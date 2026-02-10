@@ -1,0 +1,46 @@
+{
+  "classes": [
+    {
+      "class_name": "COMPS_A",
+      "student_count": 64,
+      "avg_cgpa": 0.0,
+      "max_cgpa": 0.0,
+      "min_cgpa": 0.0,
+      "avg_attendance": 0.0,
+      "max_attendance": 0.0,
+      "min_attendance": 0.0
+    },
+    {
+      "class_name": "COMPS_B",
+      "student_count": 62,
+      "avg_cgpa": 0.0,
+      "max_cgpa": 0.0,
+      "min_cgpa": 0.0,
+      "avg_attendance": 0.0,
+      "max_attendance": 0.0,
+      "min_attendance": 0.0
+    },
+    {
+      "class_name": "COMPS_C",
+      "student_count": 63,
+      "avg_cgpa": 0.0,
+      "max_cgpa": 0.0,
+      "min_cgpa": 0.0,
+      "avg_attendance": 0.0,
+      "max_attendance": 0.0,
+      "min_attendance": 0.0
+    },
+    {
+      "class_name": "MECH",
+      "student_count": 64,
+      "avg_cgpa": 0.0,
+      "max_cgpa": 0.0,
+      "min_cgpa": 0.0,
+      "avg_attendance": 0.0,
+      "max_attendance": 0.0,
+      "min_attendance": 0.0
+    }
+  ],
+  "best_cgpa_class": "COMPS_A",
+  "best_attendance_class": "COMPS_A"
+}

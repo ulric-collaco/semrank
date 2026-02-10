@@ -1,0 +1,9 @@
+# Ignore everything in root
+/*
+
+# Except these folders
+!/frontend/
+!/student_photos/
+
+# And keep .gitignore itself
+!.gitignore

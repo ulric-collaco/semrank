@@ -1,0 +1,6802 @@
+[
+  {
+    "student_id": 1,
+    "roll_no": 10578,
+    "enrollment_id": "MU0341120240233041",
+    "name": "Ahirwar Ritu Ravi",
+    "dob": "05/12/2006",
+    "class": "COMPS_A",
+    "class_id": 1,
+    "cgpa": 0.0,
+    "attendance": 0.0,
+    "subjects": [
+      {
+        "subject_id": 1,
+        "subject_code": "CS101",
+        "subject_name": "Data Structures",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 2,
+        "subject_code": "CS102",
+        "subject_name": "Database Management Systems",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 3,
+        "subject_code": "CS103",
+        "subject_name": "Operating Systems",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 4,
+        "subject_code": "CS104",
+        "subject_name": "Computer Networks",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 5,
+        "subject_code": "MA101",
+        "subject_name": "Linear Algebra",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 6,
+        "subject_code": "OE201",
+        "subject_name": "Machine Learning",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 7,
+        "subject_code": "OE202",
+        "subject_name": "Blockchain Technology",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 8,
+        "subject_code": "OE203",
+        "subject_name": "Cloud Computing",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 9,
+        "subject_code": "OE204",
+        "subject_name": "Cyber Security",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      }
+    ],
+    "total_marks": 0,
+    "average_marks": 0.0,
+    "college_rank_cgpa": 1,
+    "class_rank_cgpa": 1,
+    "college_rank_attendance": 1,
+    "class_rank_attendance": 1
+  },
+  {
+    "student_id": 2,
+    "roll_no": 10579,
+    "enrollment_id": "MU0341120240233068",
+    "name": "Almeida Allan Francis",
+    "dob": "09/01/2006",
+    "class": "COMPS_A",
+    "class_id": 1,
+    "cgpa": 0.0,
+    "attendance": 0.0,
+    "subjects": [
+      {
+        "subject_id": 1,
+        "subject_code": "CS101",
+        "subject_name": "Data Structures",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 2,
+        "subject_code": "CS102",
+        "subject_name": "Database Management Systems",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 3,
+        "subject_code": "CS103",
+        "subject_name": "Operating Systems",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 4,
+        "subject_code": "CS104",
+        "subject_name": "Computer Networks",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 5,
+        "subject_code": "MA101",
+        "subject_name": "Linear Algebra",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 6,
+        "subject_code": "OE201",
+        "subject_name": "Machine Learning",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 7,
+        "subject_code": "OE202",
+        "subject_name": "Blockchain Technology",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 8,
+        "subject_code": "OE203",
+        "subject_name": "Cloud Computing",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 9,
+        "subject_code": "OE204",
+        "subject_name": "Cyber Security",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      }
+    ],
+    "total_marks": 0,
+    "average_marks": 0.0,
+    "college_rank_cgpa": 1,
+    "class_rank_cgpa": 1,
+    "college_rank_attendance": 1,
+    "class_rank_attendance": 1
+  },
+  {
+    "student_id": 3,
+    "roll_no": 10580,
+    "enrollment_id": "MU0341120240233080",
+    "name": "Ambre Sumit Sandip",
+    "dob": "27/10/2006",
+    "class": "COMPS_A",
+    "class_id": 1,
+    "cgpa": 0.0,
+    "attendance": 0.0,
+    "subjects": [
+      {
+        "subject_id": 1,
+        "subject_code": "CS101",
+        "subject_name": "Data Structures",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 2,
+        "subject_code": "CS102",
+        "subject_name": "Database Management Systems",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 3,
+        "subject_code": "CS103",
+        "subject_name": "Operating Systems",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 4,
+        "subject_code": "CS104",
+        "subject_name": "Computer Networks",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 5,
+        "subject_code": "MA101",
+        "subject_name": "Linear Algebra",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 6,
+        "subject_code": "OE201",
+        "subject_name": "Machine Learning",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 7,
+        "subject_code": "OE202",
+        "subject_name": "Blockchain Technology",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 8,
+        "subject_code": "OE203",
+        "subject_name": "Cloud Computing",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 9,
+        "subject_code": "OE204",
+        "subject_name": "Cyber Security",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      }
+    ],
+    "total_marks": 0,
+    "average_marks": 0.0,
+    "college_rank_cgpa": 1,
+    "class_rank_cgpa": 1,
+    "college_rank_attendance": 1,
+    "class_rank_attendance": 1
+  },
+  {
+    "student_id": 4,
+    "roll_no": 10581,
+    "enrollment_id": "MU0341120240233052",
+    "name": "Bhawsar Nandana Vijay",
+    "dob": "01/09/2006",
+    "class": "COMPS_A",
+    "class_id": 1,
+    "cgpa": 0.0,
+    "attendance": 0.0,
+    "subjects": [
+      {
+        "subject_id": 1,
+        "subject_code": "CS101",
+        "subject_name": "Data Structures",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 2,
+        "subject_code": "CS102",
+        "subject_name": "Database Management Systems",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 3,
+        "subject_code": "CS103",
+        "subject_name": "Operating Systems",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 4,
+        "subject_code": "CS104",
+        "subject_name": "Computer Networks",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 5,
+        "subject_code": "MA101",
+        "subject_name": "Linear Algebra",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 6,
+        "subject_code": "OE201",
+        "subject_name": "Machine Learning",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 7,
+        "subject_code": "OE202",
+        "subject_name": "Blockchain Technology",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 8,
+        "subject_code": "OE203",
+        "subject_name": "Cloud Computing",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 9,
+        "subject_code": "OE204",
+        "subject_name": "Cyber Security",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      }
+    ],
+    "total_marks": 0,
+    "average_marks": 0.0,
+    "college_rank_cgpa": 1,
+    "class_rank_cgpa": 1,
+    "college_rank_attendance": 1,
+    "class_rank_attendance": 1
+  },
+  {
+    "student_id": 5,
+    "roll_no": 10582,
+    "enrollment_id": "MU0341120240226251",
+    "name": "Brahmane Arnav Pramod",
+    "dob": "11/05/2006",
+    "class": "COMPS_A",
+    "class_id": 1,
+    "cgpa": 0.0,
+    "attendance": 0.0,
+    "subjects": [
+      {
+        "subject_id": 1,
+        "subject_code": "CS101",
+        "subject_name": "Data Structures",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 2,
+        "subject_code": "CS102",
+        "subject_name": "Database Management Systems",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 3,
+        "subject_code": "CS103",
+        "subject_name": "Operating Systems",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 4,
+        "subject_code": "CS104",
+        "subject_name": "Computer Networks",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 5,
+        "subject_code": "MA101",
+        "subject_name": "Linear Algebra",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 6,
+        "subject_code": "OE201",
+        "subject_name": "Machine Learning",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 7,
+        "subject_code": "OE202",
+        "subject_name": "Blockchain Technology",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 8,
+        "subject_code": "OE203",
+        "subject_name": "Cloud Computing",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 9,
+        "subject_code": "OE204",
+        "subject_name": "Cyber Security",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      }
+    ],
+    "total_marks": 0,
+    "average_marks": 0.0,
+    "college_rank_cgpa": 1,
+    "class_rank_cgpa": 1,
+    "college_rank_attendance": 1,
+    "class_rank_attendance": 1
+  },
+  {
+    "student_id": 6,
+    "roll_no": 10583,
+    "enrollment_id": "MU0341120240233029",
+    "name": "Cabral Ziel Noel",
+    "dob": "16/01/2006",
+    "class": "COMPS_A",
+    "class_id": 1,
+    "cgpa": 0.0,
+    "attendance": 0.0,
+    "subjects": [
+      {
+        "subject_id": 1,
+        "subject_code": "CS101",
+        "subject_name": "Data Structures",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 2,
+        "subject_code": "CS102",
+        "subject_name": "Database Management Systems",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 3,
+        "subject_code": "CS103",
+        "subject_name": "Operating Systems",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 4,
+        "subject_code": "CS104",
+        "subject_name": "Computer Networks",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 5,
+        "subject_code": "MA101",
+        "subject_name": "Linear Algebra",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 6,
+        "subject_code": "OE201",
+        "subject_name": "Machine Learning",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 7,
+        "subject_code": "OE202",
+        "subject_name": "Blockchain Technology",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 8,
+        "subject_code": "OE203",
+        "subject_name": "Cloud Computing",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 9,
+        "subject_code": "OE204",
+        "subject_name": "Cyber Security",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      }
+    ],
+    "total_marks": 0,
+    "average_marks": 0.0,
+    "college_rank_cgpa": 1,
+    "class_rank_cgpa": 1,
+    "college_rank_attendance": 1,
+    "class_rank_attendance": 1
+  },
+  {
+    "student_id": 7,
+    "roll_no": 10584,
+    "enrollment_id": "MU0341120240233062",
+    "name": "Chavan Jeet Niranjan",
+    "dob": "02/10/2006",
+    "class": "COMPS_A",
+    "class_id": 1,
+    "cgpa": 0.0,
+    "attendance": 0.0,
+    "subjects": [
+      {
+        "subject_id": 1,
+        "subject_code": "CS101",
+        "subject_name": "Data Structures",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 2,
+        "subject_code": "CS102",
+        "subject_name": "Database Management Systems",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 3,
+        "subject_code": "CS103",
+        "subject_name": "Operating Systems",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 4,
+        "subject_code": "CS104",
+        "subject_name": "Computer Networks",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 5,
+        "subject_code": "MA101",
+        "subject_name": "Linear Algebra",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 6,
+        "subject_code": "OE201",
+        "subject_name": "Machine Learning",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 7,
+        "subject_code": "OE202",
+        "subject_name": "Blockchain Technology",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 8,
+        "subject_code": "OE203",
+        "subject_name": "Cloud Computing",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 9,
+        "subject_code": "OE204",
+        "subject_name": "Cyber Security",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      }
+    ],
+    "total_marks": 0,
+    "average_marks": 0.0,
+    "college_rank_cgpa": 1,
+    "class_rank_cgpa": 1,
+    "college_rank_attendance": 1,
+    "class_rank_attendance": 1
+  },
+  {
+    "student_id": 8,
+    "roll_no": 10585,
+    "enrollment_id": "MU0341120240228054",
+    "name": "Churi Akshat Ashish",
+    "dob": "02/05/2006",
+    "class": "COMPS_A",
+    "class_id": 1,
+    "cgpa": 0.0,
+    "attendance": 0.0,
+    "subjects": [
+      {
+        "subject_id": 1,
+        "subject_code": "CS101",
+        "subject_name": "Data Structures",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 2,
+        "subject_code": "CS102",
+        "subject_name": "Database Management Systems",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 3,
+        "subject_code": "CS103",
+        "subject_name": "Operating Systems",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 4,
+        "subject_code": "CS104",
+        "subject_name": "Computer Networks",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 5,
+        "subject_code": "MA101",
+        "subject_name": "Linear Algebra",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 6,
+        "subject_code": "OE201",
+        "subject_name": "Machine Learning",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 7,
+        "subject_code": "OE202",
+        "subject_name": "Blockchain Technology",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 8,
+        "subject_code": "OE203",
+        "subject_name": "Cloud Computing",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 9,
+        "subject_code": "OE204",
+        "subject_name": "Cyber Security",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      }
+    ],
+    "total_marks": 0,
+    "average_marks": 0.0,
+    "college_rank_cgpa": 1,
+    "class_rank_cgpa": 1,
+    "college_rank_attendance": 1,
+    "class_rank_attendance": 1
+  },
+  {
+    "student_id": 9,
+    "roll_no": 10586,
+    "enrollment_id": "MU0341120240233020",
+    "name": "Correia Anvyl Nelson",
+    "dob": "23/02/2007",
+    "class": "COMPS_A",
+    "class_id": 1,
+    "cgpa": 0.0,
+    "attendance": 0.0,
+    "subjects": [
+      {
+        "subject_id": 1,
+        "subject_code": "CS101",
+        "subject_name": "Data Structures",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 2,
+        "subject_code": "CS102",
+        "subject_name": "Database Management Systems",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 3,
+        "subject_code": "CS103",
+        "subject_name": "Operating Systems",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 4,
+        "subject_code": "CS104",
+        "subject_name": "Computer Networks",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 5,
+        "subject_code": "MA101",
+        "subject_name": "Linear Algebra",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 6,
+        "subject_code": "OE201",
+        "subject_name": "Machine Learning",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 7,
+        "subject_code": "OE202",
+        "subject_name": "Blockchain Technology",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 8,
+        "subject_code": "OE203",
+        "subject_name": "Cloud Computing",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 9,
+        "subject_code": "OE204",
+        "subject_name": "Cyber Security",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      }
+    ],
+    "total_marks": 0,
+    "average_marks": 0.0,
+    "college_rank_cgpa": 1,
+    "class_rank_cgpa": 1,
+    "college_rank_attendance": 1,
+    "class_rank_attendance": 1
+  },
+  {
+    "student_id": 10,
+    "roll_no": 10587,
+    "enrollment_id": "MU0341120240232990",
+    "name": "Coutinho Kenrich Kelwin",
+    "dob": "06/04/2006",
+    "class": "COMPS_A",
+    "class_id": 1,
+    "cgpa": 0.0,
+    "attendance": 0.0,
+    "subjects": [
+      {
+        "subject_id": 1,
+        "subject_code": "CS101",
+        "subject_name": "Data Structures",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 2,
+        "subject_code": "CS102",
+        "subject_name": "Database Management Systems",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 3,
+        "subject_code": "CS103",
+        "subject_name": "Operating Systems",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 4,
+        "subject_code": "CS104",
+        "subject_name": "Computer Networks",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 5,
+        "subject_code": "MA101",
+        "subject_name": "Linear Algebra",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 6,
+        "subject_code": "OE201",
+        "subject_name": "Machine Learning",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 7,
+        "subject_code": "OE202",
+        "subject_name": "Blockchain Technology",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 8,
+        "subject_code": "OE203",
+        "subject_name": "Cloud Computing",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 9,
+        "subject_code": "OE204",
+        "subject_name": "Cyber Security",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      }
+    ],
+    "total_marks": 0,
+    "average_marks": 0.0,
+    "college_rank_cgpa": 1,
+    "class_rank_cgpa": 1,
+    "college_rank_attendance": 1,
+    "class_rank_attendance": 1
+  },
+  {
+    "student_id": 11,
+    "roll_no": 10588,
+    "enrollment_id": "MU0341120240233002",
+    "name": "Creado Bianca Vincent",
+    "dob": "01/01/2007",
+    "class": "COMPS_A",
+    "class_id": 1,
+    "cgpa": 0.0,
+    "attendance": 0.0,
+    "subjects": [
+      {
+        "subject_id": 1,
+        "subject_code": "CS101",
+        "subject_name": "Data Structures",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 2,
+        "subject_code": "CS102",
+        "subject_name": "Database Management Systems",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 3,
+        "subject_code": "CS103",
+        "subject_name": "Operating Systems",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 4,
+        "subject_code": "CS104",
+        "subject_name": "Computer Networks",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 5,
+        "subject_code": "MA101",
+        "subject_name": "Linear Algebra",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 6,
+        "subject_code": "OE201",
+        "subject_name": "Machine Learning",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 7,
+        "subject_code": "OE202",
+        "subject_name": "Blockchain Technology",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 8,
+        "subject_code": "OE203",
+        "subject_name": "Cloud Computing",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 9,
+        "subject_code": "OE204",
+        "subject_name": "Cyber Security",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      }
+    ],
+    "total_marks": 0,
+    "average_marks": 0.0,
+    "college_rank_cgpa": 1,
+    "class_rank_cgpa": 1,
+    "college_rank_attendance": 1,
+    "class_rank_attendance": 1
+  },
+  {
+    "student_id": 12,
+    "roll_no": 10589,
+    "enrollment_id": "MU0341120240233018",
+    "name": "Dalvi Kris Binnie",
+    "dob": "05/07/2006",
+    "class": "COMPS_A",
+    "class_id": 1,
+    "cgpa": 0.0,
+    "attendance": 0.0,
+    "subjects": [
+      {
+        "subject_id": 1,
+        "subject_code": "CS101",
+        "subject_name": "Data Structures",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 2,
+        "subject_code": "CS102",
+        "subject_name": "Database Management Systems",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 3,
+        "subject_code": "CS103",
+        "subject_name": "Operating Systems",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 4,
+        "subject_code": "CS104",
+        "subject_name": "Computer Networks",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 5,
+        "subject_code": "MA101",
+        "subject_name": "Linear Algebra",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 6,
+        "subject_code": "OE201",
+        "subject_name": "Machine Learning",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 7,
+        "subject_code": "OE202",
+        "subject_name": "Blockchain Technology",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 8,
+        "subject_code": "OE203",
+        "subject_name": "Cloud Computing",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 9,
+        "subject_code": "OE204",
+        "subject_name": "Cyber Security",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      }
+    ],
+    "total_marks": 0,
+    "average_marks": 0.0,
+    "college_rank_cgpa": 1,
+    "class_rank_cgpa": 1,
+    "college_rank_attendance": 1,
+    "class_rank_attendance": 1
+  },
+  {
+    "student_id": 13,
+    "roll_no": 10590,
+    "enrollment_id": "MU0341120240233095",
+    "name": "Dandekar Shravani Ratnakumar",
+    "dob": "25/12/2006",
+    "class": "COMPS_A",
+    "class_id": 1,
+    "cgpa": 0.0,
+    "attendance": 0.0,
+    "subjects": [
+      {
+        "subject_id": 1,
+        "subject_code": "CS101",
+        "subject_name": "Data Structures",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 2,
+        "subject_code": "CS102",
+        "subject_name": "Database Management Systems",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 3,
+        "subject_code": "CS103",
+        "subject_name": "Operating Systems",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 4,
+        "subject_code": "CS104",
+        "subject_name": "Computer Networks",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 5,
+        "subject_code": "MA101",
+        "subject_name": "Linear Algebra",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 6,
+        "subject_code": "OE201",
+        "subject_name": "Machine Learning",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 7,
+        "subject_code": "OE202",
+        "subject_name": "Blockchain Technology",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 8,
+        "subject_code": "OE203",
+        "subject_name": "Cloud Computing",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 9,
+        "subject_code": "OE204",
+        "subject_name": "Cyber Security",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      }
+    ],
+    "total_marks": 0,
+    "average_marks": 0.0,
+    "college_rank_cgpa": 1,
+    "class_rank_cgpa": 1,
+    "college_rank_attendance": 1,
+    "class_rank_attendance": 1
+  },
+  {
+    "student_id": 14,
+    "roll_no": 10591,
+    "enrollment_id": "MU0341120240231438",
+    "name": "Dbritto Sera Richard",
+    "dob": "01/09/2006",
+    "class": "COMPS_A",
+    "class_id": 1,
+    "cgpa": 0.0,
+    "attendance": 0.0,
+    "subjects": [
+      {
+        "subject_id": 1,
+        "subject_code": "CS101",
+        "subject_name": "Data Structures",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 2,
+        "subject_code": "CS102",
+        "subject_name": "Database Management Systems",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 3,
+        "subject_code": "CS103",
+        "subject_name": "Operating Systems",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 4,
+        "subject_code": "CS104",
+        "subject_name": "Computer Networks",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 5,
+        "subject_code": "MA101",
+        "subject_name": "Linear Algebra",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 6,
+        "subject_code": "OE201",
+        "subject_name": "Machine Learning",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 7,
+        "subject_code": "OE202",
+        "subject_name": "Blockchain Technology",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 8,
+        "subject_code": "OE203",
+        "subject_name": "Cloud Computing",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 9,
+        "subject_code": "OE204",
+        "subject_name": "Cyber Security",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      }
+    ],
+    "total_marks": 0,
+    "average_marks": 0.0,
+    "college_rank_cgpa": 1,
+    "class_rank_cgpa": 1,
+    "college_rank_attendance": 1,
+    "class_rank_attendance": 1
+  },
+  {
+    "student_id": 15,
+    "roll_no": 10592,
+    "enrollment_id": "MU0341120240233097",
+    "name": "Desai Zainulabeddin Saleem",
+    "dob": "24/05/2006",
+    "class": "COMPS_A",
+    "class_id": 1,
+    "cgpa": 0.0,
+    "attendance": 0.0,
+    "subjects": [
+      {
+        "subject_id": 1,
+        "subject_code": "CS101",
+        "subject_name": "Data Structures",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 2,
+        "subject_code": "CS102",
+        "subject_name": "Database Management Systems",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 3,
+        "subject_code": "CS103",
+        "subject_name": "Operating Systems",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 4,
+        "subject_code": "CS104",
+        "subject_name": "Computer Networks",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 5,
+        "subject_code": "MA101",
+        "subject_name": "Linear Algebra",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 6,
+        "subject_code": "OE201",
+        "subject_name": "Machine Learning",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 7,
+        "subject_code": "OE202",
+        "subject_name": "Blockchain Technology",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 8,
+        "subject_code": "OE203",
+        "subject_name": "Cloud Computing",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 9,
+        "subject_code": "OE204",
+        "subject_name": "Cyber Security",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      }
+    ],
+    "total_marks": 0,
+    "average_marks": 0.0,
+    "college_rank_cgpa": 1,
+    "class_rank_cgpa": 1,
+    "college_rank_attendance": 1,
+    "class_rank_attendance": 1
+  },
+  {
+    "student_id": 16,
+    "roll_no": 10593,
+    "enrollment_id": "MU0341120240233074",
+    "name": "Dethe Jeshrun Pravin",
+    "dob": "27/10/2006",
+    "class": "COMPS_A",
+    "class_id": 1,
+    "cgpa": 0.0,
+    "attendance": 0.0,
+    "subjects": [
+      {
+        "subject_id": 1,
+        "subject_code": "CS101",
+        "subject_name": "Data Structures",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 2,
+        "subject_code": "CS102",
+        "subject_name": "Database Management Systems",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 3,
+        "subject_code": "CS103",
+        "subject_name": "Operating Systems",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 4,
+        "subject_code": "CS104",
+        "subject_name": "Computer Networks",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 5,
+        "subject_code": "MA101",
+        "subject_name": "Linear Algebra",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 6,
+        "subject_code": "OE201",
+        "subject_name": "Machine Learning",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 7,
+        "subject_code": "OE202",
+        "subject_name": "Blockchain Technology",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 8,
+        "subject_code": "OE203",
+        "subject_name": "Cloud Computing",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 9,
+        "subject_code": "OE204",
+        "subject_name": "Cyber Security",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      }
+    ],
+    "total_marks": 0,
+    "average_marks": 0.0,
+    "college_rank_cgpa": 1,
+    "class_rank_cgpa": 1,
+    "college_rank_attendance": 1,
+    "class_rank_attendance": 1
+  },
+  {
+    "student_id": 17,
+    "roll_no": 10594,
+    "enrollment_id": "MU0341120240232994",
+    "name": "Dias Priston Novel",
+    "dob": "24/07/2006",
+    "class": "COMPS_A",
+    "class_id": 1,
+    "cgpa": 0.0,
+    "attendance": 0.0,
+    "subjects": [
+      {
+        "subject_id": 1,
+        "subject_code": "CS101",
+        "subject_name": "Data Structures",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 2,
+        "subject_code": "CS102",
+        "subject_name": "Database Management Systems",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 3,
+        "subject_code": "CS103",
+        "subject_name": "Operating Systems",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 4,
+        "subject_code": "CS104",
+        "subject_name": "Computer Networks",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 5,
+        "subject_code": "MA101",
+        "subject_name": "Linear Algebra",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 6,
+        "subject_code": "OE201",
+        "subject_name": "Machine Learning",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 7,
+        "subject_code": "OE202",
+        "subject_name": "Blockchain Technology",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 8,
+        "subject_code": "OE203",
+        "subject_name": "Cloud Computing",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 9,
+        "subject_code": "OE204",
+        "subject_name": "Cyber Security",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      }
+    ],
+    "total_marks": 0,
+    "average_marks": 0.0,
+    "college_rank_cgpa": 1,
+    "class_rank_cgpa": 1,
+    "college_rank_attendance": 1,
+    "class_rank_attendance": 1
+  },
+  {
+    "student_id": 18,
+    "roll_no": 10595,
+    "enrollment_id": "MU0341120240231450",
+    "name": "Dsilva Lehel Vijil",
+    "dob": "13/10/2006",
+    "class": "COMPS_B",
+    "class_id": 2,
+    "cgpa": 0.0,
+    "attendance": 0.0,
+    "subjects": [
+      {
+        "subject_id": 1,
+        "subject_code": "CS101",
+        "subject_name": "Data Structures",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 2,
+        "subject_code": "CS102",
+        "subject_name": "Database Management Systems",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 3,
+        "subject_code": "CS103",
+        "subject_name": "Operating Systems",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 4,
+        "subject_code": "CS104",
+        "subject_name": "Computer Networks",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 5,
+        "subject_code": "MA101",
+        "subject_name": "Linear Algebra",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 6,
+        "subject_code": "OE201",
+        "subject_name": "Machine Learning",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 7,
+        "subject_code": "OE202",
+        "subject_name": "Blockchain Technology",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 8,
+        "subject_code": "OE203",
+        "subject_name": "Cloud Computing",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 9,
+        "subject_code": "OE204",
+        "subject_name": "Cyber Security",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      }
+    ],
+    "total_marks": 0,
+    "average_marks": 0.0,
+    "college_rank_cgpa": 1,
+    "class_rank_cgpa": 1,
+    "college_rank_attendance": 1,
+    "class_rank_attendance": 1
+  },
+  {
+    "student_id": 19,
+    "roll_no": 10596,
+    "enrollment_id": "MU0341120240231432",
+    "name": "Dsouza Aman Agnelo",
+    "dob": "19/10/2006",
+    "class": "COMPS_A",
+    "class_id": 1,
+    "cgpa": 0.0,
+    "attendance": 0.0,
+    "subjects": [
+      {
+        "subject_id": 1,
+        "subject_code": "CS101",
+        "subject_name": "Data Structures",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 2,
+        "subject_code": "CS102",
+        "subject_name": "Database Management Systems",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 3,
+        "subject_code": "CS103",
+        "subject_name": "Operating Systems",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 4,
+        "subject_code": "CS104",
+        "subject_name": "Computer Networks",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 5,
+        "subject_code": "MA101",
+        "subject_name": "Linear Algebra",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 6,
+        "subject_code": "OE201",
+        "subject_name": "Machine Learning",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 7,
+        "subject_code": "OE202",
+        "subject_name": "Blockchain Technology",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 8,
+        "subject_code": "OE203",
+        "subject_name": "Cloud Computing",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 9,
+        "subject_code": "OE204",
+        "subject_name": "Cyber Security",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      }
+    ],
+    "total_marks": 0,
+    "average_marks": 0.0,
+    "college_rank_cgpa": 1,
+    "class_rank_cgpa": 1,
+    "college_rank_attendance": 1,
+    "class_rank_attendance": 1
+  },
+  {
+    "student_id": 20,
+    "roll_no": 10597,
+    "enrollment_id": "MU0341120240233071",
+    "name": "Dsouza Dhruv Glenn",
+    "dob": "20/12/2006",
+    "class": "COMPS_A",
+    "class_id": 1,
+    "cgpa": 0.0,
+    "attendance": 0.0,
+    "subjects": [
+      {
+        "subject_id": 1,
+        "subject_code": "CS101",
+        "subject_name": "Data Structures",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 2,
+        "subject_code": "CS102",
+        "subject_name": "Database Management Systems",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 3,
+        "subject_code": "CS103",
+        "subject_name": "Operating Systems",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 4,
+        "subject_code": "CS104",
+        "subject_name": "Computer Networks",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 5,
+        "subject_code": "MA101",
+        "subject_name": "Linear Algebra",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 6,
+        "subject_code": "OE201",
+        "subject_name": "Machine Learning",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 7,
+        "subject_code": "OE202",
+        "subject_name": "Blockchain Technology",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 8,
+        "subject_code": "OE203",
+        "subject_name": "Cloud Computing",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 9,
+        "subject_code": "OE204",
+        "subject_name": "Cyber Security",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      }
+    ],
+    "total_marks": 0,
+    "average_marks": 0.0,
+    "college_rank_cgpa": 1,
+    "class_rank_cgpa": 1,
+    "college_rank_attendance": 1,
+    "class_rank_attendance": 1
+  },
+  {
+    "student_id": 21,
+    "roll_no": 10598,
+    "enrollment_id": "MU0341120240231436",
+    "name": "Dsouza Zeon Noil",
+    "dob": "28/11/2006",
+    "class": "COMPS_A",
+    "class_id": 1,
+    "cgpa": 0.0,
+    "attendance": 0.0,
+    "subjects": [
+      {
+        "subject_id": 1,
+        "subject_code": "CS101",
+        "subject_name": "Data Structures",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 2,
+        "subject_code": "CS102",
+        "subject_name": "Database Management Systems",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 3,
+        "subject_code": "CS103",
+        "subject_name": "Operating Systems",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 4,
+        "subject_code": "CS104",
+        "subject_name": "Computer Networks",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 5,
+        "subject_code": "MA101",
+        "subject_name": "Linear Algebra",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 6,
+        "subject_code": "OE201",
+        "subject_name": "Machine Learning",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 7,
+        "subject_code": "OE202",
+        "subject_name": "Blockchain Technology",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 8,
+        "subject_code": "OE203",
+        "subject_name": "Cloud Computing",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 9,
+        "subject_code": "OE204",
+        "subject_name": "Cyber Security",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      }
+    ],
+    "total_marks": 0,
+    "average_marks": 0.0,
+    "college_rank_cgpa": 1,
+    "class_rank_cgpa": 1,
+    "college_rank_attendance": 1,
+    "class_rank_attendance": 1
+  },
+  {
+    "student_id": 22,
+    "roll_no": 10599,
+    "enrollment_id": "MU0341120240232973",
+    "name": "Duarte Delisha Vernon",
+    "dob": "01/07/2006",
+    "class": "COMPS_A",
+    "class_id": 1,
+    "cgpa": 0.0,
+    "attendance": 0.0,
+    "subjects": [
+      {
+        "subject_id": 1,
+        "subject_code": "CS101",
+        "subject_name": "Data Structures",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 2,
+        "subject_code": "CS102",
+        "subject_name": "Database Management Systems",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 3,
+        "subject_code": "CS103",
+        "subject_name": "Operating Systems",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 4,
+        "subject_code": "CS104",
+        "subject_name": "Computer Networks",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 5,
+        "subject_code": "MA101",
+        "subject_name": "Linear Algebra",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 6,
+        "subject_code": "OE201",
+        "subject_name": "Machine Learning",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 7,
+        "subject_code": "OE202",
+        "subject_name": "Blockchain Technology",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 8,
+        "subject_code": "OE203",
+        "subject_name": "Cloud Computing",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 9,
+        "subject_code": "OE204",
+        "subject_name": "Cyber Security",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      }
+    ],
+    "total_marks": 0,
+    "average_marks": 0.0,
+    "college_rank_cgpa": 1,
+    "class_rank_cgpa": 1,
+    "college_rank_attendance": 1,
+    "class_rank_attendance": 1
+  },
+  {
+    "student_id": 23,
+    "roll_no": 10600,
+    "enrollment_id": "MU0341120240232987",
+    "name": "Fernandes Chrism Prasad",
+    "dob": "26/07/2006",
+    "class": "COMPS_A",
+    "class_id": 1,
+    "cgpa": 0.0,
+    "attendance": 0.0,
+    "subjects": [
+      {
+        "subject_id": 1,
+        "subject_code": "CS101",
+        "subject_name": "Data Structures",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 2,
+        "subject_code": "CS102",
+        "subject_name": "Database Management Systems",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 3,
+        "subject_code": "CS103",
+        "subject_name": "Operating Systems",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 4,
+        "subject_code": "CS104",
+        "subject_name": "Computer Networks",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 5,
+        "subject_code": "MA101",
+        "subject_name": "Linear Algebra",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 6,
+        "subject_code": "OE201",
+        "subject_name": "Machine Learning",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 7,
+        "subject_code": "OE202",
+        "subject_name": "Blockchain Technology",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 8,
+        "subject_code": "OE203",
+        "subject_name": "Cloud Computing",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 9,
+        "subject_code": "OE204",
+        "subject_name": "Cyber Security",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      }
+    ],
+    "total_marks": 0,
+    "average_marks": 0.0,
+    "college_rank_cgpa": 1,
+    "class_rank_cgpa": 1,
+    "college_rank_attendance": 1,
+    "class_rank_attendance": 1
+  },
+  {
+    "student_id": 24,
+    "roll_no": 10601,
+    "enrollment_id": "MU0341120240231440",
+    "name": "Gonsalves Nethan Malcome",
+    "dob": "05/01/2006",
+    "class": "COMPS_B",
+    "class_id": 2,
+    "cgpa": 0.0,
+    "attendance": 0.0,
+    "subjects": [
+      {
+        "subject_id": 1,
+        "subject_code": "CS101",
+        "subject_name": "Data Structures",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 2,
+        "subject_code": "CS102",
+        "subject_name": "Database Management Systems",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 3,
+        "subject_code": "CS103",
+        "subject_name": "Operating Systems",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 4,
+        "subject_code": "CS104",
+        "subject_name": "Computer Networks",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 5,
+        "subject_code": "MA101",
+        "subject_name": "Linear Algebra",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 6,
+        "subject_code": "OE201",
+        "subject_name": "Machine Learning",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 7,
+        "subject_code": "OE202",
+        "subject_name": "Blockchain Technology",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 8,
+        "subject_code": "OE203",
+        "subject_name": "Cloud Computing",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 9,
+        "subject_code": "OE204",
+        "subject_name": "Cyber Security",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      }
+    ],
+    "total_marks": 0,
+    "average_marks": 0.0,
+    "college_rank_cgpa": 1,
+    "class_rank_cgpa": 1,
+    "college_rank_attendance": 1,
+    "class_rank_attendance": 1
+  },
+  {
+    "student_id": 25,
+    "roll_no": 10602,
+    "enrollment_id": "MU0341120240233170",
+    "name": "Jalui Tuhin Sanat",
+    "dob": "14/02/2006",
+    "class": "COMPS_A",
+    "class_id": 1,
+    "cgpa": 0.0,
+    "attendance": 0.0,
+    "subjects": [
+      {
+        "subject_id": 1,
+        "subject_code": "CS101",
+        "subject_name": "Data Structures",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 2,
+        "subject_code": "CS102",
+        "subject_name": "Database Management Systems",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 3,
+        "subject_code": "CS103",
+        "subject_name": "Operating Systems",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 4,
+        "subject_code": "CS104",
+        "subject_name": "Computer Networks",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 5,
+        "subject_code": "MA101",
+        "subject_name": "Linear Algebra",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 6,
+        "subject_code": "OE201",
+        "subject_name": "Machine Learning",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 7,
+        "subject_code": "OE202",
+        "subject_name": "Blockchain Technology",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 8,
+        "subject_code": "OE203",
+        "subject_name": "Cloud Computing",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 9,
+        "subject_code": "OE204",
+        "subject_name": "Cyber Security",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      }
+    ],
+    "total_marks": 0,
+    "average_marks": 0.0,
+    "college_rank_cgpa": 1,
+    "class_rank_cgpa": 1,
+    "college_rank_attendance": 1,
+    "class_rank_attendance": 1
+  },
+  {
+    "student_id": 26,
+    "roll_no": 10603,
+    "enrollment_id": "MU0341120240233090",
+    "name": "Joshi Varad Amit",
+    "dob": "17/04/2006",
+    "class": "COMPS_A",
+    "class_id": 1,
+    "cgpa": 0.0,
+    "attendance": 0.0,
+    "subjects": [
+      {
+        "subject_id": 1,
+        "subject_code": "CS101",
+        "subject_name": "Data Structures",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 2,
+        "subject_code": "CS102",
+        "subject_name": "Database Management Systems",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 3,
+        "subject_code": "CS103",
+        "subject_name": "Operating Systems",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 4,
+        "subject_code": "CS104",
+        "subject_name": "Computer Networks",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 5,
+        "subject_code": "MA101",
+        "subject_name": "Linear Algebra",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 6,
+        "subject_code": "OE201",
+        "subject_name": "Machine Learning",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 7,
+        "subject_code": "OE202",
+        "subject_name": "Blockchain Technology",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 8,
+        "subject_code": "OE203",
+        "subject_name": "Cloud Computing",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 9,
+        "subject_code": "OE204",
+        "subject_name": "Cyber Security",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      }
+    ],
+    "total_marks": 0,
+    "average_marks": 0.0,
+    "college_rank_cgpa": 1,
+    "class_rank_cgpa": 1,
+    "college_rank_attendance": 1,
+    "class_rank_attendance": 1
+  },
+  {
+    "student_id": 27,
+    "roll_no": 10604,
+    "enrollment_id": "MU0341120240233014",
+    "name": "Joshua Jimmy",
+    "dob": "28/06/2006",
+    "class": "COMPS_A",
+    "class_id": 1,
+    "cgpa": 0.0,
+    "attendance": 0.0,
+    "subjects": [
+      {
+        "subject_id": 1,
+        "subject_code": "CS101",
+        "subject_name": "Data Structures",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 2,
+        "subject_code": "CS102",
+        "subject_name": "Database Management Systems",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 3,
+        "subject_code": "CS103",
+        "subject_name": "Operating Systems",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 4,
+        "subject_code": "CS104",
+        "subject_name": "Computer Networks",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 5,
+        "subject_code": "MA101",
+        "subject_name": "Linear Algebra",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 6,
+        "subject_code": "OE201",
+        "subject_name": "Machine Learning",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 7,
+        "subject_code": "OE202",
+        "subject_name": "Blockchain Technology",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 8,
+        "subject_code": "OE203",
+        "subject_name": "Cloud Computing",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 9,
+        "subject_code": "OE204",
+        "subject_name": "Cyber Security",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      }
+    ],
+    "total_marks": 0,
+    "average_marks": 0.0,
+    "college_rank_cgpa": 1,
+    "class_rank_cgpa": 1,
+    "college_rank_attendance": 1,
+    "class_rank_attendance": 1
+  },
+  {
+    "student_id": 28,
+    "roll_no": 10605,
+    "enrollment_id": "MU0341120240233155",
+    "name": "Kanojiya Komal Suresh",
+    "dob": "04/07/2006",
+    "class": "COMPS_A",
+    "class_id": 1,
+    "cgpa": 0.0,
+    "attendance": 0.0,
+    "subjects": [
+      {
+        "subject_id": 1,
+        "subject_code": "CS101",
+        "subject_name": "Data Structures",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 2,
+        "subject_code": "CS102",
+        "subject_name": "Database Management Systems",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 3,
+        "subject_code": "CS103",
+        "subject_name": "Operating Systems",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 4,
+        "subject_code": "CS104",
+        "subject_name": "Computer Networks",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 5,
+        "subject_code": "MA101",
+        "subject_name": "Linear Algebra",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 6,
+        "subject_code": "OE201",
+        "subject_name": "Machine Learning",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 7,
+        "subject_code": "OE202",
+        "subject_name": "Blockchain Technology",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 8,
+        "subject_code": "OE203",
+        "subject_name": "Cloud Computing",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 9,
+        "subject_code": "OE204",
+        "subject_name": "Cyber Security",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      }
+    ],
+    "total_marks": 0,
+    "average_marks": 0.0,
+    "college_rank_cgpa": 1,
+    "class_rank_cgpa": 1,
+    "college_rank_attendance": 1,
+    "class_rank_attendance": 1
+  },
+  {
+    "student_id": 29,
+    "roll_no": 10606,
+    "enrollment_id": "MU0341120240233050",
+    "name": "Karkera Manvith Damodar",
+    "dob": "01/07/2006",
+    "class": "COMPS_A",
+    "class_id": 1,
+    "cgpa": 0.0,
+    "attendance": 0.0,
+    "subjects": [
+      {
+        "subject_id": 1,
+        "subject_code": "CS101",
+        "subject_name": "Data Structures",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 2,
+        "subject_code": "CS102",
+        "subject_name": "Database Management Systems",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 3,
+        "subject_code": "CS103",
+        "subject_name": "Operating Systems",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 4,
+        "subject_code": "CS104",
+        "subject_name": "Computer Networks",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 5,
+        "subject_code": "MA101",
+        "subject_name": "Linear Algebra",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 6,
+        "subject_code": "OE201",
+        "subject_name": "Machine Learning",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 7,
+        "subject_code": "OE202",
+        "subject_name": "Blockchain Technology",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 8,
+        "subject_code": "OE203",
+        "subject_name": "Cloud Computing",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 9,
+        "subject_code": "OE204",
+        "subject_name": "Cyber Security",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      }
+    ],
+    "total_marks": 0,
+    "average_marks": 0.0,
+    "college_rank_cgpa": 1,
+    "class_rank_cgpa": 1,
+    "college_rank_attendance": 1,
+    "class_rank_attendance": 1
+  },
+  {
+    "student_id": 30,
+    "roll_no": 10607,
+    "enrollment_id": "MU0341120240233100",
+    "name": "Kator Vedank Anil",
+    "dob": "26/08/2006",
+    "class": "COMPS_A",
+    "class_id": 1,
+    "cgpa": 0.0,
+    "attendance": 0.0,
+    "subjects": [
+      {
+        "subject_id": 1,
+        "subject_code": "CS101",
+        "subject_name": "Data Structures",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 2,
+        "subject_code": "CS102",
+        "subject_name": "Database Management Systems",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 3,
+        "subject_code": "CS103",
+        "subject_name": "Operating Systems",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 4,
+        "subject_code": "CS104",
+        "subject_name": "Computer Networks",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 5,
+        "subject_code": "MA101",
+        "subject_name": "Linear Algebra",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 6,
+        "subject_code": "OE201",
+        "subject_name": "Machine Learning",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 7,
+        "subject_code": "OE202",
+        "subject_name": "Blockchain Technology",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 8,
+        "subject_code": "OE203",
+        "subject_name": "Cloud Computing",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 9,
+        "subject_code": "OE204",
+        "subject_name": "Cyber Security",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      }
+    ],
+    "total_marks": 0,
+    "average_marks": 0.0,
+    "college_rank_cgpa": 1,
+    "class_rank_cgpa": 1,
+    "college_rank_attendance": 1,
+    "class_rank_attendance": 1
+  },
+  {
+    "student_id": 31,
+    "roll_no": 10608,
+    "enrollment_id": "MU0341120240233104",
+    "name": "Kedare Anushka Vijay",
+    "dob": "14/10/2006",
+    "class": "COMPS_A",
+    "class_id": 1,
+    "cgpa": 0.0,
+    "attendance": 0.0,
+    "subjects": [
+      {
+        "subject_id": 1,
+        "subject_code": "CS101",
+        "subject_name": "Data Structures",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 2,
+        "subject_code": "CS102",
+        "subject_name": "Database Management Systems",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 3,
+        "subject_code": "CS103",
+        "subject_name": "Operating Systems",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 4,
+        "subject_code": "CS104",
+        "subject_name": "Computer Networks",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 5,
+        "subject_code": "MA101",
+        "subject_name": "Linear Algebra",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 6,
+        "subject_code": "OE201",
+        "subject_name": "Machine Learning",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 7,
+        "subject_code": "OE202",
+        "subject_name": "Blockchain Technology",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 8,
+        "subject_code": "OE203",
+        "subject_name": "Cloud Computing",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 9,
+        "subject_code": "OE204",
+        "subject_name": "Cyber Security",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      }
+    ],
+    "total_marks": 0,
+    "average_marks": 0.0,
+    "college_rank_cgpa": 1,
+    "class_rank_cgpa": 1,
+    "college_rank_attendance": 1,
+    "class_rank_attendance": 1
+  },
+  {
+    "student_id": 32,
+    "roll_no": 10609,
+    "enrollment_id": "MU0341120240233078",
+    "name": "Kharche Arjun Vivek",
+    "dob": "05/09/2006",
+    "class": "COMPS_A",
+    "class_id": 1,
+    "cgpa": 0.0,
+    "attendance": 0.0,
+    "subjects": [
+      {
+        "subject_id": 1,
+        "subject_code": "CS101",
+        "subject_name": "Data Structures",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 2,
+        "subject_code": "CS102",
+        "subject_name": "Database Management Systems",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 3,
+        "subject_code": "CS103",
+        "subject_name": "Operating Systems",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 4,
+        "subject_code": "CS104",
+        "subject_name": "Computer Networks",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 5,
+        "subject_code": "MA101",
+        "subject_name": "Linear Algebra",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 6,
+        "subject_code": "OE201",
+        "subject_name": "Machine Learning",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 7,
+        "subject_code": "OE202",
+        "subject_name": "Blockchain Technology",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 8,
+        "subject_code": "OE203",
+        "subject_name": "Cloud Computing",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 9,
+        "subject_code": "OE204",
+        "subject_name": "Cyber Security",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      }
+    ],
+    "total_marks": 0,
+    "average_marks": 0.0,
+    "college_rank_cgpa": 1,
+    "class_rank_cgpa": 1,
+    "college_rank_attendance": 1,
+    "class_rank_attendance": 1
+  },
+  {
+    "student_id": 33,
+    "roll_no": 10610,
+    "enrollment_id": "MU0341120240233046",
+    "name": "Koradiya Pranav Atul",
+    "dob": "08/05/2006",
+    "class": "COMPS_A",
+    "class_id": 1,
+    "cgpa": 0.0,
+    "attendance": 0.0,
+    "subjects": [
+      {
+        "subject_id": 1,
+        "subject_code": "CS101",
+        "subject_name": "Data Structures",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 2,
+        "subject_code": "CS102",
+        "subject_name": "Database Management Systems",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 3,
+        "subject_code": "CS103",
+        "subject_name": "Operating Systems",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 4,
+        "subject_code": "CS104",
+        "subject_name": "Computer Networks",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 5,
+        "subject_code": "MA101",
+        "subject_name": "Linear Algebra",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 6,
+        "subject_code": "OE201",
+        "subject_name": "Machine Learning",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 7,
+        "subject_code": "OE202",
+        "subject_name": "Blockchain Technology",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 8,
+        "subject_code": "OE203",
+        "subject_name": "Cloud Computing",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 9,
+        "subject_code": "OE204",
+        "subject_name": "Cyber Security",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      }
+    ],
+    "total_marks": 0,
+    "average_marks": 0.0,
+    "college_rank_cgpa": 1,
+    "class_rank_cgpa": 1,
+    "college_rank_attendance": 1,
+    "class_rank_attendance": 1
+  },
+  {
+    "student_id": 34,
+    "roll_no": 10611,
+    "enrollment_id": "MU0341120240233053",
+    "name": "Ladgaonkar Bhushan Anand",
+    "dob": "08/08/2006",
+    "class": "COMPS_A",
+    "class_id": 1,
+    "cgpa": 0.0,
+    "attendance": 0.0,
+    "subjects": [
+      {
+        "subject_id": 1,
+        "subject_code": "CS101",
+        "subject_name": "Data Structures",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 2,
+        "subject_code": "CS102",
+        "subject_name": "Database Management Systems",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 3,
+        "subject_code": "CS103",
+        "subject_name": "Operating Systems",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 4,
+        "subject_code": "CS104",
+        "subject_name": "Computer Networks",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 5,
+        "subject_code": "MA101",
+        "subject_name": "Linear Algebra",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 6,
+        "subject_code": "OE201",
+        "subject_name": "Machine Learning",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 7,
+        "subject_code": "OE202",
+        "subject_name": "Blockchain Technology",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 8,
+        "subject_code": "OE203",
+        "subject_name": "Cloud Computing",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 9,
+        "subject_code": "OE204",
+        "subject_name": "Cyber Security",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      }
+    ],
+    "total_marks": 0,
+    "average_marks": 0.0,
+    "college_rank_cgpa": 1,
+    "class_rank_cgpa": 1,
+    "college_rank_attendance": 1,
+    "class_rank_attendance": 1
+  },
+  {
+    "student_id": 35,
+    "roll_no": 10612,
+    "enrollment_id": "MU0341120240232982",
+    "name": "Lemos Carin Gibson",
+    "dob": "20/11/2006",
+    "class": "COMPS_A",
+    "class_id": 1,
+    "cgpa": 0.0,
+    "attendance": 0.0,
+    "subjects": [
+      {
+        "subject_id": 1,
+        "subject_code": "CS101",
+        "subject_name": "Data Structures",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 2,
+        "subject_code": "CS102",
+        "subject_name": "Database Management Systems",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 3,
+        "subject_code": "CS103",
+        "subject_name": "Operating Systems",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 4,
+        "subject_code": "CS104",
+        "subject_name": "Computer Networks",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 5,
+        "subject_code": "MA101",
+        "subject_name": "Linear Algebra",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 6,
+        "subject_code": "OE201",
+        "subject_name": "Machine Learning",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 7,
+        "subject_code": "OE202",
+        "subject_name": "Blockchain Technology",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 8,
+        "subject_code": "OE203",
+        "subject_name": "Cloud Computing",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 9,
+        "subject_code": "OE204",
+        "subject_name": "Cyber Security",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      }
+    ],
+    "total_marks": 0,
+    "average_marks": 0.0,
+    "college_rank_cgpa": 1,
+    "class_rank_cgpa": 1,
+    "college_rank_attendance": 1,
+    "class_rank_attendance": 1
+  },
+  {
+    "student_id": 36,
+    "roll_no": 10613,
+    "enrollment_id": "MU0341120240232992",
+    "name": "Lobo Sanika Oswald",
+    "dob": "16/11/2006",
+    "class": "COMPS_A",
+    "class_id": 1,
+    "cgpa": 0.0,
+    "attendance": 0.0,
+    "subjects": [
+      {
+        "subject_id": 1,
+        "subject_code": "CS101",
+        "subject_name": "Data Structures",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 2,
+        "subject_code": "CS102",
+        "subject_name": "Database Management Systems",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 3,
+        "subject_code": "CS103",
+        "subject_name": "Operating Systems",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 4,
+        "subject_code": "CS104",
+        "subject_name": "Computer Networks",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 5,
+        "subject_code": "MA101",
+        "subject_name": "Linear Algebra",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 6,
+        "subject_code": "OE201",
+        "subject_name": "Machine Learning",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 7,
+        "subject_code": "OE202",
+        "subject_name": "Blockchain Technology",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 8,
+        "subject_code": "OE203",
+        "subject_name": "Cloud Computing",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 9,
+        "subject_code": "OE204",
+        "subject_name": "Cyber Security",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      }
+    ],
+    "total_marks": 0,
+    "average_marks": 0.0,
+    "college_rank_cgpa": 1,
+    "class_rank_cgpa": 1,
+    "college_rank_attendance": 1,
+    "class_rank_attendance": 1
+  },
+  {
+    "student_id": 37,
+    "roll_no": 10614,
+    "enrollment_id": "MU0341120240233118",
+    "name": "Machingal Kshitij Santosh",
+    "dob": "02/01/2006",
+    "class": "COMPS_A",
+    "class_id": 1,
+    "cgpa": 0.0,
+    "attendance": 0.0,
+    "subjects": [
+      {
+        "subject_id": 1,
+        "subject_code": "CS101",
+        "subject_name": "Data Structures",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 2,
+        "subject_code": "CS102",
+        "subject_name": "Database Management Systems",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 3,
+        "subject_code": "CS103",
+        "subject_name": "Operating Systems",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 4,
+        "subject_code": "CS104",
+        "subject_name": "Computer Networks",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 5,
+        "subject_code": "MA101",
+        "subject_name": "Linear Algebra",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 6,
+        "subject_code": "OE201",
+        "subject_name": "Machine Learning",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 7,
+        "subject_code": "OE202",
+        "subject_name": "Blockchain Technology",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 8,
+        "subject_code": "OE203",
+        "subject_name": "Cloud Computing",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 9,
+        "subject_code": "OE204",
+        "subject_name": "Cyber Security",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      }
+    ],
+    "total_marks": 0,
+    "average_marks": 0.0,
+    "college_rank_cgpa": 1,
+    "class_rank_cgpa": 1,
+    "college_rank_attendance": 1,
+    "class_rank_attendance": 1
+  },
+  {
+    "student_id": 38,
+    "roll_no": 10615,
+    "enrollment_id": "MU0341120240231419",
+    "name": "Mahajan Shreyas Mangesh",
+    "dob": "06/03/2007",
+    "class": "COMPS_A",
+    "class_id": 1,
+    "cgpa": 0.0,
+    "attendance": 0.0,
+    "subjects": [
+      {
+        "subject_id": 1,
+        "subject_code": "CS101",
+        "subject_name": "Data Structures",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 2,
+        "subject_code": "CS102",
+        "subject_name": "Database Management Systems",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 3,
+        "subject_code": "CS103",
+        "subject_name": "Operating Systems",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 4,
+        "subject_code": "CS104",
+        "subject_name": "Computer Networks",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 5,
+        "subject_code": "MA101",
+        "subject_name": "Linear Algebra",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 6,
+        "subject_code": "OE201",
+        "subject_name": "Machine Learning",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 7,
+        "subject_code": "OE202",
+        "subject_name": "Blockchain Technology",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 8,
+        "subject_code": "OE203",
+        "subject_name": "Cloud Computing",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 9,
+        "subject_code": "OE204",
+        "subject_name": "Cyber Security",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      }
+    ],
+    "total_marks": 0,
+    "average_marks": 0.0,
+    "college_rank_cgpa": 1,
+    "class_rank_cgpa": 1,
+    "college_rank_attendance": 1,
+    "class_rank_attendance": 1
+  },
+  {
+    "student_id": 39,
+    "roll_no": 10616,
+    "enrollment_id": "MU0341120240233045",
+    "name": "Mangaonkar Meet Navin",
+    "dob": "30/06/2006",
+    "class": "COMPS_A",
+    "class_id": 1,
+    "cgpa": 0.0,
+    "attendance": 0.0,
+    "subjects": [
+      {
+        "subject_id": 1,
+        "subject_code": "CS101",
+        "subject_name": "Data Structures",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 2,
+        "subject_code": "CS102",
+        "subject_name": "Database Management Systems",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 3,
+        "subject_code": "CS103",
+        "subject_name": "Operating Systems",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 4,
+        "subject_code": "CS104",
+        "subject_name": "Computer Networks",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 5,
+        "subject_code": "MA101",
+        "subject_name": "Linear Algebra",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 6,
+        "subject_code": "OE201",
+        "subject_name": "Machine Learning",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 7,
+        "subject_code": "OE202",
+        "subject_name": "Blockchain Technology",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 8,
+        "subject_code": "OE203",
+        "subject_name": "Cloud Computing",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 9,
+        "subject_code": "OE204",
+        "subject_name": "Cyber Security",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      }
+    ],
+    "total_marks": 0,
+    "average_marks": 0.0,
+    "college_rank_cgpa": 1,
+    "class_rank_cgpa": 1,
+    "college_rank_attendance": 1,
+    "class_rank_attendance": 1
+  },
+  {
+    "student_id": 40,
+    "roll_no": 10617,
+    "enrollment_id": "MU0341120240233094",
+    "name": "Masaye Yash Ramchandra",
+    "dob": "21/02/2006",
+    "class": "COMPS_A",
+    "class_id": 1,
+    "cgpa": 0.0,
+    "attendance": 0.0,
+    "subjects": [
+      {
+        "subject_id": 1,
+        "subject_code": "CS101",
+        "subject_name": "Data Structures",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 2,
+        "subject_code": "CS102",
+        "subject_name": "Database Management Systems",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 3,
+        "subject_code": "CS103",
+        "subject_name": "Operating Systems",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 4,
+        "subject_code": "CS104",
+        "subject_name": "Computer Networks",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 5,
+        "subject_code": "MA101",
+        "subject_name": "Linear Algebra",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 6,
+        "subject_code": "OE201",
+        "subject_name": "Machine Learning",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 7,
+        "subject_code": "OE202",
+        "subject_name": "Blockchain Technology",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 8,
+        "subject_code": "OE203",
+        "subject_name": "Cloud Computing",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 9,
+        "subject_code": "OE204",
+        "subject_name": "Cyber Security",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      }
+    ],
+    "total_marks": 0,
+    "average_marks": 0.0,
+    "college_rank_cgpa": 1,
+    "class_rank_cgpa": 1,
+    "college_rank_attendance": 1,
+    "class_rank_attendance": 1
+  },
+  {
+    "student_id": 41,
+    "roll_no": 10618,
+    "enrollment_id": "MU0341120240233027",
+    "name": "Mathew Kristina Sam",
+    "dob": "01/11/2006",
+    "class": "COMPS_A",
+    "class_id": 1,
+    "cgpa": 0.0,
+    "attendance": 0.0,
+    "subjects": [
+      {
+        "subject_id": 1,
+        "subject_code": "CS101",
+        "subject_name": "Data Structures",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 2,
+        "subject_code": "CS102",
+        "subject_name": "Database Management Systems",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 3,
+        "subject_code": "CS103",
+        "subject_name": "Operating Systems",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 4,
+        "subject_code": "CS104",
+        "subject_name": "Computer Networks",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 5,
+        "subject_code": "MA101",
+        "subject_name": "Linear Algebra",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 6,
+        "subject_code": "OE201",
+        "subject_name": "Machine Learning",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 7,
+        "subject_code": "OE202",
+        "subject_name": "Blockchain Technology",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 8,
+        "subject_code": "OE203",
+        "subject_name": "Cloud Computing",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 9,
+        "subject_code": "OE204",
+        "subject_name": "Cyber Security",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      }
+    ],
+    "total_marks": 0,
+    "average_marks": 0.0,
+    "college_rank_cgpa": 1,
+    "class_rank_cgpa": 1,
+    "college_rank_attendance": 1,
+    "class_rank_attendance": 1
+  },
+  {
+    "student_id": 42,
+    "roll_no": 10619,
+    "enrollment_id": "MU0341120240233006",
+    "name": "Mendonsa Aisha",
+    "dob": "30/01/2006",
+    "class": "COMPS_A",
+    "class_id": 1,
+    "cgpa": 0.0,
+    "attendance": 0.0,
+    "subjects": [
+      {
+        "subject_id": 1,
+        "subject_code": "CS101",
+        "subject_name": "Data Structures",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 2,
+        "subject_code": "CS102",
+        "subject_name": "Database Management Systems",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 3,
+        "subject_code": "CS103",
+        "subject_name": "Operating Systems",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 4,
+        "subject_code": "CS104",
+        "subject_name": "Computer Networks",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 5,
+        "subject_code": "MA101",
+        "subject_name": "Linear Algebra",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 6,
+        "subject_code": "OE201",
+        "subject_name": "Machine Learning",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 7,
+        "subject_code": "OE202",
+        "subject_name": "Blockchain Technology",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 8,
+        "subject_code": "OE203",
+        "subject_name": "Cloud Computing",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 9,
+        "subject_code": "OE204",
+        "subject_name": "Cyber Security",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      }
+    ],
+    "total_marks": 0,
+    "average_marks": 0.0,
+    "college_rank_cgpa": 1,
+    "class_rank_cgpa": 1,
+    "college_rank_attendance": 1,
+    "class_rank_attendance": 1
+  },
+  {
+    "student_id": 43,
+    "roll_no": 10620,
+    "enrollment_id": "MU0341120240233031",
+    "name": "Menezes Sancia Robert",
+    "dob": "04/01/2007",
+    "class": "COMPS_A",
+    "class_id": 1,
+    "cgpa": 0.0,
+    "attendance": 0.0,
+    "subjects": [
+      {
+        "subject_id": 1,
+        "subject_code": "CS101",
+        "subject_name": "Data Structures",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 2,
+        "subject_code": "CS102",
+        "subject_name": "Database Management Systems",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 3,
+        "subject_code": "CS103",
+        "subject_name": "Operating Systems",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 4,
+        "subject_code": "CS104",
+        "subject_name": "Computer Networks",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 5,
+        "subject_code": "MA101",
+        "subject_name": "Linear Algebra",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 6,
+        "subject_code": "OE201",
+        "subject_name": "Machine Learning",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 7,
+        "subject_code": "OE202",
+        "subject_name": "Blockchain Technology",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 8,
+        "subject_code": "OE203",
+        "subject_name": "Cloud Computing",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 9,
+        "subject_code": "OE204",
+        "subject_name": "Cyber Security",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      }
+    ],
+    "total_marks": 0,
+    "average_marks": 0.0,
+    "college_rank_cgpa": 1,
+    "class_rank_cgpa": 1,
+    "college_rank_attendance": 1,
+    "class_rank_attendance": 1
+  },
+  {
+    "student_id": 44,
+    "roll_no": 10621,
+    "enrollment_id": "MU0341120240233007",
+    "name": "Miranda Alston Agnelo",
+    "dob": "24/09/2006",
+    "class": "COMPS_A",
+    "class_id": 1,
+    "cgpa": 0.0,
+    "attendance": 0.0,
+    "subjects": [
+      {
+        "subject_id": 1,
+        "subject_code": "CS101",
+        "subject_name": "Data Structures",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 2,
+        "subject_code": "CS102",
+        "subject_name": "Database Management Systems",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 3,
+        "subject_code": "CS103",
+        "subject_name": "Operating Systems",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 4,
+        "subject_code": "CS104",
+        "subject_name": "Computer Networks",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 5,
+        "subject_code": "MA101",
+        "subject_name": "Linear Algebra",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 6,
+        "subject_code": "OE201",
+        "subject_name": "Machine Learning",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 7,
+        "subject_code": "OE202",
+        "subject_name": "Blockchain Technology",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 8,
+        "subject_code": "OE203",
+        "subject_name": "Cloud Computing",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 9,
+        "subject_code": "OE204",
+        "subject_name": "Cyber Security",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      }
+    ],
+    "total_marks": 0,
+    "average_marks": 0.0,
+    "college_rank_cgpa": 1,
+    "class_rank_cgpa": 1,
+    "college_rank_attendance": 1,
+    "class_rank_attendance": 1
+  },
+  {
+    "student_id": 45,
+    "roll_no": 10622,
+    "enrollment_id": "MU0341120240231422",
+    "name": "More Soham Tanaji",
+    "dob": "14/11/2006",
+    "class": "COMPS_A",
+    "class_id": 1,
+    "cgpa": 0.0,
+    "attendance": 0.0,
+    "subjects": [
+      {
+        "subject_id": 1,
+        "subject_code": "CS101",
+        "subject_name": "Data Structures",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 2,
+        "subject_code": "CS102",
+        "subject_name": "Database Management Systems",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 3,
+        "subject_code": "CS103",
+        "subject_name": "Operating Systems",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 4,
+        "subject_code": "CS104",
+        "subject_name": "Computer Networks",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 5,
+        "subject_code": "MA101",
+        "subject_name": "Linear Algebra",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 6,
+        "subject_code": "OE201",
+        "subject_name": "Machine Learning",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 7,
+        "subject_code": "OE202",
+        "subject_name": "Blockchain Technology",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 8,
+        "subject_code": "OE203",
+        "subject_name": "Cloud Computing",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 9,
+        "subject_code": "OE204",
+        "subject_name": "Cyber Security",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      }
+    ],
+    "total_marks": 0,
+    "average_marks": 0.0,
+    "college_rank_cgpa": 1,
+    "class_rank_cgpa": 1,
+    "college_rank_attendance": 1,
+    "class_rank_attendance": 1
+  },
+  {
+    "student_id": 46,
+    "roll_no": 10623,
+    "enrollment_id": "MU0341120240231424",
+    "name": "Murade Srushti Anil",
+    "dob": "09/09/2006",
+    "class": "COMPS_A",
+    "class_id": 1,
+    "cgpa": 0.0,
+    "attendance": 0.0,
+    "subjects": [
+      {
+        "subject_id": 1,
+        "subject_code": "CS101",
+        "subject_name": "Data Structures",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 2,
+        "subject_code": "CS102",
+        "subject_name": "Database Management Systems",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 3,
+        "subject_code": "CS103",
+        "subject_name": "Operating Systems",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 4,
+        "subject_code": "CS104",
+        "subject_name": "Computer Networks",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 5,
+        "subject_code": "MA101",
+        "subject_name": "Linear Algebra",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 6,
+        "subject_code": "OE201",
+        "subject_name": "Machine Learning",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 7,
+        "subject_code": "OE202",
+        "subject_name": "Blockchain Technology",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 8,
+        "subject_code": "OE203",
+        "subject_name": "Cloud Computing",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 9,
+        "subject_code": "OE204",
+        "subject_name": "Cyber Security",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      }
+    ],
+    "total_marks": 0,
+    "average_marks": 0.0,
+    "college_rank_cgpa": 1,
+    "class_rank_cgpa": 1,
+    "college_rank_attendance": 1,
+    "class_rank_attendance": 1
+  },
+  {
+    "student_id": 47,
+    "roll_no": 10624,
+    "enrollment_id": "MU0341120240233034",
+    "name": "Nunes Nevan Jude",
+    "dob": "12/01/2006",
+    "class": "COMPS_A",
+    "class_id": 1,
+    "cgpa": 0.0,
+    "attendance": 0.0,
+    "subjects": [
+      {
+        "subject_id": 1,
+        "subject_code": "CS101",
+        "subject_name": "Data Structures",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 2,
+        "subject_code": "CS102",
+        "subject_name": "Database Management Systems",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 3,
+        "subject_code": "CS103",
+        "subject_name": "Operating Systems",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 4,
+        "subject_code": "CS104",
+        "subject_name": "Computer Networks",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 5,
+        "subject_code": "MA101",
+        "subject_name": "Linear Algebra",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 6,
+        "subject_code": "OE201",
+        "subject_name": "Machine Learning",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 7,
+        "subject_code": "OE202",
+        "subject_name": "Blockchain Technology",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 8,
+        "subject_code": "OE203",
+        "subject_name": "Cloud Computing",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 9,
+        "subject_code": "OE204",
+        "subject_name": "Cyber Security",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      }
+    ],
+    "total_marks": 0,
+    "average_marks": 0.0,
+    "college_rank_cgpa": 1,
+    "class_rank_cgpa": 1,
+    "college_rank_attendance": 1,
+    "class_rank_attendance": 1
+  },
+  {
+    "student_id": 48,
+    "roll_no": 10625,
+    "enrollment_id": "MU0341120240232996",
+    "name": "Pandit Smith William",
+    "dob": "19/10/2006",
+    "class": "COMPS_A",
+    "class_id": 1,
+    "cgpa": 0.0,
+    "attendance": 0.0,
+    "subjects": [
+      {
+        "subject_id": 1,
+        "subject_code": "CS101",
+        "subject_name": "Data Structures",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 2,
+        "subject_code": "CS102",
+        "subject_name": "Database Management Systems",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 3,
+        "subject_code": "CS103",
+        "subject_name": "Operating Systems",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 4,
+        "subject_code": "CS104",
+        "subject_name": "Computer Networks",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 5,
+        "subject_code": "MA101",
+        "subject_name": "Linear Algebra",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 6,
+        "subject_code": "OE201",
+        "subject_name": "Machine Learning",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 7,
+        "subject_code": "OE202",
+        "subject_name": "Blockchain Technology",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 8,
+        "subject_code": "OE203",
+        "subject_name": "Cloud Computing",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 9,
+        "subject_code": "OE204",
+        "subject_name": "Cyber Security",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      }
+    ],
+    "total_marks": 0,
+    "average_marks": 0.0,
+    "college_rank_cgpa": 1,
+    "class_rank_cgpa": 1,
+    "college_rank_attendance": 1,
+    "class_rank_attendance": 1
+  },
+  {
+    "student_id": 49,
+    "roll_no": 10626,
+    "enrollment_id": "MU0341120240233057",
+    "name": "Patil Adhija Vijay",
+    "dob": "09/04/2006",
+    "class": "COMPS_A",
+    "class_id": 1,
+    "cgpa": 0.0,
+    "attendance": 0.0,
+    "subjects": [
+      {
+        "subject_id": 1,
+        "subject_code": "CS101",
+        "subject_name": "Data Structures",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 2,
+        "subject_code": "CS102",
+        "subject_name": "Database Management Systems",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 3,
+        "subject_code": "CS103",
+        "subject_name": "Operating Systems",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 4,
+        "subject_code": "CS104",
+        "subject_name": "Computer Networks",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 5,
+        "subject_code": "MA101",
+        "subject_name": "Linear Algebra",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 6,
+        "subject_code": "OE201",
+        "subject_name": "Machine Learning",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 7,
+        "subject_code": "OE202",
+        "subject_name": "Blockchain Technology",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 8,
+        "subject_code": "OE203",
+        "subject_name": "Cloud Computing",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 9,
+        "subject_code": "OE204",
+        "subject_name": "Cyber Security",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      }
+    ],
+    "total_marks": 0,
+    "average_marks": 0.0,
+    "college_rank_cgpa": 1,
+    "class_rank_cgpa": 1,
+    "college_rank_attendance": 1,
+    "class_rank_attendance": 1
+  },
+  {
+    "student_id": 50,
+    "roll_no": 10627,
+    "enrollment_id": "MU0341120240233011",
+    "name": "Pereira Alister Russel",
+    "dob": "21/02/2007",
+    "class": "COMPS_A",
+    "class_id": 1,
+    "cgpa": 0.0,
+    "attendance": 0.0,
+    "subjects": [
+      {
+        "subject_id": 1,
+        "subject_code": "CS101",
+        "subject_name": "Data Structures",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 2,
+        "subject_code": "CS102",
+        "subject_name": "Database Management Systems",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 3,
+        "subject_code": "CS103",
+        "subject_name": "Operating Systems",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 4,
+        "subject_code": "CS104",
+        "subject_name": "Computer Networks",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 5,
+        "subject_code": "MA101",
+        "subject_name": "Linear Algebra",
+        "is_open_elective": false,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 6,
+        "subject_code": "OE201",
+        "subject_name": "Machine Learning",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 7,
+        "subject_code": "OE202",
+        "subject_name": "Blockchain Technology",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 8,
+        "subject_code": "OE203",
+        "subject_name": "Cloud Computing",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      },
+      {
+        "subject_id": 9,
+        "subject_code": "OE204",
+        "subject_name": "Cyber Security",
+        "is_open_elective": true,
+        "marks": {
+          "msv": null,
+          "asc": null,
+          "isc": null,
+          "ise": null,
+          "total": 0
+        }
+      }
+    ],
+    "total_marks": 0,
+    "average_marks": 0.0,
+    "college_rank_cgpa": 1,
+    "class_rank_cgpa": 1,
+    "college_rank_attendance": 1,
+    "class_rank_attendance": 1
+  }
+]

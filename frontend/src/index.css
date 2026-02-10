@@ -1,0 +1,40 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-background text-body antialiased;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    @apply text-ink font-semibold;
+  }
+  
+  /* Reduced motion support */
+  @media (prefers-reduced-motion: reduce) {
+    * {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+@layer components {
+  .bubble {
+    @apply bg-bubble rounded-bubble shadow-bubble;
+  }
+  
+  .bubble-secondary {
+    @apply bg-bubbleSecondary rounded-bubble shadow-bubble;
+  }
+  
+  .bubble-hover {
+    @apply transition-all duration-300 hover:shadow-bubble-hover;
+  }
+  
+  .bubble-active {
+    @apply active:shadow-bubble-active active:scale-95;
+  }
+}
