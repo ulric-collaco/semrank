@@ -8,7 +8,8 @@ export default function GamePage() {
   const [round, setRound] = useState(0)
   const [student1, setStudent1] = useState(null)
   const [student2, setStudent2] = useState(null)
-  const [metric, setMetric] = useState('cgpa')
+  const [metric, setMetric] = useState('cgpa') // cgpa, attendance, or subject
+  const [currentSubject, setCurrentSubject] = useState(null) // For subject mode
   const [difficulty, setDifficulty] = useState('easy')
   const [isLoading, setIsLoading] = useState(true)
   
@@ -20,12 +21,28 @@ export default function GamePage() {
     }
   }, [])
 
+  // Reset game when metric changes
+  useEffect(() => {
+    if (gameState !== 'ready') {
+      resetGame()
+    }
+  }, [metric])
+
   const startNewRound = async () => {
     setIsLoading(true)
     try {
-      const pair = await gameAPI.getRandomPair()
-      setStudent1(pair[0])
-      setStudent2(pair[1])
+      if (metric === 'subject') {
+        // For subject mode, get students with subject data
+        const data = await gameAPI.getRandomPairWithSubject()
+        setStudent1(data.students[0])
+        setStudent2(data.students[1])
+        setCurrentSubject(data.subject)
+      } else {
+        // For CGPA/Attendance modes
+        const pair = await gameAPI.getRandomPair()
+        setStudent1(pair[0])
+        setStudent2(pair[1])
+      }
       setGameState('playing')
     } catch (error) {
       console.error('Error fetching random pair:', error)
@@ -37,8 +54,16 @@ export default function GamePage() {
   const handleGuess = (guess) => {
     if (gameState !== 'playing') return
 
-    const s1Value = metric === 'cgpa' ? student1.cgpa : student1.attendance
-    const s2Value = metric === 'cgpa' ? student2.cgpa : student2.attendance
+    let s1Value, s2Value
+    
+    if (metric === 'subject') {
+      // For subject mode, compare total marks in the subject
+      s1Value = student1.totalMarks || 0
+      s2Value = student2.totalMarks || 0
+    } else {
+      s1Value = metric === 'cgpa' ? student1.cgpa : student1.attendance
+      s2Value = metric === 'cgpa' ? student2.cgpa : student2.attendance  
+    }
 
     const isCorrect =
       (guess === 'higher' && s2Value > s1Value) ||
@@ -101,7 +126,11 @@ export default function GamePage() {
         <div className="text-center mb-8">
           <h1 className="text-5xl font-bold text-ink mb-4">🎮 Higher or Lower</h1>
           <p className="text-body text-lg mb-4">
-            Guess if the next student has higher or lower {metric}
+            Guess if the next student has higher or lower {
+              metric === 'cgpa' ? 'CGPA' : 
+              metric === 'attendance' ? 'attendance' :
+              currentSubject ? `marks in ${currentSubject.name}` : 'subject marks'
+            }
           </p>
 
           {/* Score */}
@@ -143,6 +172,19 @@ export default function GamePage() {
           >
             Attendance
           </button>
+          <button
+            onClick={() => setMetric('subject')}
+            disabled={gameState === 'playing'}
+            className={`px-6 py-3 rounded-bubble font-medium transition-all duration-300
+              ${
+                metric === 'subject'
+                  ? 'bg-accent text-ink shadow-bubble-hover'
+                  : 'bubble hover:scale-105'
+              }
+              ${gameState === 'playing' ? 'opacity-50 cursor-not-allowed' : ''}`}
+          >
+            Subject
+          </button>
         </div>
 
         {/* Game Board */}
@@ -157,10 +199,20 @@ export default function GamePage() {
               <p className="text-body">Class: {student1.class}</p>
               <div className="pt-4 border-t border-ink/10">
                 <p className="text-4xl font-bold text-ink">
-                  {metric === 'cgpa' ? student1.cgpa : `${student1.attendance}%`}
+                  {metric === 'cgpa' 
+                    ? student1.cgpa 
+                    : metric === 'attendance'
+                    ? `${student1.attendance}%`
+                    : student1.totalMarks || 0
+                  }
                 </p>
                 <p className="text-body text-sm">
-                  {metric === 'cgpa' ? 'CGPA' : 'Attendance'}
+                  {metric === 'cgpa' 
+                    ? 'CGPA' 
+                    : metric === 'attendance'
+                    ? 'Attendance'
+                    : currentSubject ? `${currentSubject.name} Marks` : 'Subject Marks'
+                  }
                 </p>
               </div>
             </div>
@@ -180,11 +232,21 @@ export default function GamePage() {
                     <p className="text-4xl font-bold text-ink">?</p>
                   ) : (
                     <p className="text-4xl font-bold text-ink">
-                      {metric === 'cgpa' ? student2.cgpa : `${student2.attendance}%`}
+                      {metric === 'cgpa' 
+                        ? student2.cgpa 
+                        : metric === 'attendance'
+                        ? `${student2.attendance}%`
+                        : student2.totalMarks || 0
+                      }
                     </p>
                   )}
                   <p className="text-body text-sm">
-                    {metric === 'cgpa' ? 'CGPA' : 'Attendance'}
+                    {metric === 'cgpa' 
+                      ? 'CGPA' 
+                      : metric === 'attendance'
+                      ? 'Attendance'
+                      : currentSubject ? `${currentSubject.name} Marks` : 'Subject Marks'
+                    }
                   </p>
                 </div>
               </div>

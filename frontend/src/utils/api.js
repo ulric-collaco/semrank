@@ -100,6 +100,12 @@ export const gameAPI = {
     const response = await api.get('/game/random-pair')
     return response.data
   },
+
+  // Get two random students with subject data for subject mode
+  getRandomPairWithSubject: async () => {
+    const response = await api.get('/game/random-pair-subject')
+    return response.data
+  },
 }
 
 export default api

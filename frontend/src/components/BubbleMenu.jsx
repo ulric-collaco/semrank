@@ -1,108 +1,182 @@
-import { useEffect, useRef } from 'react'
-import { gsap } from 'gsap'
+import { useState, useRef, useEffect } from 'react';
+import { gsap } from 'gsap';
+import './BubbleMenu.css';
 
-const menuItems = [
-  { id: 'home', label: 'home', icon: '🏠' },
-  { id: 'leaderboard', label: 'leaderboard', icon: '🏆' },
-  { id: 'compare', label: 'compare', icon: '⚖️' },
-  { id: 'game', label: 'game', icon: '🎮' },
-  { id: 'about', label: 'about', icon: 'ℹ️' },
-]
+export default function BubbleMenu({
+  logo,
+  onMenuClick,
+  className,
+  style,
+  menuAriaLabel = 'Toggle menu',
+  menuBg = '#fff',
+  menuContentColor = '#111',
+  useFixedPosition = true,
+  items = [],
+  animationEase = 'back.out(1.5)',
+  animationDuration = 0.5,
+  staggerDelay = 0.12
+}) {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [showOverlay, setShowOverlay] = useState(false);
 
-export default function BubbleMenu({ isOpen, onNavigate, currentPage }) {
-  const overlayRef = useRef(null)
-  const bubblesRef = useRef([])
+  const overlayRef = useRef(null);
+  const bubblesRef = useRef([]);
+  const labelRefs = useRef([]);
+
+  const containerClassName = ['bubble-menu', useFixedPosition ? 'fixed' : 'absolute', className]
+    .filter(Boolean)
+    .join(' ');
+
+  const handleToggle = () => {
+    const nextState = !isMenuOpen;
+    if (nextState) setShowOverlay(true);
+    setIsMenuOpen(nextState);
+    onMenuClick?.(nextState);
+  };
 
   useEffect(() => {
-    if (isOpen) {
-      // Animate overlay in
-      gsap.to(overlayRef.current, {
-        opacity: 1,
-        pointerEvents: 'auto',
-        duration: 0.3,
-        ease: 'power2.out',
-      })
+    const overlay = overlayRef.current;
+    const bubbles = bubblesRef.current.filter(Boolean);
+    const labels = labelRefs.current.filter(Boolean);
 
-      // Staggered bubble animation with back.out easing
-      gsap.fromTo(
-        bubblesRef.current,
-        {
-          scale: 0,
-          opacity: 0,
-        },
-        {
+    if (!overlay || !bubbles.length) return;
+
+    if (isMenuOpen) {
+      gsap.set(overlay, { display: 'flex' });
+      gsap.killTweensOf([...bubbles, ...labels]);
+      gsap.set(bubbles, { scale: 0, transformOrigin: '50% 50%' });
+      gsap.set(labels, { y: 24, autoAlpha: 0 });
+
+      bubbles.forEach((bubble, i) => {
+        const delay = i * staggerDelay + gsap.utils.random(-0.05, 0.05);
+        const tl = gsap.timeline({ delay });
+
+        tl.to(bubble, {
           scale: 1,
-          opacity: 1,
-          duration: 0.5,
-          stagger: 0.08,
-          ease: 'back.out(1.5)',
+          duration: animationDuration,
+          ease: animationEase
+        });
+        if (labels[i]) {
+          tl.to(
+            labels[i],
+            {
+              y: 0,
+              autoAlpha: 1,
+              duration: animationDuration,
+              ease: 'power3.out'
+            },
+            `-=${animationDuration * 0.9}`
+          );
         }
-      )
-    } else {
-      // Animate out
-      gsap.to(overlayRef.current, {
-        opacity: 0,
-        pointerEvents: 'none',
-        duration: 0.3,
-        ease: 'power2.in',
-      })
-
-      gsap.to(bubblesRef.current, {
-        scale: 0,
-        opacity: 0,
+      });
+    } else if (showOverlay) {
+      gsap.killTweensOf([...bubbles, ...labels]);
+      gsap.to(labels, {
+        y: 24,
+        autoAlpha: 0,
         duration: 0.2,
-        stagger: 0.03,
-        ease: 'power2.in',
-      })
+        ease: 'power3.in'
+      });
+      gsap.to(bubbles, {
+        scale: 0,
+        duration: 0.2,
+        ease: 'power3.in',
+        onComplete: () => {
+          gsap.set(overlay, { display: 'none' });
+          setShowOverlay(false);
+        }
+      });
     }
-  }, [isOpen])
+  }, [isMenuOpen, showOverlay, animationEase, animationDuration, staggerDelay]);
 
-  const handleBubbleClick = (page) => {
-    // Quick feedback animation
-    const bubble = bubblesRef.current[menuItems.findIndex((item) => item.id === page)]
-    gsap.to(bubble, {
-      scale: 0.9,
-      duration: 0.1,
-      yoyo: true,
-      repeat: 1,
-      ease: 'power2.inOut',
-      onComplete: () => {
-        onNavigate(page)
-      },
-    })
-  }
+  useEffect(() => {
+    const handleResize = () => {
+      if (isMenuOpen) {
+        const bubbles = bubblesRef.current.filter(Boolean);
+        const isDesktop = window.innerWidth >= 900;
+
+        bubbles.forEach((bubble, i) => {
+          const item = items[i];
+          if (bubble && item) {
+            const rotation = isDesktop ? (item.rotation ?? 0) : 0;
+            gsap.set(bubble, { rotation });
+          }
+        });
+      }
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, [isMenuOpen, items]);
 
   return (
-    <div
-      ref={overlayRef}
-      className="fixed inset-0 bg-ink/20 backdrop-blur-md z-40 opacity-0 pointer-events-none flex items-center justify-center"
-      onClick={() => onNavigate(currentPage)} // Close on overlay click
-    >
-      <div
-        className="flex flex-col gap-6 items-center"
-        onClick={(e) => e.stopPropagation()} // Prevent closing when clicking bubbles
-      >
-        {menuItems.map((item, index) => (
-          <button
-            key={item.id}
-            ref={(el) => (bubblesRef.current[index] = el)}
-            onClick={() => handleBubbleClick(item.id)}
-            className={`
-              w-48 h-48 rounded-full shadow-bubble-hover
-              flex flex-col items-center justify-center gap-3
-              transition-all duration-300
-              hover:scale-110 active:scale-95
-              ${currentPage === item.id ? 'bg-accent' : 'bg-bubble'}
-            `}
-            aria-label={item.label}
-          >
-            <span className="text-5xl" role="img" aria-label={item.label}>
-              {item.icon}
-            </span>
-            <span className="text-ink font-medium text-xl lowercase">{item.label}</span>
-          </button>
-        ))}
-      </div>
-    </div>
-  )
+    <>
+      <nav className={containerClassName} style={style} aria-label="Main navigation">
+        <div className="bubble logo-bubble" aria-label="Logo" style={{ background: menuBg }}>
+          <span className="logo-content">
+            {typeof logo === 'string' ? <img src={logo} alt="Logo" className="bubble-logo" /> : logo}
+          </span>
+        </div>
+
+        <button
+          type="button"
+          className={`bubble toggle-bubble menu-btn ${isMenuOpen ? 'open' : ''}`}
+          onClick={handleToggle}
+          aria-label={menuAriaLabel}
+          aria-pressed={isMenuOpen}
+          style={{ background: menuBg }}
+        >
+          <span className="menu-line" style={{ background: menuContentColor }} />
+          <span className="menu-line short" style={{ background: menuContentColor }} />
+        </button>
+      </nav>
+      {showOverlay && (
+        <div
+          ref={overlayRef}
+          className={`bubble-menu-items ${useFixedPosition ? 'fixed' : 'absolute'}`}
+          aria-hidden={!isMenuOpen}
+        >
+          <ul className="pill-list" role="menu" aria-label="Menu links">
+            {items.map((item, idx) => (
+              <li key={idx} role="none" className="pill-col">
+                <a
+                  role="menuitem"
+                  href={item.href}
+                  aria-label={item.ariaLabel || item.label}
+                  className="pill-link"
+                  style={{
+                    '--item-rot': `${item.rotation ?? 0}deg`,
+                    '--pill-bg': menuBg,
+                    '--pill-color': menuContentColor,
+                    '--hover-bg': item.hoverStyles?.bgColor || '#f3f4f6',
+                    '--hover-color': item.hoverStyles?.textColor || menuContentColor
+                  }}
+                  ref={el => {
+                    if (el) bubblesRef.current[idx] = el;
+                  }}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setIsMenuOpen(false);
+                    // Allow navigation after animation
+                    setTimeout(() => {
+                      window.location.hash = item.href;
+                    }, 200);
+                  }}
+                >
+                  <span
+                    className="pill-label"
+                    ref={el => {
+                      if (el) labelRefs.current[idx] = el;
+                    }}
+                  >
+                    {item.label}
+                  </span>
+                </a>
+              </li>
+           ))}
+          </ul>
+        </div>
+      )}
+    </>
+  );
 }

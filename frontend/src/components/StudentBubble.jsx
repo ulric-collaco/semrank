@@ -31,11 +31,18 @@ export default function StudentBubble({ student, rank }) {
     })
   }
 
+  const handleClick = () => {
+    // Navigate to student detail page using roll number or enrollment ID
+    const identifier = student.roll_no || student.enrollment_id
+    window.location.hash = `#student?id=${identifier}`
+  }
+
   return (
     <div
       ref={bubbleRef}
       onMouseEnter={handleHover}
       onMouseLeave={handleHoverExit}
+      onClick={handleClick}
       className="bubble p-6 rounded-bubble-lg shadow-bubble cursor-pointer relative"
     >
       {/* Rank Badge */}

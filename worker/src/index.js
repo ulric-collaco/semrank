@@ -52,153 +52,42 @@ function errorResponse(message, status = 500) {
   return jsonResponse({ error: message }, status);
 }
 
-// Calculate grade pointer (0-10) from marks
-function calculatePointer(marks, maxMarks) {
-  const ten = maxMarks * 0.85;
-  const nine = maxMarks * 0.8;
-  const eight = maxMarks * 0.7;
-  const seven = maxMarks * 0.6;
-  const six = maxMarks * 0.5;
-  const five = maxMarks * 0.45;
-  const four = maxMarks * 0.4;
-
-  if (marks >= ten) return 10;
-  if (marks >= nine) return 9;
-  if (marks >= eight) return 8;
-  if (marks >= seven) return 7;
-  if (marks >= six) return 6;
-  if (marks >= five) return 5;
-  if (marks >= four) return 4;
-  return 0;
-}
-
-// Batch calculate CGPA for multiple students - SINGLE QUERY
-// Formula: SGPA = (Σ(Credits × Grade Point)) / Σ(Credits)
-async function getStudentCGPAs(db, classFilter = 'all') {
-  // Step 1: Get all marks with student info in ONE query
+// Get students with pre-computed CGPA and attendance from STUDENT_LEADERBOARD
+async function getStudentLeaderboardData(db, classFilter = 'all') {
   let query = `
     SELECT 
       s.student_id,
       s.roll_no,
       s.enrollment_id,
-      s.prn,
       s.name,
       s.dob,
       s.class,
       s.class_id,
-      m.subject,
-      SUM(m.marks) as total_marks
+      sl.cgpa,
+      sl.overall_attendance as attendance,
+      sl.rank_cgpa_college,
+      sl.rank_cgpa_class,
+      sl.rank_attendance_college,
+      sl.rank_attendance_class
     FROM STUDENT s
-    LEFT JOIN marks m ON s.prn = m.prn
+    JOIN STUDENT_LEADERBOARD sl ON s.student_id = sl.student_id
   `;
   
   if (classFilter !== 'all') {
     query += ` WHERE s.class = ?`;
   }
   
-  query += ` GROUP BY s.student_id, s.roll_no, s.enrollment_id, s.prn, s.name, s.dob, s.class, s.class_id, m.subject`;
-  
   const results = classFilter === 'all' 
     ? await db.prepare(query).all()
     : await db.prepare(query).bind(classFilter).all();
   
-  // Step 2: Process in-memory - group by student
-  const studentMap = {};
-  results.results.forEach(row => {
-    if (!studentMap[row.student_id]) {
-      studentMap[row.student_id] = {
-        student_id: row.student_id,
-        roll_no: row.roll_no,
-        enrollment_id: row.enrollment_id,
-        prn: row.prn,
-        name: row.name,
-        dob: row.dob,
-        class: row.class,
-        class_id: row.class_id,
-        subjects: []
-      };
-    }
-    if (row.subject && row.total_marks !== null) {
-      studentMap[row.student_id].subjects.push({
-        subject: row.subject,
-        total_marks: row.total_marks
-      });
-    }
-  });
-  
-  // Step 3: Calculate CGPA for each student
-  const DEFAULT_CREDITS = 3;
-  const DEFAULT_MAX_MARKS = 150;
-  
-  const students = Object.values(studentMap).map(student => {
-    let totalCreditPoints = 0;
-    let totalCredits = 0;
-    
-    student.subjects.forEach(sub => {
-      const pointer = calculatePointer(sub.total_marks, DEFAULT_MAX_MARKS);
-      totalCreditPoints += pointer * DEFAULT_CREDITS;
-      totalCredits += DEFAULT_CREDITS;
-    });
-    
-    const cgpa = totalCredits > 0 ? totalCreditPoints / totalCredits : 0;
-    
-    return {
-      student_id: student.student_id,
-      roll_no: student.roll_no,
-      enrollment_id: student.enrollment_id,
-      prn: student.prn,
-      name: student.name,
-      dob: student.dob,
-      class: student.class,
-      class_id: student.class_id,
-      cgpa: parseFloat(cgpa.toFixed(2))
-    };
-  });
-  
-  return students;
-}
-
-// Batch get attendance for all students - SINGLE QUERY
-async function getAttendanceData(db) {
-  const query = `
-    SELECT 
-      ss.student_id,
-      AVG(a.attendance_percentage) as avg_attendance
-    FROM STUDENT_SUBJECT ss
-    LEFT JOIN ATTENDANCE a ON ss.ss_id = a.ss_id
-    GROUP BY ss.student_id
-  `;
-  
-  const results = await db.prepare(query).all();
-  
-  const attendanceMap = {};
-  results.results.forEach(row => {
-    attendanceMap[row.student_id] = parseFloat((row.avg_attendance || 0).toFixed(1));
-  });
-  
-  return attendanceMap;
-}
-
-// Rank students with tiebreaker
-function rankStudents(students, sortKey = 'cgpa') {
-  students.sort((a, b) => {
-    if (b[sortKey] !== a[sortKey]) {
-      return b[sortKey] - a[sortKey];
-    }
-    return a.roll_no - b.roll_no; // Tiebreaker: lower roll_no wins
-  });
-  
-  students.forEach((student, index) => {
-    student.rank = index + 1;
-  });
-  
-  return students;
+  return results.results || [];
 }
 
 // Get student with all details including subjects and marks (for single student lookup)
 async function getStudentDetails(db, studentId) {
-  // Get student basic info with marks in one query
-  const query = `
+  // Get student basic info with CGPA and attendance from leaderboard
+  const studentQuery = `
     SELECT 
       s.student_id,
       s.roll_no,
@@ -207,87 +96,64 @@ async function getStudentDetails(db, studentId) {
       s.dob,
       s.class,
       s.class_id,
-      s.prn,
-      m.subject,
-      m.exam_type,
-      m.marks
+      sl.cgpa,
+      sl.overall_attendance as attendance,
+      sl.total_marks,
+      sl.rank_cgpa_college,
+      sl.rank_cgpa_class,
+      sl.rank_attendance_college,
+      sl.rank_attendance_class
     FROM STUDENT s
-    LEFT JOIN marks m ON s.prn = m.prn
+    JOIN STUDENT_LEADERBOARD sl ON s.student_id = sl.student_id
     WHERE s.student_id = ?
   `;
   
-  const results = await db.prepare(query).bind(studentId).all();
+  const student = await db.prepare(studentQuery).bind(studentId).first();
   
-  if (!results.results || results.results.length === 0) return null;
+  if (!student) return null;
   
-  const firstRow = results.results[0];
-  const student = {
-    student_id: firstRow.student_id,
-    roll_no: firstRow.roll_no,
-    enrollment_id: firstRow.enrollment_id,
-    name: firstRow.name,
-    dob: firstRow.dob,
-    class: firstRow.class,
-    class_id: firstRow.class_id
-  };
+  // Get subject details with marks and ranks
+  const subjectsQuery = `
+    SELECT 
+      sub.subject_id,
+      sub.subject_code,
+      sub.subject_name,
+      sub.is_open_elective,
+      m.mse,
+      m.th_ise1,
+      m.th_ise2,
+      m.ese,
+      m.pr_ise1,
+      m.pr_ise2,
+      ss.total_marks,
+      ssl.rank_subject_class as rank
+    FROM STUDENT_SUBJECT ss
+    JOIN SUBJECT sub ON ss.subject_id = sub.subject_id
+    LEFT JOIN MARKS_backup m ON ss.ss_id = m.ss_id
+    LEFT JOIN STUDENT_SUBJECT_LEADERBOARD ssl ON ss.student_id = ssl.student_id 
+      AND ss.subject_id = ssl.subject_id
+    WHERE ss.student_id = ?
+  `;
   
-  // Get attendance
-  const attendanceData = await db
-    .prepare(`
-      SELECT AVG(a.attendance_percentage) as avg_attendance
-      FROM ATTENDANCE a
-      JOIN STUDENT_SUBJECT ss ON a.ss_id = ss.ss_id
-      WHERE ss.student_id = ?
-    `)
-    .bind(studentId)
-    .first();
+  const subjectsResult = await db.prepare(subjectsQuery).bind(studentId).all();
   
-  // Group marks by subject and exam_type
-  const subjectMap = {};
-  results.results.forEach(row => {
-    if (row.subject && row.exam_type && row.marks !== null) {
-      if (!subjectMap[row.subject]) {
-        subjectMap[row.subject] = {
-          subject_name: row.subject,
-          marks: {},
-          total: 0
-        };
-      }
-      subjectMap[row.subject].marks[row.exam_type.toLowerCase()] = row.marks;
-      subjectMap[row.subject].total += row.marks;
-    }
-  });
-  
-  const subjects = Object.values(subjectMap).map((sub, idx) => ({
-    subject_id: idx + 1,
-    subject_code: `SUB${idx + 1}`,
+  const subjects = subjectsResult.results.map(sub => ({
+    subject_id: sub.subject_id,
+    subject_code: sub.subject_code,
     subject_name: sub.subject_name,
-    is_open_elective: false,
-    marks: {
-      ...sub.marks,
-      total: sub.total
-    }
+    is_open_elective: Boolean(sub.is_open_elective),
+    mse: sub.mse,
+    th_ise1: sub.th_ise1,
+    th_ise2: sub.th_ise2,
+    ese: sub.ese,
+    pr_ise1: sub.pr_ise1,
+    pr_ise2: sub.pr_ise2,
+    total_marks: sub.total_marks,
+    rank: sub.rank
   }));
-  
-  // Calculate CGPA
-  const DEFAULT_CREDITS = 3;
-  const DEFAULT_MAX_MARKS = 150;
-  let totalCreditPoints = 0;
-  let totalCredits = 0;
-  
-  Object.values(subjectMap).forEach(sub => {
-    const pointer = calculatePointer(sub.total, DEFAULT_MAX_MARKS);
-    totalCreditPoints += pointer * DEFAULT_CREDITS;
-    totalCredits += DEFAULT_CREDITS;
-  });
-  
-  const cgpa = totalCredits > 0 ? totalCreditPoints / totalCredits : 0;
-  const attendance = attendanceData?.avg_attendance || 0;
   
   return {
     ...student,
-    cgpa: parseFloat(cgpa.toFixed(2)),
-    attendance: parseFloat(attendance.toFixed(1)),
     subjects
   };
 }
@@ -309,14 +175,8 @@ async function handleRequest(request, env) {
   try {
     // GET /api/students - Get all students with rankings
     if (path === '/api/students' && method === 'GET') {
-      //Batch fetch all students with CGPA
-      const students = await getStudentCGPAs(db, 'all');
-      const attendanceMap = await getAttendanceData(db);
-      
-      // Merge attendance data
-      students.forEach(student => {
-        student.attendance = attendanceMap[student.student_id] || 0;
-      });
+      //Batch fetch all students with CGPA and attendance from leaderboard
+      const students = await getStudentLeaderboardData(db, 'all');
       
       // Sort by roll_no
       students.sort((a, b) => a.roll_no - b.roll_no);
@@ -362,14 +222,8 @@ async function handleRequest(request, env) {
     if (path === '/api/students/search' && method === 'GET') {
       const query = url.searchParams.get('q') || '';
       
-      // Get all students first (batch mode)
-      const allStudents = await getStudentCGPAs(db, 'all');
-      const attendanceMap = await getAttendanceData(db);
-      
-      // Merge attendance
-      allStudents.forEach(student => {
-        student.attendance = attendanceMap[student.student_id] || 0;
-      });
+      // Get all students from leaderboard
+      const allStudents = await getStudentLeaderboardData(db, 'all');
       
       // Filter in memory
       const filtered = allStudents.filter(student => 
@@ -385,20 +239,20 @@ async function handleRequest(request, env) {
       const limit = parseInt(url.searchParams.get('limit') || '10');
       const classFilter = url.searchParams.get('class') || 'all';
       
-      // Batch fetch all students with CGPA in 1-2 queries
-      const students = await getStudentCGPAs(db, classFilter);
-      const attendanceMap = await getAttendanceData(db);
+      // Get students from pre-computed leaderboard
+      const students = await getStudentLeaderboardData(db, classFilter);
       
-      // Merge attendance data
-      students.forEach(student => {
-        student.attendance = attendanceMap[student.student_id] || 0;
-      });
+      // Sort by appropriate rank (college or class)
+      const rankKey = classFilter === 'all' ? 'rank_cgpa_college' : 'rank_cgpa_class';
+      students.sort((a, b) => a[rankKey] - b[rankKey]);
       
-      // Sort and rank
-      const ranked = rankStudents(students, 'cgpa');
+      // Add rank field and limit results
+      const topStudents = students.slice(0, limit).map(s => ({
+        ...s,
+        rank: s[rankKey]
+      }));
       
-      // Return top N
-      return jsonResponse(ranked.slice(0, limit));
+      return jsonResponse(topStudents);
     }
     
     // GET /api/leaderboard/attendance - Top students by attendance
@@ -406,75 +260,71 @@ async function handleRequest(request, env) {
       const limit = parseInt(url.searchParams.get('limit') || '10');
       const classFilter = url.searchParams.get('class') || 'all';
       
-      // Batch fetch all students with CGPA in 1-2 queries
-      const students = await getStudentCGPAs(db, classFilter);
-      const attendanceMap = await getAttendanceData(db);
+      // Get students from pre-computed leaderboard
+      const students = await getStudentLeaderboardData(db, classFilter);
       
-      // Merge attendance data
-      students.forEach(student => {
-        student.attendance = attendanceMap[student.student_id] || 0;
-      });
+      // Sort by appropriate rank (college or class)
+      const rankKey = classFilter === 'all' ? 'rank_attendance_college' : 'rank_attendance_class';
+      students.sort((a, b) => a[rankKey] - b[rankKey]);
       
-      // Sort and rank by attendance
-      const ranked = rankStudents(students, 'attendance');
+      // Add rank field and limit results
+      const topStudents = students.slice(0, limit).map(s => ({
+        ...s,
+        rank: s[rankKey]
+      }));
       
-      // Return top N
-      return jsonResponse(ranked.slice(0, limit));
+      return jsonResponse(topStudents);
     }
     
     // GET /api/leaderboard/classes - Class rankings
     if (path === '/api/leaderboard/classes' && method === 'GET') {
-      // Get all students with CGPA in one batch
-      const allStudents = await getStudentCGPAs(db, 'all');
-      const attendanceMap = await getAttendanceData(db);
+      // Query pre-computed class leaderboard
+      const query = `
+        SELECT 
+          c.class_name,
+          cl.avg_cgpa,
+          cl.avg_attendance,
+          cl.total_students,
+          cl.rank_avg_cgpa,
+          cl.rank_avg_attendance
+        FROM CLASS_LEADERBOARD cl
+        JOIN CLASS c ON cl.class_id = c.class_id
+        ORDER BY cl.rank_avg_cgpa
+      `;
       
-      // Merge attendance
-      allStudents.forEach(student => {
-        student.attendance = attendanceMap[student.student_id] || 0;
-      });
+      const results = await db.prepare(query).all();
       
-      // Group by class
-      const classesList = ['COMPS_A', 'COMPS_B', 'COMPS_C', 'MECH'];
-      
-      const classStats = classesList.map(className => {
-        const classStudents = allStudents.filter(s => s.class === className);
-        
-        if (classStudents.length === 0) {
+      // For each class, get top student info
+      const classStats = await Promise.all(
+        results.results.map(async (classData) => {
+          // Get top student for this class
+          const topStudent = await db
+            .prepare(`
+              SELECT s.roll_no, s.name, sl.cgpa
+              FROM STUDENT s
+              JOIN STUDENT_LEADERBOARD sl ON s.student_id = sl.student_id
+              WHERE s.class = ?
+              ORDER BY sl.rank_cgpa_class
+              LIMIT 1
+            `)
+            .bind(classData.class_name)
+            .first();
+          
           return {
-            class_name: className,
-            student_count: 0,
-            avg_cgpa: 0,
-            max_cgpa: 0,
-            min_cgpa: 0,
-            avg_attendance: 0,
-            max_attendance: 0,
-            min_attendance: 0
+            class_name: classData.class_name,
+            student_count: classData.total_students,
+            avg_cgpa: parseFloat(classData.avg_cgpa.toFixed(2)),
+            avg_attendance: parseFloat(classData.avg_attendance.toFixed(1)),
+            rank_cgpa: classData.rank_avg_cgpa,
+            rank_attendance: classData.rank_avg_attendance,
+            top_student: topStudent ? {
+              roll_no: topStudent.roll_no,
+              name: topStudent.name,
+              cgpa: topStudent.cgpa
+            } : null
           };
-        }
-        
-        const cgpas = classStudents.map(s => s.cgpa || 0);
-        const attendances = classStudents.map(s => s.attendance || 0);
-        
-        // Find top student
-        const ranked = rankStudents([...classStudents], 'cgpa');
-        const topStudent = ranked[0];
-        
-        return {
-          class_name: className,
-          student_count: classStudents.length,
-          avg_cgpa: parseFloat((cgpas.reduce((a, b) => a + b, 0) / cgpas.length).toFixed(2)),
-          max_cgpa: Math.max(...cgpas),
-          min_cgpa: Math.min(...cgpas),
-          avg_attendance: parseFloat((attendances.reduce((a, b) => a + b, 0) / attendances.length).toFixed(1)),
-          max_attendance: Math.max(...attendances),
-          min_attendance: Math.min(...attendances),
-          top_student: topStudent ? {
-            roll_no: topStudent.roll_no,
-            name: topStudent.name,
-            cgpa: topStudent.cgpa
-          } : null
-        };
-      });
+        })
+      );
       
       return jsonResponse(classStats);
     }
@@ -485,44 +335,86 @@ async function handleRequest(request, env) {
       const day = String(today.getDate()).padStart(2, '0');
       const month = String(today.getMonth() + 1).padStart(2, '0');
       
-      // Get all students with CGPA
-      const allStudents = await getStudentCGPAs(db, 'all');
-      const attendanceMap = await getAttendanceData(db);
+      // Get all students from leaderboard
+      const allStudents = await getStudentLeaderboardData(db, 'all');
       
-      // Merge attendance and filter by birthday
-      const birthdayStudents = allStudents
-        .filter(student => {
-          if (!student.dob) return false;
-          const parts = student.dob.split('/');
-          return parts[0] === day && parts[1] === month;
-        })
-        .map(student => ({
-          ...student,
-          attendance: attendanceMap[student.student_id] || 0
-        }));
+      // Filter by birthday
+      const birthdayStudents = allStudents.filter(student => {
+        if (!student.dob) return false;
+        const parts = student.dob.split('/');
+        return parts[0] === day && parts[1] === month;
+      });
       
       return jsonResponse(birthdayStudents);
     }
     
     // GET /api/game/random-pair - Get two random students for game
     if (path === '/api/game/random-pair' && method === 'GET') {
-      // Get all students with CGPA
-      const allStudents = await getStudentCGPAs(db, 'all');
+      // Get all students from leaderboard
+      const allStudents = await getStudentLeaderboardData(db, 'all');
       
       if (allStudents.length < 2) {
         return errorResponse('Not enough students for game', 400);
       }
       
-      const attendanceMap = await getAttendanceData(db);
-      
       // Pick 2 random students in memory
       const shuffled = allStudents.sort(() => Math.random() - 0.5);
-      const pair = shuffled.slice(0, 2).map(student => ({
-        ...student,
-        attendance: attendanceMap[student.student_id] || 0
-      }));
+      const pair = shuffled.slice(0, 2);
       
       return jsonResponse(pair);
+    }
+
+    // GET /api/game/random-pair-subject - Get two random students with subject marks
+    if (path === '/api/game/random-pair-subject' && method === 'GET') {
+      // Get a random subject
+      const subjects = await db
+        .prepare('SELECT subject_id, subject_name, subject_code FROM SUBJECT')
+        .all();
+      
+      if (subjects.results.length === 0) {
+        return errorResponse('No subjects available', 404);
+      }
+      
+      const randomSubject = subjects.results[Math.floor(Math.random() * subjects.results.length)];
+      
+      // Get all students who have marks in this subject
+      const studentsWithMarks = await db
+        .prepare(`
+          SELECT 
+            s.student_id,
+            s.name,
+            s.roll_no,
+            s.enrollment_id,
+            c.class_name as class,
+            ss.total_marks as totalMarks,
+            ssl.rank_subject_class as rank
+          FROM STUDENT s
+          JOIN CLASS c ON s.class_id = c.class_id
+          JOIN STUDENT_SUBJECT ss ON s.student_id = ss.student_id
+          LEFT JOIN STUDENT_SUBJECT_LEADERBOARD ssl ON ss.student_id = ssl.student_id 
+            AND ss.subject_id = ssl.subject_id
+          WHERE ss.subject_id = ?
+          ORDER BY RANDOM()
+          LIMIT 50
+        `)
+        .bind(randomSubject.subject_id)
+        .all();
+      
+      if (studentsWithMarks.results.length < 2) {
+        return errorResponse('Not enough students for this subject', 400);
+      }
+      
+      // Pick 2 random students
+      const pair = studentsWithMarks.results.slice(0, 2);
+      
+      return jsonResponse({
+        subject: {
+          id: randomSubject.subject_id,
+          name: randomSubject.subject_name,
+          code: randomSubject.subject_code
+        },
+        students: pair
+      });
     }
     
     // GET /api/leaderboard/subject/:subject_code - Top students by subject
@@ -541,7 +433,7 @@ async function handleRequest(request, env) {
         return errorResponse('Subject not found', 404);
       }
       
-      // Get all students enrolled in this subject with their marks
+      // Get students from pre-computed subject leaderboard
       let query = `
         SELECT 
           s.student_id,
@@ -549,56 +441,56 @@ async function handleRequest(request, env) {
           s.enrollment_id,
           s.name,
           s.class,
+          ssl.subject_total,
+          ssl.rank_subject_college,
+          ssl.rank_subject_class,
           m.mse, m.th_ise1, m.th_ise2, m.ese, m.pr_ise1, m.pr_ise2
-        FROM STUDENT s
-        JOIN STUDENT_SUBJECT ss ON s.student_id = ss.student_id
-        LEFT JOIN MARKS m ON ss.ss_id = m.ss_id
-        WHERE ss.subject_id = ?
+        FROM STUDENT_SUBJECT_LEADERBOARD ssl
+        JOIN STUDENT s ON ssl.student_id = s.student_id
+        LEFT JOIN MARKS_backup m ON ssl.ss_id = m.ss_id
+        WHERE ssl.subject_id = ?
       `;
       
       if (classFilter !== 'all') {
-        query += ` AND s.class = '${classFilter}'`;
+        query += ` AND s.class = ?`;
       }
       
-      const students = await db
-        .prepare(query)
-        .bind(subject.subject_id)
-        .all();
+      const students = classFilter === 'all'
+        ? await db.prepare(query).bind(subject.subject_id).all()
+        : await db.prepare(query).bind(subject.subject_id, classFilter).all();
       
-      // Calculate total marks for each student in this subject
-      const studentsWithMarks = students.results.map(student => {
-        const total = (student.mse || 0) + (student.th_ise1 || 0) + (student.th_ise2 || 0) + 
-                     (student.ese || 0) + (student.pr_ise1 || 0) + (student.pr_ise2 || 0);
-        return {
-          student_id: student.student_id,
-          roll_no: student.roll_no,
-          enrollment_id: student.enrollment_id,
-          name: student.name,
-          class: student.class,
-          subject_code: subjectCode,
-          subject_name: subject.subject_name,
-          marks: {
-            mse: student.mse,
-            th_ise1: student.th_ise1,
-            th_ise2: student.th_ise2,
-            ese: student.ese,
-            pr_ise1: student.pr_ise1,
-            pr_ise2: student.pr_ise2,
-            total: total
-          }
-        };
-      });
-      
-      // Sort by total marks and limit
-      const sorted = studentsWithMarks
-        .sort((a, b) => b.marks.total - a.marks.total)
+      // Sort by appropriate rank
+      const rankKey = classFilter === 'all' ? 'rank_subject_college' : 'rank_subject_class';
+      const sorted = students.results
+        .sort((a, b) => a[rankKey] - b[rankKey])
         .slice(0, limit);
+      
+      // Format response
+      const formattedStudents = sorted.map(student => ({
+        student_id: student.student_id,
+        roll_no: student.roll_no,
+        enrollment_id: student.enrollment_id,
+        name: student.name,
+        class: student.class,
+        subject_code: subjectCode,
+        subject_name: subject.subject_name,
+        rank: student[rankKey],
+        marks: {
+          mse: student.mse,
+          th_ise1: student.th_ise1,
+          th_ise2: student.th_ise2,
+          ese: student.ese,
+          pr_ise1: student.pr_ise1,
+          pr_ise2: student.pr_ise2,
+          total: student.subject_total
+        }
+      }));
       
       return jsonResponse({
         subject_code: subjectCode,
         subject_name: subject.subject_name,
         class_filter: classFilter,
-        students: sorted
+        students: formattedStudents
       });
     }
     
@@ -606,74 +498,102 @@ async function handleRequest(request, env) {
     if (path === '/api/stats/subjects' && method === 'GET') {
       const classFilter = url.searchParams.get('class') || 'all';
       
-      // Get all subjects
-      const subjects = await db
-        .prepare('SELECT subject_id, subject_code, subject_name FROM SUBJECT')
-        .all();
+      // Query pre-computed subject-class leaderboard
+      let query = `
+        SELECT 
+          sub.subject_id,
+          sub.subject_code,
+          sub.subject_name,
+          scl.avg_subject_marks,
+          scl.rank_in_subject,
+          c.class_name
+        FROM SUBJECT sub
+        JOIN SUBJECT_CLASS_LEADERBOARD scl ON sub.subject_id = scl.subject_id
+        JOIN CLASS c ON scl.class_id = c.class_id
+      `;
       
+      if (classFilter !== 'all') {
+        query += ` WHERE c.class_name = ?`;
+      }
+      
+      query += ` ORDER BY scl.rank_in_subject`;
+      
+      const results = classFilter === 'all'
+        ? await db.prepare(query).all()
+        : await db.prepare(query).bind(classFilter).all();
+      
+      // Group by subject and get additional details
+      const subjectMap = {};
+      results.results.forEach(row => {
+        if (!subjectMap[row.subject_id]) {
+          subjectMap[row.subject_id] = {
+            subject_code: row.subject_code,
+            subject_name: row.subject_name,
+            classes: []
+          };
+        }
+        subjectMap[row.subject_id].classes.push({
+          class_name: row.class_name,
+          avg_marks: parseFloat(row.avg_subject_marks.toFixed(2)),
+          rank: row.rank_in_subject
+        });
+      });
+      
+      // For each subject, get enrollment count and top student
       const subjectStats = await Promise.all(
-        subjects.results.map(async (subject) => {
-          let query = `
+        Object.values(subjectMap).map(async (subject) => {
+          // Get enrollment count and top student
+          let studentQuery = `
             SELECT 
-              s.student_id,
-              s.name,
-              s.class,
-              m.mse, m.th_ise1, m.th_ise2, m.ese, m.pr_ise1, m.pr_ise2
-            FROM STUDENT s
-            JOIN STUDENT_SUBJECT ss ON s.student_id = ss.student_id
-            LEFT JOIN MARKS m ON ss.ss_id = m.ss_id
-            WHERE ss.subject_id = ?
+              COUNT(*) as enrollment_count,
+              MAX(ssl.subject_total) as max_marks,
+              MIN(ssl.subject_total) as min_marks
+            FROM STUDENT_SUBJECT_LEADERBOARD ssl
+            JOIN SUBJECT sub ON ssl.subject_id = sub.subject_id
+            WHERE sub.subject_code = ?
           `;
           
           if (classFilter !== 'all') {
-            query += ` AND s.class = '${classFilter}'`;
+            studentQuery += ` AND ssl.class_id = (SELECT class_id FROM CLASS WHERE class_name = ?)`;
           }
           
-          const enrolledStudents = await db
-            .prepare(query)
-            .bind(subject.subject_id)
-            .all();
+          const stats = classFilter === 'all'
+            ? await db.prepare(studentQuery).bind(subject.subject_code).first()
+            : await db.prepare(studentQuery).bind(subject.subject_code, classFilter).first();
           
-          const marksData = enrolledStudents.results.map(student => {
-            const total = (student.mse || 0) + (student.th_ise1 || 0) + (student.th_ise2 || 0) + 
-                         (student.ese || 0) + (student.pr_ise1 || 0) + (student.pr_ise2 || 0);
-            return {
-              student_id: student.student_id,
-              name: student.name,
-              class: student.class,
-              total: total
-            };
-          });
+          // Get top student
+          let topStudentQuery = `
+            SELECT s.name, s.class, ssl.subject_total
+            FROM STUDENT_SUBJECT_LEADERBOARD ssl
+            JOIN STUDENT s ON ssl.student_id = s.student_id
+            JOIN SUBJECT sub ON ssl.subject_id = sub.subject_id
+            WHERE sub.subject_code = ?
+          `;
           
-          if (marksData.length === 0) {
-            return {
-              subject_code: subject.subject_code,
-              subject_name: subject.subject_name,
-              enrollment_count: 0,
-              avg_marks: 0,
-              max_marks: 0,
-              min_marks: 0,
-              top_student: null
-            };
+          if (classFilter !== 'all') {
+            topStudentQuery += ` AND s.class = ?`;
           }
           
-          const totals = marksData.map(m => m.total);
-          const avgMarks = totals.reduce((a, b) => a + b, 0) / totals.length;
-          const maxMarks = Math.max(...totals);
-          const minMarks = Math.min(...totals);
-          const topStudent = marksData.find(m => m.total === maxMarks);
+          topStudentQuery += ` ORDER BY ssl.rank_subject_college LIMIT 1`;
+          
+          const topStudent = classFilter === 'all'
+            ? await db.prepare(topStudentQuery).bind(subject.subject_code).first()
+            : await db.prepare(topStudentQuery).bind(subject.subject_code, classFilter).first();
+          
+          // Calculate average across all classes for this subject
+          const avgMarks = subject.classes.reduce((sum, c) => sum + c.avg_marks, 0) / subject.classes.length;
           
           return {
             subject_code: subject.subject_code,
             subject_name: subject.subject_name,
-            enrollment_count: marksData.length,
+            enrollment_count: stats.enrollment_count,
             avg_marks: parseFloat(avgMarks.toFixed(2)),
-            max_marks: maxMarks,
-            min_marks: minMarks,
+            max_marks: stats.max_marks || 0,
+            min_marks: stats.min_marks || 0,
             top_student: topStudent ? {
               name: topStudent.name,
               class: topStudent.class,
-              marks: topStudent.total
+              marks: topStudent.subject_total
             } : null
           };
         })
@@ -689,39 +609,52 @@ async function handleRequest(request, env) {
     if (path.match(/^\/api\/students\/rank\/\d+$/) && method === 'GET') {
       const rollNo = parseInt(path.split('/').pop());
       
-      // Get all students with CGPA in batch
-      const allStudents = await getStudentCGPAs(db, 'all');
-      const attendanceMap = await getAttendanceData(db);
+      // Get student from leaderboard with pre-computed ranks
+      const student = await db
+        .prepare(`
+          SELECT 
+            s.student_id,
+            s.roll_no,
+            s.enrollment_id,
+            s.name,
+            s.dob,
+            s.class,
+            s.class_id,
+            sl.cgpa,
+            sl.overall_attendance as attendance,
+            sl.rank_cgpa_college,
+            sl.rank_cgpa_class,
+            sl.rank_attendance_college,
+            sl.rank_attendance_class
+          FROM STUDENT s
+          JOIN STUDENT_LEADERBOARD sl ON s.student_id = sl.student_id
+          WHERE s.roll_no = ?
+        `)
+        .bind(rollNo)
+        .first();
       
-      // Merge attendance
-      allStudents.forEach(student => {
-        student.attendance = attendanceMap[student.student_id] || 0;
-      });
-      
-      // Find the target student
-      const studentDetails = allStudents.find(s => s.roll_no === rollNo);
-      
-      if (!studentDetails) {
+      if (!student) {
         return errorResponse('Student not found', 404);
       }
       
-      // Sort by CGPA with tiebreaker
-      const ranked = rankStudents([...allStudents], 'cgpa');
-      
-      // Find overall rank
-      const overallRank = ranked.findIndex(s => s.roll_no === rollNo) + 1;
-      
-      // Find class rank
-      const classStudents = ranked.filter(s => s.class === studentDetails.class);
-      const classRank = classStudents.findIndex(s => s.roll_no === rollNo) + 1;
+      // Get total counts
+      const totals = await db
+        .prepare(`
+          SELECT 
+            COUNT(*) as total_students,
+            SUM(CASE WHEN s.class = ? THEN 1 ELSE 0 END) as total_in_class
+          FROM STUDENT s
+        `)
+        .bind(student.class)
+        .first();
       
       return jsonResponse({
-        ...studentDetails,
+        ...student,
         ranks: {
-          overall: overallRank,
-          in_class: classRank,
-          total_students: ranked.length,
-          total_in_class: classStudents.length
+          overall: student.rank_cgpa_college,
+          in_class: student.rank_cgpa_class,
+          total_students: totals.total_students,
+          total_in_class: totals.total_in_class
         }
       });
     }
@@ -749,6 +682,7 @@ async function handleRequest(request, env) {
           'GET /api/stats/subjects?class=all': 'Subject-wise statistics (avg/max/min marks, top students)',
           'GET /api/birthdays/today': "Today's birthdays",
           'GET /api/game/random-pair': 'Get random pair for game',
+          'GET /api/game/random-pair-subject': 'Get random pair with subject marks for game',
           'GET /api/health': 'Health check',
         },
       });
