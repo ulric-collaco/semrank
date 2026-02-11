@@ -11,6 +11,7 @@
 !/deploy.sh
 !/CLOUDFLARE_SETUP.md
 !/README.md
+!/requirements.txt
 
 # And keep .gitignore itself
 !.gitignore
