@@ -1,9 +1,8 @@
 import { useState, useEffect, useRef } from 'react'
 import { gsap } from 'gsap'
-import { useMockStudents } from '../hooks/useMockStudents'
+import { gameAPI } from '../utils/api'
 
 export default function GamePage() {
-  const { students } = useMockStudents()
   const [gameState, setGameState] = useState('ready') // ready, playing, correct, wrong
   const [score, setScore] = useState(0)
   const [round, setRound] = useState(0)
@@ -11,24 +10,28 @@ export default function GamePage() {
   const [student2, setStudent2] = useState(null)
   const [metric, setMetric] = useState('cgpa')
   const [difficulty, setDifficulty] = useState('easy')
+  const [isLoading, setIsLoading] = useState(true)
   
   const student2Ref = useRef(null)
 
   useEffect(() => {
-    if (students.length > 0 && gameState === 'ready') {
+    if (gameState === 'ready') {
       startNewRound()
     }
-  }, [students])
+  }, [])
 
-  const startNewRound = () => {
-    // Select two random students
-    const shuffled = [...students].sort(() => Math.random() - 0.5)
-    const s1 = shuffled[0]
-    const s2 = shuffled[1]
-
-    setStudent1(s1)
-    setStudent2(s2)
-    setGameState('playing')
+  const startNewRound = async () => {
+    setIsLoading(true)
+    try {
+      const pair = await gameAPI.getRandomPair()
+      setStudent1(pair[0])
+      setStudent2(pair[1])
+      setGameState('playing')
+    } catch (error) {
+      console.error('Error fetching random pair:', error)
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   const handleGuess = (guess) => {
@@ -80,9 +83,10 @@ export default function GamePage() {
     setRound(0)
     setGameState('ready')
     gsap.set(student2Ref.current, { y: 0, opacity: 1 })
+    startNewRound()
   }
 
-  if (!student1 || !student2) {
+  if (isLoading || !student1 || !student2) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-xl text-body">Loading game...</div>

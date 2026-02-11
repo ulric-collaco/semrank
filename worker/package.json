@@ -1,0 +1,25 @@
+{
+  "name": "semrank-api-worker",
+  "version": "1.0.0",
+  "description": "Cloudflare Worker API for SemRank student ranking system",
+  "main": "src/index.js",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "tail": "wrangler tail",
+    "test": "node test-api.js",
+    "test:local": "node test-api.js http://localhost:8787",
+    "test:remote": "node test-api.js"
+  },
+  "keywords": [
+    "cloudflare",
+    "workers",
+    "d1",
+    "api"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "wrangler": "^3.0.0"
+  }
+}

@@ -1,48 +1,50 @@
 import { useState, useEffect, useRef } from 'react'
 import { gsap } from 'gsap'
 import StudentBubble from '../components/StudentBubble'
-import { useMockStudents } from '../hooks/useMockStudents'
+import { leaderboardAPI } from '../utils/api'
 
 export default function LeaderboardPage() {
-  const { students, isLoading } = useMockStudents()
+  const [sortedStudents, setSortedStudents] = useState([])
+  const [isLoading, setIsLoading] = useState(true)
   const [sortBy, setSortBy] = useState('cgpa')
   const [filterClass, setFilterClass] = useState('all')
-  const [sortedStudents, setSortedStudents] = useState([])
   const gridRef = useRef(null)
 
+  // Fetch students from API
   useEffect(() => {
-    if (students.length === 0) return
-
-    // Sort and filter students
-    let filtered = [...students]
-
-    if (filterClass !== 'all') {
-      filtered = filtered.filter((s) => s.class === filterClass)
+    const fetchStudents = async () => {
+      setIsLoading(true)
+      try {
+        let data
+        if (sortBy === 'cgpa') {
+          data = await leaderboardAPI.getTopByCGPA(10, filterClass)
+        } else {
+          data = await leaderboardAPI.getTopByAttendance(10, filterClass)
+        }
+        setSortedStudents(data)
+      } catch (error) {
+        console.error('Failed to fetch students:', error)
+        setSortedStudents([])
+      } finally {
+        setIsLoading(false)
+      }
     }
+    
+    fetchStudents()
+  }, [sortBy, filterClass])
 
-    filtered.sort((a, b) => {
-      if (sortBy === 'cgpa') return b.cgpa - a.cgpa
-      if (sortBy === 'attendance') return b.attendance - a.attendance
-      return 0
-    })
+  // Animation when data changes
+  useEffect(() => {
+    if (sortedStudents.length === 0 || !gridRef.current) return
 
-    // Limit to top 10
-    filtered = filtered.slice(0, 10)
+    gsap.fromTo(
+      gridRef.current.children,
+      { scale: 0.8, opacity: 0 },
+      { scale: 1, opacity: 1, duration: 0.4, stagger: 0.05, ease: 'back.out(1.3)' }
+    )
+  }, [sortedStudents])
 
-    setSortedStudents(filtered)
-
-    // Animate reshuffle
-    if (gridRef.current) {
-      gsap.fromTo(
-        gridRef.current.children,
-        { scale: 0.8, opacity: 0 },
-        { scale: 1, opacity: 1, duration: 0.4, stagger: 0.05, ease: 'back.out(1.3)' }
-      )
-    }
-  }, [students, sortBy, filterClass])
-
-  const classes = ['all', 'COMPS_A', 'COMPS_B', 'COMPS_C']
-
+  const classes = ['all', 'COMPS_A', 'COMPS_B', 'COMPS_C', 'MECH']
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">

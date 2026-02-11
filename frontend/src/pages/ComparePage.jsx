@@ -1,9 +1,9 @@
 import { useState, useEffect, useRef } from 'react'
 import { gsap } from 'gsap'
-import { useMockStudents } from '../hooks/useMockStudents'
+import { studentAPI } from '../utils/api'
 
 export default function ComparePage() {
-  const { students } = useMockStudents()
+  const [students, setStudents] = useState([])
   const [student1, setStudent1] = useState(null)
   const [student2, setStudent2] = useState(null)
   const [metric, setMetric] = useState('cgpa')
@@ -12,6 +12,20 @@ export default function ComparePage() {
   
   const bubble1Ref = useRef(null)
   const bubble2Ref = useRef(null)
+
+  // Load all students on mount
+  useEffect(() => {
+    const fetchStudents = async () => {
+      try {
+        const data = await studentAPI.getAllStudents()
+        setStudents(data)
+      } catch (error) {
+        console.error('Error fetching students:', error)
+      }
+    }
+    
+    fetchStudents()
+  }, [])
 
   useEffect(() => {
     if (student1 && student2) {

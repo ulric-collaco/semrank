@@ -36,6 +36,12 @@ export const studentAPI = {
     const response = await api.get(`/students/search?q=${query}`)
     return response.data
   },
+
+  // Get student rank (overall and in class)
+  getStudentRank: async (rollNo) => {
+    const response = await api.get(`/students/rank/${rollNo}`)
+    return response.data
+  },
 }
 
 export const leaderboardAPI = {
@@ -58,6 +64,24 @@ export const leaderboardAPI = {
   // Get class rankings
   getClassRankings: async () => {
     const response = await api.get(`/leaderboard/classes`)
+    return response.data
+  },
+
+  // Get top students by subject
+  getTopBySubject: async (subjectCode, limit = 10, classFilter = 'all') => {
+    const response = await api.get(`/leaderboard/subject/${subjectCode}`, {
+      params: { limit, class: classFilter },
+    })
+    return response.data
+  },
+}
+
+export const statsAPI = {
+  // Get subject-wise statistics
+  getSubjectStats: async (classFilter = 'all') => {
+    const response = await api.get('/stats/subjects', {
+      params: { class: classFilter },
+    })
     return response.data
   },
 }

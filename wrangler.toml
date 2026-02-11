@@ -1,0 +1,15 @@
+name = "semrank-api"
+main = "worker/src/index.js"
+compatibility_date = "2024-01-01"
+compatibility_flags = [ "nodejs_compat" ]
+
+# D1 Database Binding
+[[d1_databases]]
+binding = "DB"
+database_name = "semrank"
+database_id = "b4c64624-b325-4496-a012-710b1a47e1e2" # Add your D1 database ID after creation
+
+# CORS settings
+[vars]
+ALLOWED_ORIGINS = "*"
+

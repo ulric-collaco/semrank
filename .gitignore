@@ -1,9 +1,27 @@
 # Ignore everything in root
 /*
 
-# Except these folders
+# Except these folders and files
 !/frontend/
 !/student_photos/
+!/worker/
+!/.github/
+!/wrangler.toml
+!/deploy.ps1
+!/deploy.sh
+!/CLOUDFLARE_SETUP.md
+!/README.md
 
 # And keep .gitignore itself
 !.gitignore
+
+# But ignore these
+node_modules/
+.env
+.env.local
+.dev.vars
+*.db
+*.db-journal
+.wrangler/
+dist/
+.cache/

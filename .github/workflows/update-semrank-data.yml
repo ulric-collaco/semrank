@@ -1,0 +1,68 @@
+name: Update SemRank Data
+
+# Run twice daily at 9:30 AM and 9:30 PM IST (4:00 AM and 4:00 PM UTC)
+on:
+  schedule:
+    - cron: '0 4,16 * * *'  # 9:30 AM/PM IST (UTC+5:30)
+  
+  # Allow manual trigger
+  workflow_dispatch:
+
+jobs:
+  update-data:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          # Add any required packages here
+          # pip install requests beautifulsoup4
+      
+      - name: Run SemRank cron job
+        run: |
+          python semrank_cron.py
+      
+      - name: Check for changes
+        id: check_changes
+        run: |
+          git diff --quiet frontend/src/data/ || echo "changes=true" >> $GITHUB_OUTPUT
+      
+      - name: Commit and push if changes
+        if: steps.check_changes.outputs.changes == 'true'
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "SemRank Bot"
+          git add frontend/src/data/*.json
+          git add cron_log.txt
+          git commit -m "chore: update student data and rankings [skip ci]"
+          git push
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Generate summary
+        if: always()
+        run: |
+          echo "## SemRank Data Update Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Timestamp:** $(date -u +'%Y-%m-%d %H:%M:%S UTC')" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
+          if [ -f frontend/src/data/metadata.json ]; then
+            echo "**Status:** ✅ Success" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "### Data Summary" >> $GITHUB_STEP_SUMMARY
+            echo '```json' >> $GITHUB_STEP_SUMMARY
+            cat frontend/src/data/metadata.json >> $GITHUB_STEP_SUMMARY
+            echo '```' >> $GITHUB_STEP_SUMMARY
+          else
+            echo "**Status:** ❌ Failed" >> $GITHUB_STEP_SUMMARY
+          fi
