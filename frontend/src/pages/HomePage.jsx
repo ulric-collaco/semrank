@@ -95,38 +95,58 @@ export default function HomePage() {
 
         {/* Top 3 Preview */}
         {!loading && topStudents.length > 0 && (
-          <div ref={top3Ref} className="flex flex-col md:flex-row gap-6 justify-center items-center mt-12">
-            {topStudents.map((student, index) => (
-              <div
-                key={student.student_id}
-                className={`bubble p-6 rounded-bubble-lg ${index === 0 ? 'md:scale-110 border-accent/50 hover:md:scale-[1.12]' : 'hover:scale-105'} 
-                  bg-bubble transition-transform duration-300 ease-in-out cursor-pointer`}
-                onClick={() => setSelectedStudentRoll(student.roll_no)}
-              >
-                <div className="text-center">
-                  <div className="w-20 h-20 mx-auto bg-bubbleSecondary rounded-2xl flex items-center justify-center text-4xl mb-3 relative overflow-hidden">
-                    {student.roll_no ? (
-                      <img
-                        src={`/student_faces/${student.roll_no}.png`}
-                        alt={student.name}
-                        className="w-full h-full object-cover"
-                        onError={(e) => {
-                          e.target.style.display = 'none'
-                          e.target.nextSibling.style.display = 'flex'
-                        }}
-                      />
-                    ) : null}
-                    <div className={student.roll_no ? 'hidden absolute inset-0 bg-bubbleSecondary' : 'absolute inset-0 bg-bubbleSecondary flex items-center justify-center'}>
-                      {index === 0 ? '🥇' : index === 1 ? '🥈' : '🥉'}
+          <div ref={top3Ref} className="flex flex-row flex-wrap md:flex-nowrap justify-center items-end gap-4 md:gap-6 mt-12">
+            {/** Render in visual order: show 2,1,3 so rank 1 is centered */}
+            {(() => {
+              const order = topStudents.length >= 3 ? [1, 0, 2] : topStudents.map((_, i) => i)
+              return order.map((origIdx) => {
+                const student = topStudents[origIdx]
+                if (!student) return null
+
+                const posClasses = origIdx === 0
+                  ? 'transform md:-translate-y-6 -translate-y-4 md:scale-[1.12] scale-105 z-20'
+                  : origIdx === 1
+                    ? 'transform md:-translate-y-2 translate-y-1 md:scale-100 scale-95 z-10'
+                    : 'transform md:translate-y-2 translate-y-3 md:scale-95 scale-90 z-0'
+
+                const borderClass = origIdx === 0
+                  ? 'ring-4 ring-yellow-400/80' // gold
+                  : origIdx === 1
+                    ? 'ring-3 ring-slate-300/60' // silver
+                    : 'ring-2 ring-amber-600/40' // bronze
+
+                return (
+                  <div
+                    key={student.student_id}
+                    className={`bubble p-6 rounded-bubble-lg ${posClasses} ${borderClass} bg-bubble transition-transform duration-300 ease-in-out cursor-pointer`}
+                    onClick={() => setSelectedStudentRoll(student.roll_no)}
+                  >
+                    <div className="text-center">
+                      <div className="w-20 h-20 mx-auto bg-bubbleSecondary rounded-2xl flex items-center justify-center text-4xl mb-3 relative overflow-hidden">
+                        {student.roll_no ? (
+                          <img
+                            src={`/student_faces/${student.roll_no}.png`}
+                            alt={student.name}
+                            className="w-full h-full object-cover"
+                            onError={(e) => {
+                              e.target.style.display = 'none'
+                              e.target.nextSibling.style.display = 'flex'
+                            }}
+                          />
+                        ) : null}
+                        <div className={student.roll_no ? 'hidden absolute inset-0 bg-bubbleSecondary' : 'absolute inset-0 bg-bubbleSecondary flex items-center justify-center'}>
+                          {origIdx === 0 ? '🥇' : origIdx === 1 ? '🥈' : '🥉'}
+                        </div>
+                      </div>
+                      <h3 className="font-display font-bold text-[18px] md:text-[20px] text-ink mb-1">{student.name}</h3>
+                      <p className="text-sm text-body mb-2">Roll: {student.roll_no}</p>
+                      <div className="text-[28px] md:text-[36px] font-bold text-ink tabular-nums">{student.cgpa}</div>
+                      <p className="text-xs text-body uppercase tracking-wide">SGPA</p>
                     </div>
                   </div>
-                  <h3 className="font-display font-bold text-[18px] md:text-[20px] text-ink mb-1">{student.name}</h3>
-                  <p className="text-sm text-body mb-2">Roll: {student.roll_no}</p>
-                  <div className="text-[28px] md:text-[36px] font-bold text-ink tabular-nums">{student.cgpa}</div>
-                  <p className="text-xs text-body uppercase tracking-wide">SGPA</p>
-                </div>
-              </div>
-            ))}
+                )
+              })
+            })()}
           </div>
         )}
       </div>

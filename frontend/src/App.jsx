@@ -1,7 +1,70 @@
-import { useState, useEffect, useCallback, Suspense, lazy } from 'react'
+import { useState, useEffect, Suspense, lazy } from 'react'
 import LoadingScreen from './components/LoadingScreen'
 
 const BubbleMenu = lazy(() => import('./components/BubbleMenu'))
+// ... (rest imports)
+
+function App() {
+  const [currentPage, setCurrentPage] = useState(getPageFromHash)
+  const [isLoading, setIsLoading] = useState(true)
+  const [showLoader, setShowLoader] = useState(true)
+
+  // Handle hash navigation
+  useEffect(() => {
+    const handleHashChange = () => setCurrentPage(getPageFromHash());
+    window.addEventListener('hashchange', handleHashChange);
+    return () => window.removeEventListener('hashchange', handleHashChange);
+  }, []);
+
+  const handleReveal = () => {
+    setIsLoading(false) // Triggers blur removal
+  }
+
+  const handleLoadingComplete = () => {
+    setShowLoader(false) // Unmounts loader
+  }
+
+  const renderPage = () => {
+    // ... switch ...
+  }
+
+  // Blur style for the main app content
+  const contentStyle = {
+    filter: isLoading ? 'blur(15px)' : 'none',
+    transition: 'filter 1.5s ease-out',
+    opacity: isLoading ? 0.8 : 1, // Slight dim too
+  }
+
+  return (
+    <div className="min-h-screen relative">
+      {showLoader && (
+        <LoadingScreen
+          onReveal={handleReveal}
+          onComplete={handleLoadingComplete}
+        />
+      )}
+
+      {/* Main App Content Wrapper with Blur Effect */}
+      <div style={contentStyle} className="relative z-0 min-h-screen transition-all duration-1000">
+
+        {/* ── PixelSnow Background ──────────────────── */}
+        <div className="fixed inset-0 z-0" style={{ pointerEvents: 'none' }}>
+          {/* ... PixelSnow ... */}
+        </div>
+
+        {/* ── Bubble Menu Navigation ────────────────── */}
+        <div>
+          {/* ... BubbleMenu ... */}
+        </div>
+
+        {/* ── Page Content ──────────────────────────── */}
+        <main className="relative z-10">
+          {/* ... Page Content ... */}
+        </main>
+      </div>
+    </div>
+  )
+}
 const PageTransition = lazy(() => import('./components/PageTransition'))
 const PixelSnow = lazy(() => import('./components/PixelSnow'))
 const HomePage = lazy(() => import('./pages/HomePage'))
@@ -51,31 +114,6 @@ function getPageFromHash() {
 function App() {
   const [currentPage, setCurrentPage] = useState(getPageFromHash)
 
-  // ── Cinematic intro state ──────────────────────────
-  // Only play once per browser session
-  const [showIntro, setShowIntro] = useState(() => {
-    return !sessionStorage.getItem('semrank_intro_seen')
-  })
-  const [introRevealed, setIntroRevealed] = useState(!showIntro)
-  const [logoVisible, setLogoVisible] = useState(!showIntro)
-
-  // Fires at ~1.5 s — overlay is still fading but content can start appearing
-  const handleReveal = useCallback(() => {
-    sessionStorage.setItem('semrank_intro_seen', '1')
-    setIntroRevealed(true)
-
-    // Schedule logo reveal for the merge moment (approx 950ms after reveal)
-    // Reveal is at 1.5s. Merge fade happens at 2.45s-2.65s.
-    setTimeout(() => {
-      setLogoVisible(true)
-    }, 950)
-  }, [])
-
-  // Fires at ~2.65 s — overlay fully gone, safe to unmount
-  const handleIntroDone = useCallback(() => {
-    setShowIntro(false)
-  }, [])
-
   // Handle hash navigation
   useEffect(() => {
     const handleHashChange = () => setCurrentPage(getPageFromHash());
@@ -109,23 +147,8 @@ function App() {
 
   return (
     <div className="min-h-screen relative">
-      {/* ── Cinematic Intro Overlay ────────────────── */}
-      {showIntro && (
-        <LoadingScreen
-          onReveal={handleReveal}
-          onComplete={handleIntroDone}
-        />
-      )}
-
       {/* ── PixelSnow Background ──────────────────── */}
-      <div
-        className="fixed inset-0 z-0"
-        style={{
-          pointerEvents: 'none',
-          opacity: introRevealed ? 1 : 0,
-          transition: introRevealed ? 'opacity 0.9s ease-out' : 'none',
-        }}
-      >
+      <div className="fixed inset-0 z-0" style={{ pointerEvents: 'none' }}>
         <Suspense fallback={null}>
           <PixelSnow
             color="#ffffff"
@@ -146,12 +169,7 @@ function App() {
       </div>
 
       {/* ── Bubble Menu Navigation ────────────────── */}
-      <div
-        style={{
-          opacity: introRevealed ? 1 : 0,
-          transition: introRevealed ? 'opacity 0.6s ease-out 0.25s' : 'none',
-        }}
-      >
+      <div>
         <Suspense fallback={null}>
           <BubbleMenu
             logo={<span className="font-display" style={{ fontSize: '1.5rem', color: '#f582ae' }}>SemRank</span>}
@@ -164,22 +182,12 @@ function App() {
             animationDuration={0.5}
             staggerDelay={0.18}
             currentPage={currentPage}
-            hideLogo={!logoVisible}
           />
         </Suspense>
       </div>
 
       {/* ── Page Content ──────────────────────────── */}
-      <main
-        className="relative z-10"
-        style={{
-          opacity: introRevealed ? 1 : 0,
-          transform: introRevealed ? 'none' : 'translateY(30px)',
-          transition: introRevealed
-            ? 'opacity 0.7s ease-out 0.4s, transform 0.7s ease-out 0.4s'
-            : 'none',
-        }}
-      >
+      <main className="relative z-10">
         <Suspense fallback={
           <div className="min-h-screen flex items-center justify-center">
             <div className="text-xl text-body">Loading...</div>
