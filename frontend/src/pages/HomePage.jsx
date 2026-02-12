@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { gsap } from 'gsap'
 import { leaderboardAPI, birthdayAPI } from '../utils/api'
+import { formatClassName } from '../utils/format'
 import StudentBubble from '../components/StudentBubble'
 import ClassStatsSection from '../components/ClassStatsSection'
 import StudentModal from '../components/StudentModal'
@@ -82,7 +83,7 @@ export default function HomePage() {
     <div className="min-h-screen px-6 py-20">
       {/* Hero Section */}
       <div ref={heroRef} className="max-w-6xl mx-auto text-center mb-16">
-        <h1 className="text-[40px] md:text-[64px] font-display text-ink mb-4 leading-tight">
+        <h1 className="text-[60px] md:text-[84px] lg:text-[100px] font-display text-ink mb-4 leading-none tracking-tight">
           SemRank
         </h1>
 
@@ -93,12 +94,12 @@ export default function HomePage() {
             {topStudents.map((student, index) => (
               <div
                 key={student.student_id}
-                className={`bubble p-6 rounded-bubble-lg ${index === 0 ? 'md:scale-110 bg-accent' : 'bg-bubble'
-                  } hover:scale-105 transition-transform duration-300 cursor-pointer`}
+                className={`bubble p-6 rounded-bubble-lg ${index === 0 ? 'md:scale-110 border-accent/50 hover:md:scale-[1.12]' : 'hover:scale-105'} 
+                  bg-bubble transition-transform duration-300 ease-in-out cursor-pointer`}
                 onClick={() => setSelectedStudentRoll(student.roll_no)}
               >
                 <div className="text-center">
-                  <div className="w-20 h-20 mx-auto bg-bubbleSecondary rounded-full flex items-center justify-center text-4xl mb-3 relative overflow-hidden">
+                  <div className="w-20 h-20 mx-auto bg-bubbleSecondary rounded-2xl flex items-center justify-center text-4xl mb-3 relative overflow-hidden">
                     {student.roll_no ? (
                       <img
                         src={`/student_faces/${student.roll_no}.png`}
@@ -111,10 +112,6 @@ export default function HomePage() {
                       />
                     ) : null}
                     <div className={student.roll_no ? 'hidden absolute inset-0 bg-bubbleSecondary' : 'absolute inset-0 bg-bubbleSecondary flex items-center justify-center'}>
-                      {index === 0 ? '🥇' : index === 1 ? '🥈' : '🥉'}
-                    </div>
-                    {/* Medal overlay */}
-                    <div className="absolute -top-1 -right-1 text-2xl">
                       {index === 0 ? '🥇' : index === 1 ? '🥈' : '🥉'}
                     </div>
                   </div>
@@ -137,8 +134,8 @@ export default function HomePage() {
             <button
               onClick={() => setSortMetric('cgpa')}
               className={`px-4 py-2 rounded-bubble font-medium transition-all ${sortMetric === 'cgpa'
-                ? 'bg-accent text-ink shadow-bubble-hover'
-                : 'bubble hover:shadow-bubble-hover'
+                ? 'bg-accent text-ink'
+                : 'bubble bubble-hover'
                 }`}
             >
               SGPA
@@ -146,8 +143,8 @@ export default function HomePage() {
             <button
               onClick={() => setSortMetric('attendance')}
               className={`px-4 py-2 rounded-bubble font-medium transition-all ${sortMetric === 'attendance'
-                ? 'bg-accent text-ink shadow-bubble-hover'
-                : 'bubble hover:shadow-bubble-hover'
+                ? 'bg-accent text-ink'
+                : 'bubble bubble-hover'
                 }`}
             >
               Attendance
@@ -159,7 +156,7 @@ export default function HomePage() {
           {quickLeaderboard.map((student, index) => (
             <div
               key={student.student_id}
-              className="bubble p-4 rounded-bubble flex items-center gap-4 hover:shadow-bubble-hover transition-all cursor-pointer"
+              className="bubble bubble-hover p-4 rounded-bubble flex items-center gap-4 transition-all cursor-pointer"
               onClick={() => setSelectedStudentRoll(student.roll_no)}
             >
               <div className="w-12 h-12 bg-accent rounded-full flex items-center justify-center font-bold text-ink">
@@ -167,7 +164,7 @@ export default function HomePage() {
               </div>
               <div className="flex-1">
                 <h3 className="font-display font-bold text-ink">{student.name}</h3>
-                <p className="text-sm text-body">{student.class}</p>
+                <p className="text-sm text-body">{formatClassName(student.class)}</p>
               </div>
               <div className="text-right">
                 <div className="text-2xl font-bold text-ink">
@@ -209,23 +206,23 @@ export default function HomePage() {
         <a
           href="#leaderboard"
           className="px-8 py-4 bg-accent text-ink rounded-bubble font-semibold text-lg text-center
-                   shadow-bubble hover:shadow-bubble-hover hover:scale-105
+                   hover:scale-105
                    active:scale-95 transition-all duration-300"
         >
           📊 View Full Leaderboard
         </a>
         <a
           href="#compare"
-          className="px-8 py-4 bubble text-ink rounded-bubble font-semibold text-lg text-center
-                   shadow-bubble hover:shadow-bubble-hover hover:scale-105
+          className="px-8 py-4 bubble bubble-hover text-ink rounded-bubble font-semibold text-lg text-center
+                   hover:scale-105
                    active:scale-95 transition-all duration-300"
         >
           ⚖️ Compare Students
         </a>
         <a
           href="#game"
-          className="px-8 py-4 bubble text-ink rounded-bubble font-semibold text-lg text-center
-                   shadow-bubble hover:shadow-bubble-hover hover:scale-105
+          className="px-8 py-4 bubble bubble-hover text-ink rounded-bubble font-semibold text-lg text-center
+                   hover:scale-105
                    active:scale-95 transition-all duration-300"
         >
           🎮 Play Higher/Lower

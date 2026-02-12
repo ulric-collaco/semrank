@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { leaderboardAPI, statsAPI } from '../utils/api'
+import { formatClassName } from '../utils/format'
 
 export default function ClassStatsSection() {
   const [stats, setStats] = useState(null)
@@ -23,7 +24,7 @@ export default function ClassStatsSection() {
         bestSGPA: classRankings[0], // First in rankings
         bestAttendance: [...classRankings].sort((a, b) => b.avg_attendance - a.avg_attendance)[0],
         mostBunked: [...classRankings].sort((a, b) => a.avg_attendance - b.avg_attendance)[0],
-        worstSubject: subjectStats.length > 0 
+        worstSubject: subjectStats.length > 0
           ? [...subjectStats].sort((a, b) => a.avg_marks - b.avg_marks)[0]
           : null
       }
@@ -38,44 +39,38 @@ export default function ClassStatsSection() {
 
   if (loading) {
     return (
-      <div className="bubble p-6 rounded-bubble-lg shadow-bubble text-center">
+      <div className="bubble p-6 rounded-bubble-lg text-center border border-white/10">
         <div className="text-body">Loading fun stats...</div>
       </div>
     )
   }
 
-  if (!stats) {
-    return null
-  }
+  if (!stats) return null
 
   const statCards = [
     {
       emoji: '🏆',
       label: 'Best Class by SGPA',
-      value: stats.bestSGPA?.class_name || 'N/A',
+      value: formatClassName(stats.bestSGPA?.class_name) || 'N/A',
       detail: stats.bestSGPA ? `${stats.bestSGPA.avg_cgpa} SGPA` : '',
-      color: 'bg-yellow-50 border-yellow-200'
     },
     {
       emoji: '👑',
       label: 'Best Attendance',
-      value: stats.bestAttendance?.class_name || 'N/A',
+      value: formatClassName(stats.bestAttendance?.class_name) || 'N/A',
       detail: stats.bestAttendance ? `${stats.bestAttendance.avg_attendance}%` : '',
-      color: 'bg-blue-50 border-blue-200'
     },
     {
       emoji: '😴',
       label: 'Most Bunked Class',
-      value: stats.mostBunked?.class_name || 'N/A',
+      value: formatClassName(stats.mostBunked?.class_name) || 'N/A',
       detail: stats.mostBunked ? `${stats.mostBunked.avg_attendance}% attendance` : '',
-      color: 'bg-orange-50 border-orange-200'
     },
     {
       emoji: '📉',
       label: 'Worst Performing Subject',
       value: stats.worstSubject?.subject_name || 'N/A',
       detail: stats.worstSubject ? `${stats.worstSubject.avg_marks.toFixed(1)} avg marks` : '',
-      color: 'bg-red-50 border-red-200'
     }
   ]
 
@@ -92,8 +87,8 @@ export default function ClassStatsSection() {
         {statCards.map((card, index) => (
           <div
             key={index}
-            className={`bubble p-6 rounded-bubble-lg shadow-bubble border-2 ${card.color} 
-                       hover:scale-105 transition-transform duration-300`}
+            className="bubble p-6 rounded-bubble-lg border border-white/10 hover:border-accent/40
+                       hover:scale-105 transition-transform duration-300 bg-bubble"
           >
             <div className="text-center space-y-3">
               <div className="text-5xl">{card.emoji}</div>
@@ -109,13 +104,6 @@ export default function ClassStatsSection() {
             </div>
           </div>
         ))}
-      </div>
-
-      {/* Additional Fun Facts */}
-      <div className="bubble p-6 rounded-bubble-lg shadow-bubble text-center">
-        <p className="text-body text-sm">
-          💡 <span className="font-semibold">Pro Tip:</span> Click on any student in the leaderboard to see their complete academic profile!
-        </p>
       </div>
     </div>
   )

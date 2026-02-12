@@ -6,6 +6,7 @@ import {
 } from 'recharts';
 import { ArrowLeft, Users, X, Search, Check } from 'lucide-react';
 import { studentAPI } from '../utils/api';
+import { formatClassName } from '../utils/format';
 
 // Theme colors - Softer, less high-contrast palette
 const THEME_COLORS = [
@@ -278,15 +279,11 @@ export default function ComparePage() {
   const containerClass = "bg-[#1a1a2e]/50 border border-white/5 p-6 rounded-xl backdrop-blur-sm";
 
   return (
-    <div className="min-h-screen px-4 sm:px-6 py-8 sm:py-12 bg-transparent text-ink pb-24">
-      <div className="max-w-7xl mx-auto space-y-8">
-
-        {/* Header */}
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+    <div className="min-h-screen bg-background text-ink p-8 pt-24 font-sans">
+      <div className="max-w-7xl mx-auto">
+        <div className="flex items-center justify-between mb-8">
           <div>
-            <h1 className="text-3xl md:text-4xl font-display font-bold text-ink mb-2">
-              Compare Students
-            </h1>
+            <h1 className="text-4xl font-display font-bold mb-2">Compare Students</h1>
             <p className="text-body text-sm md:text-base">
               Select up to 4 students to analyze their performance side-by-side.
             </p>
@@ -327,7 +324,7 @@ export default function ComparePage() {
                   }
                 `}
               >
-                {cls}
+                {formatClassName(cls)}
               </button>
             ))}
           </div>

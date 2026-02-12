@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, Suspense, lazy } from 'react'
 import BubbleMenu from './components/BubbleMenu'
-import PixelSnow from './components/PixelSnow'
+const PixelSnow = lazy(() => import('./components/PixelSnow'))
 import HomePage from './pages/HomePage'
 import LeaderboardPage from './pages/LeaderboardPage'
 import ComparePage from './pages/ComparePage'
@@ -74,20 +74,22 @@ function App() {
     <div className="min-h-screen relative">
       {/* PixelSnow Background */}
       <div className="fixed inset-0 z-0">
-        <PixelSnow
-          color="#a78bfa"
-          flakeSize={0.01}
-          minFlakeSize={1.25}
-          pixelResolution={200}
-          speed={1.25}
-          density={0.35}
-          direction={125}
-          brightness={1.2}
-          depthFade={8}
-          farPlane={20}
-          gamma={0.4545}
-          variant="snowflake"
-        />
+        <Suspense fallback={null}>
+          <PixelSnow
+            color="#a78bfa"
+            flakeSize={0.01}
+            minFlakeSize={1.25}
+            pixelResolution={200}
+            speed={1.25}
+            density={0.35}
+            direction={125}
+            brightness={1.2}
+            depthFade={8}
+            farPlane={20}
+            gamma={0.4545}
+            variant="snowflake"
+          />
+        </Suspense>
       </div>
 
       {/* Bubble Menu Navigation */}
@@ -101,6 +103,7 @@ function App() {
         animationEase="back.out(1.5)"
         animationDuration={0.5}
         staggerDelay={0.18}
+        currentPage={currentPage}
       />
 
       {/* Page Content */}

@@ -68,9 +68,9 @@
   height: 100%;
 }
 
-.bubble-menu .logo-content > .bubble-logo,
-.bubble-menu .logo-content > img,
-.bubble-menu .logo-content > svg {
+.bubble-menu .logo-content>.bubble-logo,
+.bubble-menu .logo-content>img,
+.bubble-menu .logo-content>svg {
   max-height: var(--logo-max-height);
   max-width: var(--logo-max-width);
 }
@@ -99,7 +99,7 @@
   transform-origin: center;
 }
 
-.bubble-menu .menu-line + .menu-line {
+.bubble-menu .menu-line+.menu-line {
   margin-top: 6px;
 }
 
@@ -211,6 +211,7 @@
   white-space: nowrap;
   overflow: hidden;
   height: 10px;
+  font-family: 'Slackey', cursive;
 }
 
 @media (min-width: 900px) {

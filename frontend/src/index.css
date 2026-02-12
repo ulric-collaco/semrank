@@ -14,27 +14,47 @@
       radial-gradient(2px 2px at 60px 70px, rgba(245, 130, 174, 0.3), transparent),
       radial-gradient(1px 1px at 50px 50px, rgba(139, 92, 246, 0.2), transparent),
       radial-gradient(1px 1px at 130px 80px, rgba(96, 165, 250, 0.2), transparent),
-      animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
+      radial-gradient(2px 2px at 90px 10px, rgba(245, 130, 174, 0.2), transparent);
+    background-size: 200px 200px, 200px 200px, 200px 200px, 200px 200px, 200px 200px;
+    background-position: 0 0, 40px 60px, 130px 270px, 70px 100px, 150px 50px;
+    background-attachment: fixed;
   }
-}
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply text-ink font-normal;
+    font-family: 'Slackey', cursive;
+  }
+
+  /* Reduced motion support */
+  @media (prefers-reduced-motion: reduce) {
+    * {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
 }
 
 @layer components {
   .bubble {
-    @apply bg-bubble/70 backdrop-blur-lg rounded-bubble shadow-bubble border border-accent/20;
+    @apply bg-bubble/70 backdrop-blur-lg rounded-bubble border border-white/10;
   }
 
   .bubble-secondary {
-    @apply bg-bubbleSecondary/70 backdrop-blur-lg rounded-bubble shadow-bubble border border-accent/20;
+    @apply bg-bubbleSecondary/70 backdrop-blur-lg rounded-bubble border border-white/10;
   }
 
   .bubble-hover {
-    @apply transition-all duration-300 hover:shadow-bubble-hover hover:bg-bubble/85 hover:border-accent/30;
+    @apply transition-all duration-300 hover:bg-bubble/85 hover:border-white/20;
   }
 
   .bubble-active {
-    @apply active:shadow-bubble-active active:scale-95;
+    @apply active:scale-95;
   }
 
   /* Dark theme form elements */

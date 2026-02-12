@@ -14,7 +14,8 @@ export default function BubbleMenu({
   items = [],
   animationEase = 'back.out(1.5)',
   animationDuration = 0.5,
-  staggerDelay = 0.12
+  staggerDelay = 0.12,
+  currentPage
 }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [showOverlay, setShowOverlay] = useState(false);
@@ -119,12 +120,18 @@ export default function BubbleMenu({
   return (
     <>
       <nav className={containerClassName} style={style} aria-label="Main navigation">
-        <button 
+        <button
           type="button"
-          className="bubble logo-bubble" 
-          aria-label="Go to home" 
-          style={{ background: menuBg, cursor: 'pointer' }}
+          className="bubble logo-bubble"
+          aria-label="Go to home"
           onClick={handleLogoClick}
+          style={{
+            background: menuBg,
+            cursor: 'pointer',
+            opacity: currentPage === 'home' && !isMenuOpen ? 0 : 1,
+            pointerEvents: currentPage === 'home' && !isMenuOpen ? 'none' : 'auto',
+            transition: 'opacity 0.3s ease'
+          }}
         >
           <span className="logo-content">
             {typeof logo === 'string' ? <img src={logo} alt="Logo" className="bubble-logo" /> : logo}
@@ -186,7 +193,7 @@ export default function BubbleMenu({
                   </span>
                 </a>
               </li>
-           ))}
+            ))}
           </ul>
         </div>
       )}
