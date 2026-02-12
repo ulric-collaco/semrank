@@ -249,15 +249,7 @@ export default function HomePage() {
         </a>
       </div>
 
-      {/* Class Fun Stats Section */}
-      <div className="max-w-5xl mx-auto mt-16">
-        <ClassStatsSection />
-      </div>
 
-      {/* Footer Tagline */}
-      <p className="text-center text-body/70 text-sm mt-16">
-        Playful rankings for serious semesters.
-      </p>
 
       {/* Student Modal */}
       {selectedStudentRoll && (

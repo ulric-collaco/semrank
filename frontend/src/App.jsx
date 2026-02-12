@@ -1,11 +1,11 @@
 import { useState, useEffect, Suspense, lazy } from 'react'
 import BubbleMenu from './components/BubbleMenu'
-const GridScan = lazy(() => import('./components/GridScan'))
-import HomePage from './pages/HomePage'
-import LeaderboardPage from './pages/LeaderboardPage'
-import ComparePage from './pages/ComparePage'
-import GamePage from './pages/GamePage'
-import StudentDetailPage from './pages/StudentDetailPage'
+const PixelSnow = lazy(() => import('./components/PixelSnow'))
+const HomePage = lazy(() => import('./pages/HomePage'))
+const LeaderboardPage = lazy(() => import('./pages/LeaderboardPage'))
+const ComparePage = lazy(() => import('./pages/ComparePage'))
+const GamePage = lazy(() => import('./pages/GamePage'))
+const StudentDetailPage = lazy(() => import('./pages/StudentDetailPage'))
 
 const menuItems = [
   {
@@ -73,19 +73,22 @@ function App() {
   return (
     <div className="min-h-screen relative">
       {/* PixelSnow Background */}
-      <div className="fixed inset-0 z-0">
+      <div className="fixed inset-0 z-0" style={{ pointerEvents: 'none' }}>
         <Suspense fallback={null}>
-          <GridScan
-            sensitivity={0.55}
-            lineThickness={1}
-            linesColor="#392e4e"
-            gridScale={0.1}
-            scanColor="#FF9FFC"
-            scanOpacity={0.4}
-            enablePost
-            bloomIntensity={0.6}
-            chromaticAberration={0.002}
-            noiseIntensity={0.01}
+          <PixelSnow
+            color="#ffffff"
+            flakeSize={0.01}
+            minFlakeSize={1.25}
+            pixelResolution={200}
+            speed={1.25}
+            density={0.3}
+            direction={125}
+            brightness={1}
+            depthFade={8}
+            farPlane={20}
+            gamma={0.4545}
+            variant="square"
+            style={{ width: '100vw', height: '100vh' }}
           />
         </Suspense>
       </div>
@@ -106,7 +109,13 @@ function App() {
 
       {/* Page Content */}
       <main className="relative z-10">
-        {renderPage()}
+        <Suspense fallback={
+          <div className="min-h-screen flex items-center justify-center">
+            <div className="text-xl text-body">Loading...</div>
+          </div>
+        }>
+          {renderPage()}
+        </Suspense>
       </main>
     </div>
   )

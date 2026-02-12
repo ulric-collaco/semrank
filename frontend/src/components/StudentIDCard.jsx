@@ -79,7 +79,7 @@ export default function StudentIDCard({ student, loading, error, onClose }) {
         <div className="w-full max-w-[950px] mx-auto bg-slate-900/60 backdrop-blur-3xl border border-white/10 shadow-2xl shadow-black/40 rounded-[16px] overflow-hidden font-sans text-slate-200 relative">
 
             {/* Scroll container for whole card content */}
-            <div className="max-h-[85vh] overflow-y-auto no-scrollbar">
+            <div className="max-h-[85vh] overflow-y-auto no-scrollbar md:max-h-none md:overflow-y-visible">
                 <style>{`
             .no-scrollbar::-webkit-scrollbar {
                 display: none;

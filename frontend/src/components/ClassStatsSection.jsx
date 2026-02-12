@@ -79,7 +79,6 @@ export default function ClassStatsSection() {
       {/* Section Header */}
       <div className="text-center">
         <h2 className="text-3xl font-display font-bold text-ink mb-2">🎉 Fun Insights</h2>
-        <p className="text-body">College stats you didn't know you needed!</p>
       </div>
 
       {/* Stats Grid */}
