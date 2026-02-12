@@ -122,7 +122,6 @@ export default function LeaderboardPage() {
         {/* Header */}
         <div className="text-center mb-8">
           <h1 className="text-5xl font-brand font-bold text-ink mb-4">🏆 Leaderboard</h1>
-          <p className="text-body text-lg">Real-time student and class rankings</p>
         </div>
 
         {/* Tabs */}
