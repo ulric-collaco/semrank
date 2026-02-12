@@ -124,7 +124,7 @@ export default function GamePage() {
       <div className="max-w-4xl mx-auto">
         {/* Header */}
         <div className="text-center mb-8">
-          <h1 className="text-5xl font-brand font-bold text-ink mb-4">🎮 Higher or Lower</h1>
+          <h1 className="text-5xl font-display font-bold text-ink mb-4">🎮 Higher or Lower</h1>
           <p className="text-body text-lg mb-4">
             Guess if the next student has higher or lower {
               metric === 'cgpa' ? 'SGPA' : 
@@ -208,7 +208,7 @@ export default function GamePage() {
                   👤
                 </div>
               </div>
-              <h3 className="text-2xl font-brand font-bold text-ink">{student1.name}</h3>
+              <h3 className="text-2xl font-display font-bold text-ink">{student1.name}</h3>
               <p className="text-body">Class: {student1.class}</p>
               <div className="pt-4 border-t border-ink/10">
                 <p className="text-4xl font-bold text-ink">
@@ -251,7 +251,7 @@ export default function GamePage() {
                     👤
                   </div>
                 </div>
-                <h3 className="text-2xl font-brand font-bold text-ink">{student2.name}</h3>
+                <h3 className="text-2xl font-display font-bold text-ink">{student2.name}</h3>
                 <p className="text-body">Class: {student2.class}</p>
                 <div className="pt-4 border-t border-ink/10">
                   {gameState === 'playing' ? (

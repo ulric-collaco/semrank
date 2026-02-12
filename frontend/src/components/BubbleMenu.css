@@ -129,9 +129,9 @@
   justify-content: center;
   pointer-events: none;
   z-index: 98;
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  background: rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  background: rgba(10, 10, 15, 0.4);
 }
 
 .bubble-menu-items.fixed {

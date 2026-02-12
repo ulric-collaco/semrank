@@ -92,7 +92,7 @@ function App() {
 
       {/* Bubble Menu Navigation */}
       <BubbleMenu
-        logo={<span className="font-brand" style={{ fontSize: '1.5rem', color: '#f582ae' }}>SemRank</span>}
+        logo={<span className="font-display" style={{ fontSize: '1.5rem', color: '#f582ae' }}>SemRank</span>}
         items={menuItems}
         menuAriaLabel="Toggle navigation"
         menuBg="#1a1a2e"

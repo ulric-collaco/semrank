@@ -69,7 +69,7 @@ export default function HomePage() {
 
   const fetchQuickLeaderboard = async () => {
     try {
-      const data = sortMetric === 'cgpa' 
+      const data = sortMetric === 'cgpa'
         ? await leaderboardAPI.getTopBySGPA(5, 'all')
         : await leaderboardAPI.getTopByAttendance(5, 'all')
       setQuickLeaderboard(data)
@@ -82,10 +82,10 @@ export default function HomePage() {
     <div className="min-h-screen px-6 py-20">
       {/* Hero Section */}
       <div ref={heroRef} className="max-w-6xl mx-auto text-center mb-16">
-        <h1 className="text-7xl md:text-9xl font-brand text-ink mb-4">
+        <h1 className="text-[40px] md:text-[64px] font-display text-ink mb-4 leading-tight">
           SemRank
         </h1>
-       
+
 
         {/* Top 3 Preview */}
         {!loading && topStudents.length > 0 && (
@@ -93,15 +93,14 @@ export default function HomePage() {
             {topStudents.map((student, index) => (
               <div
                 key={student.student_id}
-                className={`bubble p-6 rounded-bubble-lg ${
-                  index === 0 ? 'md:scale-110 bg-accent' : 'bg-bubble'
-                } hover:scale-105 transition-transform duration-300 cursor-pointer`}
+                className={`bubble p-6 rounded-bubble-lg ${index === 0 ? 'md:scale-110 bg-accent' : 'bg-bubble'
+                  } hover:scale-105 transition-transform duration-300 cursor-pointer`}
                 onClick={() => setSelectedStudentRoll(student.roll_no)}
               >
                 <div className="text-center">
                   <div className="w-20 h-20 mx-auto bg-bubbleSecondary rounded-full flex items-center justify-center text-4xl mb-3 relative overflow-hidden">
                     {student.roll_no ? (
-                      <img 
+                      <img
                         src={`/student_faces/${student.roll_no}.png`}
                         alt={student.name}
                         className="w-full h-full object-cover"
@@ -119,10 +118,10 @@ export default function HomePage() {
                       {index === 0 ? '🥇' : index === 1 ? '🥈' : '🥉'}
                     </div>
                   </div>
-                  <h3 className="font-brand font-bold text-lg text-ink mb-1">{student.name}</h3>
+                  <h3 className="font-display font-bold text-[18px] md:text-[20px] text-ink mb-1">{student.name}</h3>
                   <p className="text-sm text-body mb-2">Roll: {student.roll_no}</p>
-                  <div className="text-2xl font-bold text-ink">{student.cgpa}</div>
-                  <p className="text-xs text-body">SGPA</p>
+                  <div className="text-[28px] md:text-[36px] font-bold text-ink tabular-nums">{student.cgpa}</div>
+                  <p className="text-xs text-body uppercase tracking-wide">SGPA</p>
                 </div>
               </div>
             ))}
@@ -133,25 +132,23 @@ export default function HomePage() {
       {/* Quick Leaderboard */}
       <div ref={quickLeaderRef} className="max-w-4xl mx-auto mb-16">
         <div className="flex justify-between items-center mb-6">
-          <h2 className="text-3xl font-brand font-bold text-ink">📊 Quick Leaderboard</h2>
+          <h2 className="text-[22px] md:text-[28px] font-display text-ink">📊 Quick Leaderboard</h2>
           <div className="flex gap-2">
             <button
               onClick={() => setSortMetric('cgpa')}
-              className={`px-4 py-2 rounded-bubble font-medium transition-all ${
-                sortMetric === 'cgpa'
-                  ? 'bg-accent text-ink shadow-bubble-hover'
-                  : 'bubble hover:shadow-bubble-hover'
-              }`}
+              className={`px-4 py-2 rounded-bubble font-medium transition-all ${sortMetric === 'cgpa'
+                ? 'bg-accent text-ink shadow-bubble-hover'
+                : 'bubble hover:shadow-bubble-hover'
+                }`}
             >
               SGPA
             </button>
             <button
               onClick={() => setSortMetric('attendance')}
-              className={`px-4 py-2 rounded-bubble font-medium transition-all ${
-                sortMetric === 'attendance'
-                  ? 'bg-accent text-ink shadow-bubble-hover'
-                  : 'bubble hover:shadow-bubble-hover'
-              }`}
+              className={`px-4 py-2 rounded-bubble font-medium transition-all ${sortMetric === 'attendance'
+                ? 'bg-accent text-ink shadow-bubble-hover'
+                : 'bubble hover:shadow-bubble-hover'
+                }`}
             >
               Attendance
             </button>
@@ -169,7 +166,7 @@ export default function HomePage() {
                 #{index + 1}
               </div>
               <div className="flex-1">
-                <h3 className="font-brand font-bold text-ink">{student.name}</h3>
+                <h3 className="font-display font-bold text-ink">{student.name}</h3>
                 <p className="text-sm text-body">{student.class}</p>
               </div>
               <div className="text-right">
@@ -186,7 +183,7 @@ export default function HomePage() {
       {/* Birthday Spotlight */}
       {birthdays.length > 0 && (
         <div className="max-w-4xl mx-auto mb-16">
-          <h2 className="text-3xl font-brand font-bold text-ink mb-6">🎉 Today's Birthdays</h2>
+          <h2 className="text-3xl font-display font-bold text-ink mb-6">🎉 Today's Birthdays</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {birthdays.map((student) => (
               <div
@@ -194,7 +191,7 @@ export default function HomePage() {
                 className="bubble p-6 rounded-bubble-lg text-center hover:scale-105 transition-transform"
               >
                 <div className="text-5xl mb-3">🎂</div>
-                <h3 className="font-brand font-bold text-ink mb-1">{student.name}</h3>
+                <h3 className="font-display font-bold text-ink mb-1">{student.name}</h3>
                 <p className="text-body">{student.class}</p>
               </div>
             ))}
@@ -247,9 +244,9 @@ export default function HomePage() {
 
       {/* Student Modal */}
       {selectedStudentRoll && (
-        <StudentModal 
-          rollNo={selectedStudentRoll} 
-          onClose={() => setSelectedStudentRoll(null)} 
+        <StudentModal
+          rollNo={selectedStudentRoll}
+          onClose={() => setSelectedStudentRoll(null)}
         />
       )}
     </div>

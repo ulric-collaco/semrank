@@ -60,6 +60,7 @@ export default function ComparePage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [loading, setLoading] = useState(true);
   const [fetchingDetails, setFetchingDetails] = useState(false);
+  const [selectedClass, setSelectedClass] = useState('All');
 
   useEffect(() => {
     const fetchStudents = async () => {
@@ -75,13 +76,32 @@ export default function ComparePage() {
     fetchStudents();
   }, []);
 
+
+
+  // Extract unique classes
+  const classes = useMemo(() => {
+    const unique = new Set(students.map(s => s.class).filter(Boolean));
+    return ['All', ...Array.from(unique).sort()];
+  }, [students]);
+
   const filteredStudents = useMemo(() => {
-    if (!searchQuery.trim()) return students;
-    const q = searchQuery.toLowerCase();
-    return students.filter(
-      (s) => s.name?.toLowerCase().includes(q) || s.roll_no?.toString().toLowerCase().includes(q)
-    );
-  }, [students, searchQuery]);
+    let filtered = students;
+
+    // Filter by class
+    if (selectedClass !== 'All') {
+      filtered = filtered.filter(s => s.class === selectedClass);
+    }
+
+    // Filter by search query
+    if (searchQuery.trim()) {
+      const q = searchQuery.toLowerCase();
+      filtered = filtered.filter(
+        (s) => s.name?.toLowerCase().includes(q) || s.roll_no?.toString().toLowerCase().includes(q)
+      );
+    }
+
+    return filtered;
+  }, [students, searchQuery, selectedClass]);
 
   const toggleStudent = async (student) => {
     const isSelected = selectedStudents.find(s => s.roll_no === student.roll_no);
@@ -264,7 +284,7 @@ export default function ComparePage() {
         {/* Header */}
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
           <div>
-            <h1 className="text-3xl md:text-4xl font-brand font-bold text-ink mb-2">
+            <h1 className="text-3xl md:text-4xl font-display font-bold text-ink mb-2">
               Compare Students
             </h1>
             <p className="text-body text-sm md:text-base">
@@ -289,8 +309,27 @@ export default function ComparePage() {
               placeholder="Search by name or roll number..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-12 pr-4 py-3 bg-black/20 rounded-lg border border-white/5 text-ink placeholder:text-body/50 focus:outline-none focus:border-accent/40 transition-all"
+              className="w-full pl-12 pr-4 py-3 bg-black/20 rounded-lg border border-white/5 text-ink placeholder:text-body/50 focus:outline-none focus:border-accent/40 transition-all font-sans"
             />
+          </div>
+
+          {/* Class Filters */}
+          <div className="flex flex-wrap gap-2 mt-4">
+            {classes.map(cls => (
+              <button
+                key={cls}
+                onClick={() => setSelectedClass(cls)}
+                className={`
+                  px-4 py-2 rounded-lg text-sm font-semibold transition-all border
+                  ${selectedClass === cls
+                    ? 'bg-accent text-ink border-accent shadow-bubble-hover'
+                    : 'bg-white/5 text-body border-white/10 hover:bg-white/10 hover:text-ink'
+                  }
+                `}
+              >
+                {cls}
+              </button>
+            ))}
           </div>
 
           {loading ? (

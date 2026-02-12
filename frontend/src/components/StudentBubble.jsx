@@ -109,7 +109,7 @@ export default function StudentBubble({ student, rank, onStudentClick }) {
         </div>
 
         {/* Name */}
-        <h3 className="text-lg font-brand font-bold text-ink truncate">{student.name}</h3>
+        <h3 className="text-lg font-display font-bold text-ink truncate">{student.name}</h3>
 
         {/* Roll Number */}
         <p className="text-sm text-body">Roll: {student.roll_no}</p>

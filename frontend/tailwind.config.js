@@ -16,8 +16,8 @@ export default {
         accent: '#f582ae',
       },
       fontFamily: {
-        sans: ['Inter', 'system-ui', 'sans-serif'],
-        brand: ['Slackey', 'cursive'],
+        display: ['Slackey', 'cursive'],
+        sans: ['Inter', 'sans-serif'],
       },
       borderRadius: {
         'bubble': '2rem',

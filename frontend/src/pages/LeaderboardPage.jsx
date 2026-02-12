@@ -121,7 +121,7 @@ export default function LeaderboardPage() {
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="text-center mb-8">
-          <h1 className="text-5xl font-brand font-bold text-ink mb-4">🏆 Leaderboard</h1>
+          <h1 className="text-5xl font-display font-bold text-ink mb-4">🏆 Leaderboard</h1>
         </div>
 
         {/* Tabs */}
@@ -286,7 +286,7 @@ export default function LeaderboardPage() {
                     #{index + 1}
                   </div>
                   <div className="flex-1">
-                    <h3 className="text-2xl font-brand font-bold text-ink mb-2">{classData.class_name}</h3>
+                    <h3 className="text-2xl font-display font-bold text-ink mb-2">{classData.class_name}</h3>
                     <div className="grid grid-cols-2 gap-4 text-sm">
                       <div>
                         <p className="text-body">Avg SGPA</p>
