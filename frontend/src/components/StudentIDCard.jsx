@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { User, ChevronDown, ChevronUp } from 'lucide-react';
+import { User } from 'lucide-react';
 
 export default function StudentIDCard({ student, loading, error, onClose }) {
     // Setup state for tabs
@@ -8,19 +8,19 @@ export default function StudentIDCard({ student, loading, error, onClose }) {
 
     if (loading) {
         return (
-            <div className="w-full max-w-[1100px] bg-white rounded-2xl border border-slate-200 p-8 flex items-center justify-center min-h-[400px]">
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-slate-600"></div>
+            <div className="w-full max-w-[950px] bg-slate-900/60 backdrop-blur-3xl border border-white/10 rounded-2xl p-6 flex items-center justify-center min-h-[300px]">
+                <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-indigo-500"></div>
             </div>
         );
     }
 
     if (error || !student) {
         return (
-            <div className="w-full max-w-[1100px] bg-white rounded-2xl border border-slate-200 p-8 text-center min-h-[200px] flex flex-col items-center justify-center gap-4">
-                <p className="text-slate-600 font-medium">{error || "Student details not available."}</p>
+            <div className="w-full max-w-[950px] bg-slate-900/60 backdrop-blur-3xl border border-white/10 rounded-2xl p-6 text-center min-h-[200px] flex flex-col items-center justify-center gap-3">
+                <p className="text-slate-400 font-medium text-sm">{error || "Student details not available."}</p>
                 <button
                     onClick={onClose}
-                    className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-sm font-medium transition-colors"
+                    className="px-3 py-1.5 bg-white/5 hover:bg-white/10 text-slate-200 border border-white/10 rounded-lg text-xs font-medium transition-colors"
                 >
                     Close
                 </button>
@@ -35,7 +35,7 @@ export default function StudentIDCard({ student, loading, error, onClose }) {
     };
 
     const topSubjects = student.subjects
-        ? [...student.subjects].sort((a, b) => (a.rank || 999) - (b.rank || 999)).slice(0, 5)
+        ? [...student.subjects].sort((a, b) => (a.rank || 999) - (b.rank || 999)).slice(0, 4)
         : [];
 
     const subjects = student.subjects || [];
@@ -52,159 +52,161 @@ export default function StudentIDCard({ student, loading, error, onClose }) {
             activeSubject.th_ise1 || 0,
             activeSubject.th_ise2 || 0
         ];
-        // Default to at least 25 or the max found
         return Math.max(...marks, 25);
     };
 
     const maxMark = getMaxMark();
 
     // Helper to render bars
-    const BarBox = ({ label, value, colorClass }) => (
-        <div className="flex flex-col items-center gap-2 flex-1 min-w-[50px]">
-            <div className="w-full bg-slate-100 rounded-t-lg h-32 md:h-40 relative flex items-end justify-center pb-0 overflow-hidden">
+    const BarBox = ({ label, value }) => (
+        <div className="flex flex-col items-center gap-1.5 flex-1 min-w-[32px]">
+            <div className="w-full bg-white/5 rounded-t-md h-24 md:h-28 relative flex items-end justify-center pb-0 overflow-hidden border border-white/5">
                 <div
-                    className={`w-full mx-2 rounded-t-md transition-all duration-500 ease-out flex items-end justify-center pb-2 ${colorClass}`}
+                    className="w-full mx-1 rounded-t-[2px] transition-all duration-500 ease-out flex items-end justify-center pb-1 bg-indigo-500/80 backdrop-blur-sm"
                     style={{ height: `${(value / maxMark) * 100}%` }}
                 >
-                    <span className="text-white text-xs font-bold">{value}</span>
+                    <span className="text-white/90 text-[10px] font-semibold">{value}</span>
                 </div>
             </div>
-            <div className="text-center">
-                <span className="text-[10px] uppercase font-bold text-slate-500 block">{label}</span>
+            <div className="text-center w-full">
+                <span className="text-[9px] uppercase font-bold text-slate-500 block truncate w-full">{label}</span>
             </div>
         </div>
     );
 
     return (
-        <div className="w-full max-w-[1100px] mx-auto bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden font-sans text-slate-800">
+        <div className="w-full max-w-[950px] mx-auto bg-slate-900/60 backdrop-blur-3xl border border-white/10 shadow-2xl shadow-black/40 rounded-[16px] overflow-hidden font-sans text-slate-200 relative">
 
-            {/* Scroll container for whole card content if needed on small screens */}
-            <div className="max-h-[90vh] overflow-y-auto custom-scrollbar">
+            {/* Scroll container for whole card content */}
+            <div className="max-h-[85vh] overflow-y-auto no-scrollbar">
+                <style>{`
+            .no-scrollbar::-webkit-scrollbar {
+                display: none;
+            }
+            .no-scrollbar {
+                -ms-overflow-style: none;
+                scrollbar-width: none;
+            }
+        `}</style>
 
                 {/* Header / Close button */}
                 {onClose && (
-                    <div className="flex justify-end p-4 pb-0 md:hidden">
+                    <div className="flex justify-end p-3 pb-0 md:hidden">
                         <button
                             onClick={onClose}
-                            className="w-8 h-8 flex items-center justify-center bg-slate-100 rounded-full text-slate-500 hover:bg-slate-200"
+                            className="w-6 h-6 flex items-center justify-center bg-white/5 rounded-full text-slate-400 hover:bg-white/10 transition-colors border border-white/5"
                         >
                             ×
                         </button>
                     </div>
                 )}
 
-                <div className="p-4 md:p-6 grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div className="p-4 md:p-6 grid grid-cols-1 md:grid-cols-12 gap-6">
 
-                    {/* Column 1: Profile & Identity */}
-                    <div className="flex flex-col items-center md:items-start text-center md:text-left space-y-4">
-                        <div className="w-32 h-32 md:w-full md:h-auto md:aspect-square max-w-[200px] bg-slate-100 rounded-xl overflow-hidden border border-slate-200 flex items-center justify-center relative">
-                            {student.roll_no ? (
-                                <img
-                                    src={`/student_faces/${student.roll_no}.png`}
-                                    alt={student.name}
-                                    className="w-full h-full object-cover"
-                                    onError={(e) => {
-                                        e.target.style.display = 'none';
-                                        e.target.nextSibling.style.display = 'flex';
-                                    }}
-                                />
-                            ) : null}
-                            <div className="hidden w-full h-full flex-col items-center justify-center text-slate-300">
-                                <User className="w-12 h-12" />
+                    {/* Left Column: Profile (Takes 4 cols) */}
+                    <div className="md:col-span-4 flex flex-col items-center md:items-start text-center md:text-left space-y-4">
+                        <div className="relative">
+                            {/* Subtle radial glow */}
+                            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-32 h-32 bg-indigo-500/20 blur-2xl rounded-full -z-10"></div>
+
+                            <div className="w-24 h-24 md:w-[100px] md:h-[100px] bg-white/5 rounded-[16px] overflow-hidden border border-white/10 flex items-center justify-center relative shadow-md shadow-black/20">
+                                {student.roll_no ? (
+                                    <img
+                                        src={`/student_faces/${student.roll_no}.png`}
+                                        alt={student.name}
+                                        className="w-full h-full object-cover"
+                                        onError={(e) => {
+                                            e.target.style.display = 'none';
+                                            e.target.nextSibling.style.display = 'flex';
+                                        }}
+                                    />
+                                ) : null}
+                                <div className="hidden w-full h-full flex-col items-center justify-center text-slate-600">
+                                    <User className="w-8 h-8 opacity-50" />
+                                </div>
                             </div>
                         </div>
 
-                        <div className="w-full">
-                            <h1 className="text-[22px] md:text-[26px] font-semibold text-slate-900 leading-tight mb-2">
+                        <div className="w-full space-y-2">
+                            <h1 className="text-lg md:text-xl font-semibold text-white leading-tight">
                                 {student.name}
                             </h1>
-                            <div className="space-y-1">
-                                <div className="flex justify-between md:justify-start md:gap-4 border-b border-dashed border-slate-200 pb-1 mb-1">
-                                    <span className="text-[12px] uppercase tracking-wide text-slate-500 font-medium">Roll No</span>
-                                    <span className="font-mono text-sm font-medium text-slate-700">{student.roll_no}</span>
+
+                            <div className="space-y-1.5 text-xs text-slate-400">
+                                <div className="flex justify-between md:flex-col md:items-start border-b border-white/5 pb-1.5 md:border-0 md:pb-0">
+                                    <span className="text-[10px] uppercase tracking-wide opacity-50 font-medium">Roll No</span>
+                                    <span className="font-mono text-slate-300">{student.roll_no}</span>
                                 </div>
-                                <div className="flex justify-between md:justify-start md:gap-4 border-b border-dashed border-slate-200 pb-1 mb-1">
-                                    <span className="text-[12px] uppercase tracking-wide text-slate-500 font-medium">Class</span>
-                                    <span className="text-sm font-medium text-slate-700">{student.class}</span>
-                                </div>
-                                <div className="flex justify-between md:justify-start md:gap-4">
-                                    <span className="text-[12px] uppercase tracking-wide text-slate-500 font-medium">Enrollment</span>
-                                    <span className="font-mono text-xs text-slate-600">{student.enrollment_id}</span>
+                                <div className="flex justify-between md:flex-col md:items-start">
+                                    <span className="text-[10px] uppercase tracking-wide opacity-50 font-medium">Class</span>
+                                    <span className="text-slate-300">{student.class}</span>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    {/* Column 2 & 3: Stats */}
-                    <div className="md:col-span-2 flex flex-col gap-6">
+                    {/* Right Column: Stats & Data (Takes 8 cols) */}
+                    <div className="md:col-span-8 flex flex-col gap-5">
 
-                        {/* Top Row: SGPA & Attendance Cards */}
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
-                            <div className="bg-slate-50 border border-slate-200 rounded-xl p-5 flex flex-col justify-between h-full relative overflow-hidden group hover:border-slate-300 transition-colors">
-                                <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
-                                    <span className="text-6xl">📊</span>
-                                </div>
-                                <span className="text-[12px] uppercase tracking-wide text-slate-500 font-bold">Sem SGPA</span>
-                                <div className="mt-2 text-slate-900">
-                                    <span className="text-[32px] md:text-[40px] font-bold tracking-tight">
+                        {/* Row 1: Metrics */}
+                        <div className="grid grid-cols-2 gap-4">
+                            {/* SGPA Card */}
+                            <div className="bg-white/5 border border-white/5 rounded-lg p-3 md:p-4 backdrop-blur-md flex flex-col justify-between hover:bg-white/[0.07] transition-colors">
+                                <span className="text-[10px] uppercase tracking-wide text-slate-400 font-medium">Sem SGPA</span>
+                                <div className="mt-1 text-white flex items-baseline">
+                                    <span className="text-2xl md:text-3xl font-bold tracking-tight">
                                         {formatFloat(student.cgpa, 2)}
                                     </span>
-                                    <span className="text-slate-400 text-sm ml-1">/ 10</span>
+                                    <span className="text-slate-500 text-xs ml-1.5 font-medium">/ 10</span>
                                 </div>
                             </div>
 
-                            <div className="bg-slate-50 border border-slate-200 rounded-xl p-5 flex flex-col justify-between h-full relative overflow-hidden group hover:border-slate-300 transition-colors">
-                                <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
-                                    <span className="text-6xl">📅</span>
-                                </div>
-                                <span className="text-[12px] uppercase tracking-wide text-slate-500 font-bold">Attendance</span>
-                                <div className="mt-2 text-slate-900">
-                                    <span className="text-[26px] md:text-[32px] font-semibold tracking-tight">
+                            {/* Attendance Card */}
+                            <div className="bg-white/5 border border-white/5 rounded-lg p-3 md:p-4 backdrop-blur-md flex flex-col justify-between hover:bg-white/[0.07] transition-colors">
+                                <span className="text-[10px] uppercase tracking-wide text-slate-400 font-medium">Attendance</span>
+                                <div className="mt-1 text-white flex items-baseline">
+                                    <span className="text-2xl md:text-3xl font-semibold tracking-tight">
                                         {formatFloat(student.attendance, 1)}
                                     </span>
-                                    <span className="text-slate-500 text-lg ml-0.5">%</span>
+                                    <span className="text-slate-500 text-sm ml-1">%</span>
                                 </div>
                             </div>
                         </div>
 
-                        {/* Ranking Section */}
+                        {/* Row 2: Ranks */}
                         <div>
-                            <span className="text-[12px] uppercase tracking-wide text-slate-500 font-semibold mb-3 block">
-                                Rankings
-                            </span>
-                            <div className="flex flex-wrap gap-2 md:gap-3">
+                            <div className="flex flex-wrap gap-2">
                                 {[
-                                    { label: 'College Rank', val: student.rank_cgpa_college, color: 'bg-indigo-50 text-indigo-700 border-indigo-100' },
-                                    { label: 'Class Rank', val: student.rank_cgpa_class, color: 'bg-blue-50 text-blue-700 border-blue-100' },
-                                    { label: 'College Att.', val: student.rank_attendance_college, color: 'bg-teal-50 text-teal-700 border-teal-100' },
-                                    { label: 'Class Att.', val: student.rank_attendance_class, color: 'bg-emerald-50 text-emerald-700 border-emerald-100' }
+                                    { label: 'College Rank', val: student.rank_cgpa_college },
+                                    { label: 'Class Rank', val: student.rank_cgpa_class },
+                                    { label: 'College Att.', val: student.rank_attendance_college },
+                                    { label: 'Class Att.', val: student.rank_attendance_class }
                                 ].map((rank, idx) => (
                                     rank.val && (
-                                        <div key={idx} className={`px-3 py-1.5 rounded-md border ${rank.color} text-sm font-medium flex items-center gap-2`}>
-                                            <span className="opacity-70 text-xs uppercase tracking-wider">{rank.label}</span>
-                                            <span className="font-bold">#{rank.val}</span>
+                                        <div key={idx} className="px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-xs text-slate-300 flex items-center gap-1.5 hover:bg-white/10 transition-colors">
+                                            <span className="opacity-50 text-[9px] uppercase tracking-wider">{rank.label}</span>
+                                            <span className="font-mono font-semibold text-white">#{rank.val}</span>
                                         </div>
                                     )
                                 ))}
                             </div>
                         </div>
 
-                        {/* Simple Top Subjects List (Preserving summary view) */}
-                        <div className="pt-2">
-                            <div className="flex items-center justify-between mb-3 border-b border-slate-100 pb-2">
-                                <span className="text-[12px] uppercase tracking-wide text-slate-500 font-semibold">Top Subjects</span>
-                                <span className="text-[10px] uppercase text-slate-400 font-medium">Rank</span>
-                            </div>
+                        {/* Row 3: Top Subjects Grid (Compact) */}
+                        <div>
+                            <span className="text-[10px] uppercase tracking-wide text-slate-500 font-semibold mb-2 block pl-0.5">Top Subjects</span>
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                                {topSubjects.slice(0, 4).map((sub, idx) => ( // Show top 4 to save space
-                                    <div key={idx} className="flex items-center justify-between p-2 bg-slate-50 rounded-lg border border-slate-100">
+                                {topSubjects.map((sub, idx) => (
+                                    <div key={idx} className="flex items-center justify-between p-2 rounded-md hover:bg-white/5 border border-transparent hover:border-white/5 transition-colors">
                                         <div className="flex flex-col min-w-0">
-                                            <span className="text-xs font-semibold text-slate-800 truncate pr-2" title={sub.subject_name}>{sub.subject_name}</span>
-                                            <span className="text-[10px] text-slate-500 font-mono">{sub.subject_code}</span>
+                                            <span className="text-xs font-medium text-slate-200 truncate">{sub.subject_name}</span>
+
                                         </div>
-                                        <div className="flex items-center gap-2 flex-shrink-0">
-                                            <span className="text-xs font-bold text-slate-700">{sub.total_marks}</span>
-                                            {sub.rank <= 3 && <span className="text-[10px] text-amber-600 font-bold">#{sub.rank}</span>}
+                                        <div className="flex items-center gap-2">
+                                            <span className="text-xs font-semibold text-white/80">{sub.total_marks}</span>
+                                            <span className={`text-[10px] font-bold w-6 text-right ${sub.rank <= 3 ? 'text-amber-400' : 'text-slate-600'}`}>
+                                                #{sub.rank || '-'}
+                                            </span>
                                         </div>
                                     </div>
                                 ))}
@@ -216,57 +218,52 @@ export default function StudentIDCard({ student, loading, error, onClose }) {
 
                 {/* Full Width Subject Performance Section (Bar Graphs) */}
                 {subjects.length > 0 && (
-                    <div className="border-t border-slate-200 mt-2 bg-slate-50/50 p-6 md:p-8">
-                        <h3 className="text-lg font-semibold text-slate-800 mb-6 flex items-center gap-2">
-                            <span>📊</span> Subject Performance
-                        </h3>
-
-                        {/* Horizontal Scrollable Tabs */}
-                        <div className="flex gap-2 overflow-x-auto pb-4 mb-6 custom-scrollbar">
+                    <div className="border-t border-white/5 mt-2 bg-black/20 p-4 md:p-6">
+                        {/* Compact Tabs - Full Width */}
+                        <div className="flex gap-2 overflow-x-auto no-scrollbar w-full mb-4 pb-1">
                             {subjects.map((subj, idx) => (
                                 <button
                                     key={idx}
                                     onClick={() => setSelectedSubjectIndex(idx)}
-                                    className={`px-4 py-2 rounded-lg text-sm font-medium whitespace-nowrap transition-all border ${selectedSubjectIndex === idx
-                                            ? 'bg-slate-800 text-white border-slate-800 shadow-md'
-                                            : 'bg-white text-slate-600 border-slate-200 hover:bg-slate-100'
+                                    className={`px-3 py-1.5 rounded-md text-[10px] font-medium whitespace-nowrap transition-all border shrink-0 ${selectedSubjectIndex === idx
+                                        ? 'bg-white/10 text-white border-white/10'
+                                        : 'bg-transparent text-slate-500 border-transparent hover:bg-white/5 hover:text-slate-300'
                                         }`}
                                 >
-                                    {subj.subject_code}
+                                    {subj.subject_name}
                                 </button>
                             ))}
                         </div>
 
                         {/* Active Subject Chart */}
                         {activeSubject && (
-                            <div className="bg-white rounded-xl border border-slate-200 p-6 shadow-sm">
+                            <div className="bg-white/[0.02] rounded-lg border border-white/5 p-4">
 
-                                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4 border-b border-slate-100 pb-4">
+                                <div className="flex justify-between items-center mb-6">
                                     <div>
-                                        <h4 className="text-xl font-bold text-slate-800">{activeSubject.subject_name}</h4>
-                                        <p className="text-sm text-slate-500 mt-1">Code: {activeSubject.subject_code}</p>
+                                        <h4 className="text-sm font-bold text-slate-200">{activeSubject.subject_name}</h4>
                                     </div>
                                     <div className="flex gap-4">
                                         <div className="text-right">
-                                            <span className="text-[10px] uppercase font-bold text-slate-400 block">Total</span>
-                                            <span className="text-2xl font-bold text-slate-900">{activeSubject.total_marks || 0}</span>
+                                            <span className="text-[9px] uppercase font-bold text-slate-600 block">Total</span>
+                                            <span className="text-sm font-bold text-white">{activeSubject.total_marks || 0}</span>
                                         </div>
                                         {activeSubject.rank && (
-                                            <div className="text-right pl-4 border-l border-slate-100">
-                                                <span className="text-[10px] uppercase font-bold text-slate-400 block">Rank</span>
-                                                <span className="text-2xl font-bold text-indigo-600">#{activeSubject.rank}</span>
+                                            <div className="text-right pl-4 border-l border-white/5">
+                                                <span className="text-[9px] uppercase font-bold text-slate-600 block">Rank</span>
+                                                <span className="text-sm font-bold text-indigo-400">#{activeSubject.rank}</span>
                                             </div>
                                         )}
                                     </div>
                                 </div>
 
-                                <div className="flex justify-between items-end gap-2 h-48 w-full">
-                                    <BarBox label="MSE" value={activeSubject.mse || 0} colorClass="bg-indigo-500" />
-                                    <BarBox label="ESE" value={activeSubject.ese || 0} colorClass="bg-blue-500" />
-                                    <BarBox label="TH-ISE1" value={activeSubject.th_ise1 || 0} colorClass="bg-sky-500" />
-                                    <BarBox label="TH-ISE2" value={activeSubject.th_ise2 || 0} colorClass="bg-cyan-500" />
-                                    <BarBox label="PR-ISE1" value={activeSubject.pr_ise1 || 0} colorClass="bg-teal-500" />
-                                    <BarBox label="PR-ISE2" value={activeSubject.pr_ise2 || 0} colorClass="bg-emerald-500" />
+                                <div className="flex justify-between items-end gap-1.5 h-28 w-full">
+                                    <BarBox label="MSE" value={activeSubject.mse || 0} />
+                                    <BarBox label="ESE" value={activeSubject.ese || 0} />
+                                    <BarBox label="T1" value={activeSubject.th_ise1 || 0} />
+                                    <BarBox label="T2" value={activeSubject.th_ise2 || 0} />
+                                    <BarBox label="P1" value={activeSubject.pr_ise1 || 0} />
+                                    <BarBox label="P2" value={activeSubject.pr_ise2 || 0} />
                                 </div>
 
                             </div>

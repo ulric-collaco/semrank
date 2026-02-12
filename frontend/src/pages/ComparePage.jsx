@@ -370,10 +370,10 @@ export default function ComparePage() {
               <div className="h-[300px] sm:h-[400px] w-full">
                 <ResponsiveContainer width="100%" height="100%">
                   <RadarChart cx="50%" cy="50%" outerRadius="80%" data={radarData}>
-                    <PolarGrid stroke="var(--color-body)" strokeOpacity={0.1} />
+                    <PolarGrid stroke="#94a3b8" strokeOpacity={0.4} />
                     <PolarAngleAxis
                       dataKey="subject"
-                      tick={{ fill: 'var(--color-ink)', fontSize: 12, fontWeight: 500 }}
+                      tick={{ fill: '#f8fafc', fontSize: 12, fontWeight: 600 }}
                     />
                     <PolarRadiusAxis angle={30} domain={[0, 100]} tick={false} axisLine={false} />
                     {selectedStudents.map((student, idx) => (
@@ -383,8 +383,8 @@ export default function ComparePage() {
                         dataKey={student.name}
                         stroke={THEME_COLORS[idx % THEME_COLORS.length]}
                         fill={THEME_COLORS[idx % THEME_COLORS.length]}
-                        fillOpacity={0.15}
-                        strokeWidth={2}
+                        fillOpacity={0.4}
+                        strokeWidth={3}
                       />
                     ))}
                     <Legend iconType="circle" />
@@ -405,15 +405,15 @@ export default function ComparePage() {
                   <div className="h-[250px] w-full flex-grow">
                     <ResponsiveContainer width="100%" height="100%">
                       <BarChart data={data} margin={{ top: 20, right: 10, left: -20, bottom: 0 }}>
-                        <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="var(--color-body)" strokeOpacity={0.05} />
+                        <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#94a3b8" strokeOpacity={0.2} />
                         <XAxis
                           dataKey="exam"
-                          tick={{ fill: 'var(--color-body)', fontSize: 12 }}
+                          tick={{ fill: '#cbd5e1', fontSize: 12 }}
                           axisLine={false}
                           tickLine={false}
                         />
                         <YAxis
-                          tick={{ fill: 'var(--color-body)', fontSize: 12 }}
+                          tick={{ fill: '#cbd5e1', fontSize: 12 }}
                           axisLine={false}
                           tickLine={false}
                         />
