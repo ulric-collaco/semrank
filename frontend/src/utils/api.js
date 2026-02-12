@@ -45,8 +45,8 @@ export const studentAPI = {
 }
 
 export const leaderboardAPI = {
-  // Get top students by CGPA
-  getTopByCGPA: async (limit = 10, classFilter = 'all') => {
+  // Get top students by SGPA
+  getTopBySGPA: async (limit = 10, classFilter = 'all') => {
     const response = await api.get(`/leaderboard/cgpa`, {
       params: { limit, class: classFilter },
     })

@@ -11,7 +11,7 @@ export default function LeaderboardPage() {
   const [isLoading, setIsLoading] = useState(true)
   
   // Student leaderboard filters
-  const [sortBy, setSortBy] = useState('cgpa') // 'cgpa', 'attendance', or 'subject'
+  const [sortBy, setSortBy] = useState('sgpa') // 'sgpa', 'attendance', or 'subject'
   const [filterClass, setFilterClass] = useState('all')
   const [selectedSubject, setSelectedSubject] = useState('')
   const [limit, setLimit] = useState(10) // 10, 50, or 'all'
@@ -51,8 +51,8 @@ export default function LeaderboardPage() {
       if (sortBy === 'subject' && selectedSubject) {
         const response = await leaderboardAPI.getTopBySubject(selectedSubject, fetchLimit, filterClass)
         data = response.students || []
-      } else if (sortBy === 'cgpa') {
-        data = await leaderboardAPI.getTopByCGPA(fetchLimit, filterClass)
+      } else if (sortBy === 'sgpa') {
+        data = await leaderboardAPI.getTopBySGPA(fetchLimit, filterClass)
       } else {
         data = await leaderboardAPI.getTopByAttendance(fetchLimit, filterClass)
       }
@@ -155,14 +155,14 @@ export default function LeaderboardPage() {
               {/* Sort Options */}
               <div className="flex flex-wrap gap-3 justify-center">
                 <button
-                  onClick={() => setSortBy('cgpa')}
+                  onClick={() => setSortBy('sgpa')}
                   className={`px-6 py-3 rounded-bubble font-medium transition-all ${
-                    sortBy === 'cgpa'
+                    sortBy === 'sgpa'
                       ? 'bg-accent text-ink shadow-bubble-hover scale-105'
                       : 'bubble hover:scale-105'
                   }`}
                 >
-                  📊 CGPA
+                  📊 SGPA
                 </button>
                 <button
                   onClick={() => setSortBy('attendance')}
@@ -287,7 +287,7 @@ export default function LeaderboardPage() {
                     <h3 className="text-2xl font-bold text-ink mb-2">{classData.class_name}</h3>
                     <div className="grid grid-cols-2 gap-4 text-sm">
                       <div>
-                        <p className="text-body">Avg CGPA</p>
+                        <p className="text-body">Avg SGPA</p>
                         <p className="text-xl font-bold text-ink">{classData.avg_cgpa}</p>
                       </div>
                       <div>

@@ -5,6 +5,15 @@
 @layer base {
   body {
     @apply bg-background text-body antialiased;
+    background-image: 
+      radial-gradient(2px 2px at 20px 30px, rgba(139, 92, 246, 0.3), transparent),
+      radial-gradient(2px 2px at 60px 70px, rgba(245, 130, 174, 0.3), transparent),
+      radial-gradient(1px 1px at 50px 50px, rgba(139, 92, 246, 0.2), transparent),
+      radial-gradient(1px 1px at 130px 80px, rgba(96, 165, 250, 0.2), transparent),
+      radial-gradient(2px 2px at 90px 10px, rgba(245, 130, 174, 0.2), transparent);
+    background-size: 200px 200px, 200px 200px, 200px 200px, 200px 200px, 200px 200px;
+    background-position: 0 0, 40px 60px, 130px 270px, 70px 100px, 150px 50px;
+    background-attachment: fixed;
   }
   
   h1, h2, h3, h4, h5, h6 {
@@ -23,18 +32,32 @@
 
 @layer components {
   .bubble {
-    @apply bg-bubble rounded-bubble shadow-bubble;
+    @apply bg-bubble/70 backdrop-blur-lg rounded-bubble shadow-bubble border border-accent/20;
   }
   
   .bubble-secondary {
-    @apply bg-bubbleSecondary rounded-bubble shadow-bubble;
+    @apply bg-bubbleSecondary/70 backdrop-blur-lg rounded-bubble shadow-bubble border border-accent/20;
   }
   
   .bubble-hover {
-    @apply transition-all duration-300 hover:shadow-bubble-hover;
+    @apply transition-all duration-300 hover:shadow-bubble-hover hover:bg-bubble/85 hover:border-accent/30;
   }
   
   .bubble-active {
     @apply active:shadow-bubble-active active:scale-95;
   }
+  
+  /* Dark theme form elements */
+  select, input[type="text"], input[type="search"], input[type="number"] {
+    @apply bg-bubble/80 text-ink border border-accent/30;
+  }
+  
+  select:focus, input:focus {
+    @apply outline-none ring-2 ring-accent/50 border-accent/50;
+  }
+  
+  select option {
+    @apply bg-bubble text-ink;
+  }
 }
+

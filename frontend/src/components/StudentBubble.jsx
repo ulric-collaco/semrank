@@ -37,6 +37,19 @@ export default function StudentBubble({ student, rank }) {
     window.location.hash = `#student?id=${identifier}`
   }
 
+  // Get student photo path - photos are in student_faces folder by roll number
+  const getPhotoPath = () => {
+    if (!student.roll_no) return null
+    try {
+      // Photos are stored as student_faces/{roll_no}.png
+      return `/student_faces/${student.roll_no}.png`
+    } catch {
+      return null
+    }
+  }
+
+  const photoPath = getPhotoPath()
+
   return (
     <div
       ref={bubbleRef}
@@ -51,9 +64,22 @@ export default function StudentBubble({ student, rank }) {
       </div>
 
       <div className="text-center space-y-3">
-        {/* Photo Placeholder */}
-        <div className="w-24 h-24 mx-auto bg-bubbleSecondary rounded-full flex items-center justify-center text-4xl relative">
-          👤
+        {/* Photo */}
+        <div className="w-24 h-24 mx-auto bg-bubbleSecondary rounded-full flex items-center justify-center text-4xl relative overflow-hidden">
+          {photoPath ? (
+            <img 
+              src={photoPath} 
+              alt={student.name}
+              className="w-full h-full object-cover"
+              onError={(e) => {
+                e.target.style.display = 'none'
+                e.target.nextSibling.style.display = 'flex'
+              }}
+            />
+          ) : null}
+          <div className={photoPath ? 'hidden' : 'flex'} style={{ fontSize: '3rem' }}>
+            👤
+          </div>
           {/* Attendance Ring */}
           <svg className="absolute inset-0 w-full h-full -rotate-90">
             <circle
@@ -87,8 +113,8 @@ export default function StudentBubble({ student, rank }) {
         {/* Stats */}
         <div className="pt-3 border-t border-ink/10 space-y-2">
           <div className="flex justify-between items-center">
-            <span className="text-xs text-body">CGPA:</span>
-            <span className="text-base font-semibold text-ink">{student.cgpa}</span>
+            <span className="text-xs text-body">SGPA:</span>
+            <span className="text-base font-semibold text-ink">{student.sgpa}</span>
           </div>
           <div className="flex justify-between items-center">
             <span className="text-xs text-body">Attendance:</span>

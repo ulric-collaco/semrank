@@ -8,7 +8,7 @@ export default function GamePage() {
   const [round, setRound] = useState(0)
   const [student1, setStudent1] = useState(null)
   const [student2, setStudent2] = useState(null)
-  const [metric, setMetric] = useState('cgpa') // cgpa, attendance, or subject
+  const [metric, setMetric] = useState('sgpa') // sgpa, attendance, or subject
   const [currentSubject, setCurrentSubject] = useState(null) // For subject mode
   const [difficulty, setDifficulty] = useState('easy')
   const [isLoading, setIsLoading] = useState(true)
@@ -38,7 +38,7 @@ export default function GamePage() {
         setStudent2(data.students[1])
         setCurrentSubject(data.subject)
       } else {
-        // For CGPA/Attendance modes
+        // For SGPA/Attendance modes
         const pair = await gameAPI.getRandomPair()
         setStudent1(pair[0])
         setStudent2(pair[1])
@@ -61,8 +61,8 @@ export default function GamePage() {
       s1Value = student1.totalMarks || 0
       s2Value = student2.totalMarks || 0
     } else {
-      s1Value = metric === 'cgpa' ? student1.cgpa : student1.attendance
-      s2Value = metric === 'cgpa' ? student2.cgpa : student2.attendance  
+      s1Value = metric === 'sgpa' ? student1.sgpa : student1.attendance
+      s2Value = metric === 'sgpa' ? student2.sgpa : student2.attendance  
     }
 
     const isCorrect =
@@ -127,7 +127,7 @@ export default function GamePage() {
           <h1 className="text-5xl font-bold text-ink mb-4">🎮 Higher or Lower</h1>
           <p className="text-body text-lg mb-4">
             Guess if the next student has higher or lower {
-              metric === 'cgpa' ? 'CGPA' : 
+              metric === 'sgpa' ? 'SGPA' : 
               metric === 'attendance' ? 'attendance' :
               currentSubject ? `marks in ${currentSubject.name}` : 'subject marks'
             }
@@ -192,23 +192,36 @@ export default function GamePage() {
           {/* Student 1 (Known) */}
           <div className="bubble p-8 rounded-bubble-lg shadow-bubble">
             <div className="text-center space-y-4">
-              <div className="w-32 h-32 mx-auto bg-bubbleSecondary rounded-full flex items-center justify-center text-5xl">
-                👤
+              <div className="w-32 h-32 mx-auto bg-bubbleSecondary rounded-full flex items-center justify-center text-5xl overflow-hidden">
+                {student1.roll_no ? (
+                  <img 
+                    src={`/student_faces/${student1.roll_no}.png`}
+                    alt={student1.name}
+                    className="w-full h-full object-cover"
+                    onError={(e) => {
+                      e.target.style.display = 'none'
+                      e.target.nextSibling.style.display = 'flex'
+                    }}
+                  />
+                ) : null}
+                <div className={student1.roll_no ? 'hidden' : 'flex'} style={{ fontSize: '3rem' }}>
+                  👤
+                </div>
               </div>
               <h3 className="text-2xl font-bold text-ink">{student1.name}</h3>
               <p className="text-body">Class: {student1.class}</p>
               <div className="pt-4 border-t border-ink/10">
                 <p className="text-4xl font-bold text-ink">
-                  {metric === 'cgpa' 
-                    ? student1.cgpa 
+                  {metric === 'sgpa' 
+                    ? student1.sgpa 
                     : metric === 'attendance'
                     ? `${student1.attendance}%`
                     : student1.totalMarks || 0
                   }
                 </p>
                 <p className="text-body text-sm">
-                  {metric === 'cgpa' 
-                    ? 'CGPA' 
+                  {metric === 'sgpa' 
+                    ? 'SGPA' 
                     : metric === 'attendance'
                     ? 'Attendance'
                     : currentSubject ? `${currentSubject.name} Marks` : 'Subject Marks'
@@ -222,8 +235,21 @@ export default function GamePage() {
           <div ref={student2Ref} className="space-y-4">
             <div className="bubble p-8 rounded-bubble-lg shadow-bubble">
               <div className="text-center space-y-4">
-                <div className="w-32 h-32 mx-auto bg-bubbleSecondary rounded-full flex items-center justify-center text-5xl">
-                  👤
+                <div className="w-32 h-32 mx-auto bg-bubbleSecondary rounded-full flex items-center justify-center text-5xl overflow-hidden">
+                  {student2.roll_no ? (
+                    <img 
+                      src={`/student_faces/${student2.roll_no}.png`}
+                      alt={student2.name}
+                      className="w-full h-full object-cover"
+                      onError={(e) => {
+                        e.target.style.display = 'none'
+                        e.target.nextSibling.style.display = 'flex'
+                      }}
+                    />
+                  ) : null}
+                  <div className={student2.roll_no ? 'hidden' : 'flex'} style={{ fontSize: '3rem' }}>
+                    👤
+                  </div>
                 </div>
                 <h3 className="text-2xl font-bold text-ink">{student2.name}</h3>
                 <p className="text-body">Class: {student2.class}</p>
@@ -232,8 +258,8 @@ export default function GamePage() {
                     <p className="text-4xl font-bold text-ink">?</p>
                   ) : (
                     <p className="text-4xl font-bold text-ink">
-                      {metric === 'cgpa' 
-                        ? student2.cgpa 
+                      {metric === 'sgpa' 
+                        ? student2.sgpa 
                         : metric === 'attendance'
                         ? `${student2.attendance}%`
                         : student2.totalMarks || 0
@@ -241,8 +267,8 @@ export default function GamePage() {
                     </p>
                   )}
                   <p className="text-body text-sm">
-                    {metric === 'cgpa' 
-                      ? 'CGPA' 
+                    {metric === 'sgpa' 
+                      ? 'SGPA' 
                       : metric === 'attendance'
                       ? 'Attendance'
                       : currentSubject ? `${currentSubject.name} Marks` : 'Subject Marks'

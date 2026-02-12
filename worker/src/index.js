@@ -125,7 +125,8 @@ async function getStudentDetails(db, studentId) {
       m.ese,
       m.pr_ise1,
       m.pr_ise2,
-      ss.total_marks,
+      (COALESCE(m.mse, 0) + COALESCE(m.th_ise1, 0) + COALESCE(m.th_ise2, 0) + 
+       COALESCE(m.ese, 0) + COALESCE(m.pr_ise1, 0) + COALESCE(m.pr_ise2, 0)) as total_marks,
       ssl.rank_subject_class as rank
     FROM STUDENT_SUBJECT ss
     JOIN SUBJECT sub ON ss.subject_id = sub.subject_id

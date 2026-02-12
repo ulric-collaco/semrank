@@ -109,14 +109,27 @@ export default function BubbleMenu({
     return () => window.removeEventListener('resize', handleResize);
   }, [isMenuOpen, items]);
 
+  const handleLogoClick = () => {
+    window.location.hash = '#home';
+    if (isMenuOpen) {
+      setIsMenuOpen(false);
+    }
+  };
+
   return (
     <>
       <nav className={containerClassName} style={style} aria-label="Main navigation">
-        <div className="bubble logo-bubble" aria-label="Logo" style={{ background: menuBg }}>
+        <button 
+          type="button"
+          className="bubble logo-bubble" 
+          aria-label="Go to home" 
+          style={{ background: menuBg, cursor: 'pointer' }}
+          onClick={handleLogoClick}
+        >
           <span className="logo-content">
             {typeof logo === 'string' ? <img src={logo} alt="Logo" className="bubble-logo" /> : logo}
           </span>
-        </div>
+        </button>
 
         <button
           type="button"

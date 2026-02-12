@@ -8,33 +8,37 @@ export default function HomePage() {
   const [topStudents, setTopStudents] = useState([])
   const [quickLeaderboard, setQuickLeaderboard] = useState([])
   const [birthdays, setBirthdays] = useState([])
-  const [sortMetric, setSortMetric] = useState('cgpa') // 'cgpa' or 'attendance'
+  const [sortMetric, setSortMetric] = useState('sgpa') // 'sgpa' or 'attendance'
   const [loading, setLoading] = useState(true)
 
   const heroRef = useRef(null)
   const top3Ref = useRef(null)
   const quickLeaderRef = useRef(null)
+  const hasAnimated = useRef(false)
 
   useEffect(() => {
-    // Entrance animations
-    const tl = gsap.timeline()
-    tl.fromTo(
-      heroRef.current,
-      { y: 30, opacity: 0 },
-      { y: 0, opacity: 1, duration: 0.8, ease: 'back.out(1.5)' }
-    )
-      .fromTo(
-        top3Ref.current?.children || [],
-        { scale: 0, opacity: 0 },
-        { scale: 1, opacity: 1, duration: 0.5, stagger: 0.1, ease: 'back.out(1.5)' },
-        '-=0.3'
+    // Entrance animations - only play once on mount
+    if (!hasAnimated.current && topStudents.length > 0) {
+      hasAnimated.current = true
+      const tl = gsap.timeline()
+      tl.fromTo(
+        heroRef.current,
+        { y: 30, opacity: 0 },
+        { y: 0, opacity: 1, duration: 0.8, ease: 'back.out(1.5)' }
       )
-      .fromTo(
-        quickLeaderRef.current,
-        { y: 20, opacity: 0 },
-        { y: 0, opacity: 1, duration: 0.6, ease: 'power2.out' },
-        '-=0.2'
-      )
+        .fromTo(
+          top3Ref.current?.children || [],
+          { scale: 0, opacity: 0 },
+          { scale: 1, opacity: 1, duration: 0.5, stagger: 0.1, ease: 'back.out(1.5)' },
+          '-=0.3'
+        )
+        .fromTo(
+          quickLeaderRef.current,
+          { y: 20, opacity: 0 },
+          { y: 0, opacity: 1, duration: 0.6, ease: 'power2.out' },
+          '-=0.2'
+        )
+    }
   }, [topStudents])
 
   useEffect(() => {
@@ -49,7 +53,7 @@ export default function HomePage() {
     try {
       setLoading(true)
       const [topData, birthdayData] = await Promise.all([
-        leaderboardAPI.getTopByCGPA(3, 'all'),
+        leaderboardAPI.getTopBySGPA(3, 'all'),
         birthdayAPI.getTodaysBirthdays().catch(() => [])
       ])
       setTopStudents(topData)
@@ -63,8 +67,8 @@ export default function HomePage() {
 
   const fetchQuickLeaderboard = async () => {
     try {
-      const data = sortMetric === 'cgpa' 
-        ? await leaderboardAPI.getTopByCGPA(5, 'all')
+      const data = sortMetric === 'sgpa' 
+        ? await leaderboardAPI.getTopBySGPA(5, 'all')
         : await leaderboardAPI.getTopByAttendance(5, 'all')
       setQuickLeaderboard(data)
     } catch (error) {
@@ -76,12 +80,10 @@ export default function HomePage() {
     <div className="min-h-screen px-6 py-20">
       {/* Hero Section */}
       <div ref={heroRef} className="max-w-6xl mx-auto text-center mb-16">
-        <h1 className="text-7xl md:text-9xl font-bold text-ink mb-4">
-          🎓 SemRank
+        <h1 className="text-7xl md:text-9xl font-brand text-ink mb-4">
+          SemRank
         </h1>
-        <p className="text-2xl md:text-3xl text-body mb-8">
-          Rankings that move. Academics that inspire.
-        </p>
+       
 
         {/* Top 3 Preview */}
         {!loading && topStudents.length > 0 && (
@@ -92,15 +94,33 @@ export default function HomePage() {
                 className={`bubble p-6 rounded-bubble-lg ${
                   index === 0 ? 'md:scale-110 bg-accent' : 'bg-bubble'
                 } hover:scale-105 transition-transform duration-300 cursor-pointer`}
+                onClick={() => window.location.hash = `#student?id=${student.roll_no}`}
               >
                 <div className="text-center">
-                  <div className="w-20 h-20 mx-auto bg-bubbleSecondary rounded-full flex items-center justify-center text-4xl mb-3">
-                    {index === 0 ? '🥇' : index === 1 ? '🥈' : '🥉'}
+                  <div className="w-20 h-20 mx-auto bg-bubbleSecondary rounded-full flex items-center justify-center text-4xl mb-3 relative overflow-hidden">
+                    {student.roll_no ? (
+                      <img 
+                        src={`/student_faces/${student.roll_no}.png`}
+                        alt={student.name}
+                        className="w-full h-full object-cover"
+                        onError={(e) => {
+                          e.target.style.display = 'none'
+                          e.target.nextSibling.style.display = 'flex'
+                        }}
+                      />
+                    ) : null}
+                    <div className={student.roll_no ? 'hidden absolute inset-0 bg-bubbleSecondary' : 'absolute inset-0 bg-bubbleSecondary flex items-center justify-center'}>
+                      {index === 0 ? '🥇' : index === 1 ? '🥈' : '🥉'}
+                    </div>
+                    {/* Medal overlay */}
+                    <div className="absolute -top-1 -right-1 text-2xl">
+                      {index === 0 ? '🥇' : index === 1 ? '🥈' : '🥉'}
+                    </div>
                   </div>
                   <h3 className="font-bold text-lg text-ink mb-1">{student.name}</h3>
                   <p className="text-sm text-body mb-2">Roll: {student.roll_no}</p>
-                  <div className="text-2xl font-bold text-ink">{student.cgpa}</div>
-                  <p className="text-xs text-body">CGPA</p>
+                  <div className="text-2xl font-bold text-ink">{student.sgpa}</div>
+                  <p className="text-xs text-body">SGPA</p>
                 </div>
               </div>
             ))}
@@ -114,14 +134,14 @@ export default function HomePage() {
           <h2 className="text-3xl font-bold text-ink">📊 Quick Leaderboard</h2>
           <div className="flex gap-2">
             <button
-              onClick={() => setSortMetric('cgpa')}
+              onClick={() => setSortMetric('sgpa')}
               className={`px-4 py-2 rounded-bubble font-medium transition-all ${
-                sortMetric === 'cgpa'
+                sortMetric === 'sgpa'
                   ? 'bg-accent text-ink shadow-bubble-hover'
                   : 'bubble hover:shadow-bubble-hover'
               }`}
             >
-              CGPA
+              SGPA
             </button>
             <button
               onClick={() => setSortMetric('attendance')}
@@ -151,9 +171,9 @@ export default function HomePage() {
               </div>
               <div className="text-right">
                 <div className="text-2xl font-bold text-ink">
-                  {sortMetric === 'cgpa' ? student.cgpa : `${student.attendance}%`}
+                  {sortMetric === 'sgpa' ? student.sgpa : `${student.attendance}%`}
                 </div>
-                <p className="text-xs text-body">{sortMetric === 'cgpa' ? 'CGPA' : 'Attendance'}</p>
+                <p className="text-xs text-body">{sortMetric === 'sgpa' ? 'SGPA' : 'Attendance'}</p>
               </div>
             </div>
           ))}

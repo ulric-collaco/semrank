@@ -20,7 +20,7 @@ export default function ClassStatsSection() {
 
       // Calculate fun insights
       const insights = {
-        bestCGPA: classRankings[0], // First in rankings
+        bestSGPA: classRankings[0], // First in rankings
         bestAttendance: [...classRankings].sort((a, b) => b.avg_attendance - a.avg_attendance)[0],
         mostBunked: [...classRankings].sort((a, b) => a.avg_attendance - b.avg_attendance)[0],
         worstSubject: subjectStats.length > 0 
@@ -51,9 +51,9 @@ export default function ClassStatsSection() {
   const statCards = [
     {
       emoji: '🏆',
-      label: 'Best Class by CGPA',
-      value: stats.bestCGPA?.class_name || 'N/A',
-      detail: stats.bestCGPA ? `${stats.bestCGPA.avg_cgpa} CGPA` : '',
+      label: 'Best Class by SGPA',
+      value: stats.bestSGPA?.class_name || 'N/A',
+      detail: stats.bestSGPA ? `${stats.bestSGPA.avg_cgpa} SGPA` : '',
       color: 'bg-yellow-50 border-yellow-200'
     },
     {
