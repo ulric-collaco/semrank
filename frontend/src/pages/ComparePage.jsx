@@ -6,7 +6,7 @@ export default function ComparePage() {
   const [students, setStudents] = useState([])
   const [student1, setStudent1] = useState(null)
   const [student2, setStudent2] = useState(null)
-  const [metric, setMetric] = useState('sgpa')
+  const [metric, setMetric] = useState('cgpa')
   const [searchTerm1, setSearchTerm1] = useState('')
   const [searchTerm2, setSearchTerm2] = useState('')
   
@@ -31,8 +31,8 @@ export default function ComparePage() {
     if (student1 && student2) {
       // Animate comparison
       const winner =
-        metric === 'sgpa'
-          ? student1.sgpa > student2.sgpa ? bubble1Ref : bubble2Ref
+        metric === 'cgpa'
+          ? student1.cgpa > student2.cgpa ? bubble1Ref : bubble2Ref
           : student1.attendance > student2.attendance ? bubble1Ref : bubble2Ref
 
       gsap.to(winner.current, {
@@ -67,8 +67,8 @@ export default function ComparePage() {
 
   const getWinner = () => {
     if (!student1 || !student2) return null
-    if (metric === 'sgpa') {
-      return student1.sgpa > student2.sgpa ? student1 : student2
+    if (metric === 'cgpa') {
+      return student1.cgpa > student2.cgpa ? student1 : student2
     }
     return student1.attendance > student2.attendance ? student1 : student2
   }
@@ -80,17 +80,17 @@ export default function ComparePage() {
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <div className="text-center mb-12">
-          <h1 className="text-5xl font-bold text-ink mb-4">⚖️ Compare</h1>
+          <h1 className="text-5xl font-brand font-bold text-ink mb-4">⚖️ Compare</h1>
           <p className="text-body text-lg">Compare two students side-by-side</p>
         </div>
 
         {/* Metric Selector */}
         <div className="flex gap-3 justify-center mb-12">
           <button
-            onClick={() => setMetric('sgpa')}
+            onClick={() => setMetric('cgpa')}
             className={`px-6 py-3 rounded-bubble font-medium transition-all duration-300
               ${
-                metric === 'sgpa'
+                metric === 'cgpa'
                   ? 'bg-accent text-ink shadow-bubble-hover scale-105'
                   : 'bubble hover:scale-105'
               }`}
@@ -132,15 +132,15 @@ export default function ComparePage() {
                   <div className="w-32 h-32 mx-auto bg-bubbleSecondary rounded-full flex items-center justify-center text-5xl">
                     👤
                   </div>
-                  <h3 className="text-2xl font-bold text-ink">{student1.name}</h3>
+                  <h3 className="text-2xl font-brand font-bold text-ink">{student1.name}</h3>
                   <p className="text-body">Roll: {student1.roll_no}</p>
                   <p className="text-body">Class: {student1.class}</p>
                   <div className="pt-4 border-t border-ink/10">
                     <p className="text-3xl font-bold text-ink">
-                      {metric === 'sgpa' ? student1.sgpa : `${student1.attendance}%`}
+                      {metric === 'cgpa' ? student1.cgpa : `${student1.attendance}%`}
                     </p>
                     <p className="text-body text-sm">
-                      {metric === 'sgpa' ? 'SGPA' : 'Attendance'}
+                      {metric === 'cgpa' ? 'SGPA' : 'Attendance'}
                     </p>
                   </div>
                 </div>
@@ -168,15 +168,15 @@ export default function ComparePage() {
                   <div className="w-32 h-32 mx-auto bg-bubbleSecondary rounded-full flex items-center justify-center text-5xl">
                     👤
                   </div>
-                  <h3 className="text-2xl font-bold text-ink">{student2.name}</h3>
+                  <h3 className="text-2xl font-brand font-bold text-ink">{student2.name}</h3>
                   <p className="text-body">Roll: {student2.roll_no}</p>
                   <p className="text-body">Class: {student2.class}</p>
                   <div className="pt-4 border-t border-ink/10">
                     <p className="text-3xl font-bold text-ink">
-                      {metric === 'sgpa' ? student2.sgpa : `${student2.attendance}%`}
+                      {metric === 'cgpa' ? student2.cgpa : `${student2.attendance}%`}
                     </p>
                     <p className="text-body text-sm">
-                      {metric === 'sgpa' ? 'SGPA' : 'Attendance'}
+                      {metric === 'cgpa' ? 'SGPA' : 'Attendance'}
                     </p>
                   </div>
                 </div>
@@ -189,7 +189,7 @@ export default function ComparePage() {
         {winner && (
           <div className="text-center mt-12">
             <p className="text-2xl font-semibold text-ink">
-              🎉 {winner.name} has higher {metric === 'sgpa' ? 'SGPA' : 'attendance'}!
+              🎉 {winner.name} has higher {metric === 'cgpa' ? 'SGPA' : 'attendance'}!
             </p>
           </div>
         )}

@@ -1,7 +1,7 @@
 import { useRef, useEffect } from 'react'
 import { gsap } from 'gsap'
 
-export default function StudentBubble({ student, rank }) {
+export default function StudentBubble({ student, rank, onStudentClick }) {
   const bubbleRef = useRef(null)
 
   useEffect(() => {
@@ -32,9 +32,13 @@ export default function StudentBubble({ student, rank }) {
   }
 
   const handleClick = () => {
-    // Navigate to student detail page using roll number or enrollment ID
-    const identifier = student.roll_no || student.enrollment_id
-    window.location.hash = `#student?id=${identifier}`
+    if (onStudentClick) {
+      onStudentClick(student.roll_no)
+    } else {
+      // Fallback to navigation if no onClick provided
+      const identifier = student.roll_no || student.enrollment_id
+      window.location.hash = `#student?id=${identifier}`
+    }
   }
 
   // Get student photo path - photos are in student_faces folder by roll number
@@ -105,7 +109,7 @@ export default function StudentBubble({ student, rank }) {
         </div>
 
         {/* Name */}
-        <h3 className="text-lg font-bold text-ink truncate">{student.name}</h3>
+        <h3 className="text-lg font-brand font-bold text-ink truncate">{student.name}</h3>
 
         {/* Roll Number */}
         <p className="text-sm text-body">Roll: {student.roll_no}</p>
@@ -114,7 +118,7 @@ export default function StudentBubble({ student, rank }) {
         <div className="pt-3 border-t border-ink/10 space-y-2">
           <div className="flex justify-between items-center">
             <span className="text-xs text-body">SGPA:</span>
-            <span className="text-base font-semibold text-ink">{student.sgpa}</span>
+            <span className="text-base font-semibold text-ink">{student.cgpa}</span>
           </div>
           <div className="flex justify-between items-center">
             <span className="text-xs text-body">Attendance:</span>

@@ -151,7 +151,7 @@ export default function StudentDetailPage() {
               
               {/* Basic Info */}
               <div className="text-center space-y-2 w-full">
-                <h1 className="text-2xl font-bold text-ink">{student.name}</h1>
+                <h1 className="text-2xl font-brand font-bold text-ink">{student.name}</h1>
                 <div className="space-y-1 text-body text-sm">
                   <p className="font-mono font-semibold text-ink text-lg">{student.roll_no}</p>
                   <p className="text-xs">{student.enrollment_id}</p>
@@ -165,7 +165,7 @@ export default function StudentDetailPage() {
               {/* Top Row: SGPA and Attendance */}
               <div className="grid grid-cols-2 gap-4">
                 <div className="bg-gradient-to-br from-pink-500/30 to-purple-500/30 p-6 rounded-2xl border border-pink-500/40">
-                  <div className="text-5xl font-bold text-ink mb-1">{student.sgpa || 'N/A'}</div>
+                  <div className="text-5xl font-bold text-ink mb-1">{student.cgpa || 'N/A'}</div>
                   <div className="text-body text-sm uppercase tracking-wide">SGPA</div>
                 </div>
                 <div className="bg-gradient-to-br from-blue-500/30 to-cyan-500/30 p-6 rounded-2xl border border-blue-500/40">
@@ -217,7 +217,7 @@ export default function StudentDetailPage() {
           <div className="bubble p-6 rounded-bubble-lg shadow-bubble">
             {/* Last Updated */}
             <div className="flex justify-between items-center mb-6">
-              <h2 className="text-2xl font-bold text-ink">📊 Subject Performance</h2>
+              <h2 className="text-2xl font-brand font-bold text-ink">📊 Subject Performance</h2>
               <p className="text-sm text-body">Last updated: {new Date(student.updated_at || Date.now()).toLocaleDateString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}</p>
             </div>
 
@@ -363,7 +363,7 @@ export default function StudentDetailPage() {
         {/* All Subjects Table */}
         {student.subjects && student.subjects.length > 0 && (
           <div className="bubble p-6 rounded-bubble-lg shadow-bubble">
-            <h2 className="text-2xl font-bold text-ink mb-4">📋 Complete Marksheet</h2>
+            <h2 className="text-2xl font-brand font-bold text-ink mb-4">📋 Complete Marksheet</h2>
             <div className="overflow-x-auto">
               <table className="w-full">
                 <thead>

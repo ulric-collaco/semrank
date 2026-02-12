@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react'
 import { gsap } from 'gsap'
 import StudentBubble from '../components/StudentBubble'
 import { leaderboardAPI, statsAPI } from '../utils/api'
+import StudentModal from '../components/StudentModal'
 
 export default function LeaderboardPage() {
   const [activeTab, setActiveTab] = useState('student') // 'student' or 'class'
@@ -9,9 +10,10 @@ export default function LeaderboardPage() {
   const [classRankings, setClassRankings] = useState([])
   const [subjectList, setSubjectList] = useState([])
   const [isLoading, setIsLoading] = useState(true)
+  const [selectedStudentRoll, setSelectedStudentRoll] = useState(null)
   
   // Student leaderboard filters
-  const [sortBy, setSortBy] = useState('sgpa') // 'sgpa', 'attendance', or 'subject'
+  const [sortBy, setSortBy] = useState('cgpa') // 'cgpa', 'attendance', or 'subject'
   const [filterClass, setFilterClass] = useState('all')
   const [selectedSubject, setSelectedSubject] = useState('')
   const [limit, setLimit] = useState(10) // 10, 50, or 'all'
@@ -51,7 +53,7 @@ export default function LeaderboardPage() {
       if (sortBy === 'subject' && selectedSubject) {
         const response = await leaderboardAPI.getTopBySubject(selectedSubject, fetchLimit, filterClass)
         data = response.students || []
-      } else if (sortBy === 'sgpa') {
+      } else if (sortBy === 'cgpa') {
         data = await leaderboardAPI.getTopBySGPA(fetchLimit, filterClass)
       } else {
         data = await leaderboardAPI.getTopByAttendance(fetchLimit, filterClass)
@@ -119,7 +121,7 @@ export default function LeaderboardPage() {
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="text-center mb-8">
-          <h1 className="text-5xl font-bold text-ink mb-4">🏆 Leaderboard</h1>
+          <h1 className="text-5xl font-brand font-bold text-ink mb-4">🏆 Leaderboard</h1>
           <p className="text-body text-lg">Real-time student and class rankings</p>
         </div>
 
@@ -155,9 +157,9 @@ export default function LeaderboardPage() {
               {/* Sort Options */}
               <div className="flex flex-wrap gap-3 justify-center">
                 <button
-                  onClick={() => setSortBy('sgpa')}
+                  onClick={() => setSortBy('cgpa')}
                   className={`px-6 py-3 rounded-bubble font-medium transition-all ${
-                    sortBy === 'sgpa'
+                    sortBy === 'cgpa'
                       ? 'bg-accent text-ink shadow-bubble-hover scale-105'
                       : 'bubble hover:scale-105'
                   }`}
@@ -259,6 +261,7 @@ export default function LeaderboardPage() {
                   key={student.student_id || student.roll_no}
                   student={student}
                   rank={student.rank || index + 1}
+                  onStudentClick={(rollNo) => setSelectedStudentRoll(rollNo)}
                 />
               ))}
             </div>
@@ -284,7 +287,7 @@ export default function LeaderboardPage() {
                     #{index + 1}
                   </div>
                   <div className="flex-1">
-                    <h3 className="text-2xl font-bold text-ink mb-2">{classData.class_name}</h3>
+                    <h3 className="text-2xl font-brand font-bold text-ink mb-2">{classData.class_name}</h3>
                     <div className="grid grid-cols-2 gap-4 text-sm">
                       <div>
                         <p className="text-body">Avg SGPA</p>
@@ -314,6 +317,14 @@ export default function LeaderboardPage() {
           </div>
         )}
       </div>
+
+      {/* Student Modal */}
+      {selectedStudentRoll && (
+        <StudentModal 
+          rollNo={selectedStudentRoll} 
+          onClose={() => setSelectedStudentRoll(null)} 
+        />
+      )}
     </div>
   )
 }

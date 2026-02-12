@@ -3,13 +3,15 @@ import { gsap } from 'gsap'
 import { leaderboardAPI, birthdayAPI } from '../utils/api'
 import StudentBubble from '../components/StudentBubble'
 import ClassStatsSection from '../components/ClassStatsSection'
+import StudentModal from '../components/StudentModal'
 
 export default function HomePage() {
   const [topStudents, setTopStudents] = useState([])
   const [quickLeaderboard, setQuickLeaderboard] = useState([])
   const [birthdays, setBirthdays] = useState([])
-  const [sortMetric, setSortMetric] = useState('sgpa') // 'sgpa' or 'attendance'
+  const [sortMetric, setSortMetric] = useState('cgpa') // 'cgpa' or 'attendance'
   const [loading, setLoading] = useState(true)
+  const [selectedStudentRoll, setSelectedStudentRoll] = useState(null)
 
   const heroRef = useRef(null)
   const top3Ref = useRef(null)
@@ -67,7 +69,7 @@ export default function HomePage() {
 
   const fetchQuickLeaderboard = async () => {
     try {
-      const data = sortMetric === 'sgpa' 
+      const data = sortMetric === 'cgpa' 
         ? await leaderboardAPI.getTopBySGPA(5, 'all')
         : await leaderboardAPI.getTopByAttendance(5, 'all')
       setQuickLeaderboard(data)
@@ -94,7 +96,7 @@ export default function HomePage() {
                 className={`bubble p-6 rounded-bubble-lg ${
                   index === 0 ? 'md:scale-110 bg-accent' : 'bg-bubble'
                 } hover:scale-105 transition-transform duration-300 cursor-pointer`}
-                onClick={() => window.location.hash = `#student?id=${student.roll_no}`}
+                onClick={() => setSelectedStudentRoll(student.roll_no)}
               >
                 <div className="text-center">
                   <div className="w-20 h-20 mx-auto bg-bubbleSecondary rounded-full flex items-center justify-center text-4xl mb-3 relative overflow-hidden">
@@ -117,9 +119,9 @@ export default function HomePage() {
                       {index === 0 ? '🥇' : index === 1 ? '🥈' : '🥉'}
                     </div>
                   </div>
-                  <h3 className="font-bold text-lg text-ink mb-1">{student.name}</h3>
+                  <h3 className="font-brand font-bold text-lg text-ink mb-1">{student.name}</h3>
                   <p className="text-sm text-body mb-2">Roll: {student.roll_no}</p>
-                  <div className="text-2xl font-bold text-ink">{student.sgpa}</div>
+                  <div className="text-2xl font-bold text-ink">{student.cgpa}</div>
                   <p className="text-xs text-body">SGPA</p>
                 </div>
               </div>
@@ -131,12 +133,12 @@ export default function HomePage() {
       {/* Quick Leaderboard */}
       <div ref={quickLeaderRef} className="max-w-4xl mx-auto mb-16">
         <div className="flex justify-between items-center mb-6">
-          <h2 className="text-3xl font-bold text-ink">📊 Quick Leaderboard</h2>
+          <h2 className="text-3xl font-brand font-bold text-ink">📊 Quick Leaderboard</h2>
           <div className="flex gap-2">
             <button
-              onClick={() => setSortMetric('sgpa')}
+              onClick={() => setSortMetric('cgpa')}
               className={`px-4 py-2 rounded-bubble font-medium transition-all ${
-                sortMetric === 'sgpa'
+                sortMetric === 'cgpa'
                   ? 'bg-accent text-ink shadow-bubble-hover'
                   : 'bubble hover:shadow-bubble-hover'
               }`}
@@ -160,20 +162,21 @@ export default function HomePage() {
           {quickLeaderboard.map((student, index) => (
             <div
               key={student.student_id}
-              className="bubble p-4 rounded-bubble flex items-center gap-4 hover:shadow-bubble-hover transition-all"
+              className="bubble p-4 rounded-bubble flex items-center gap-4 hover:shadow-bubble-hover transition-all cursor-pointer"
+              onClick={() => setSelectedStudentRoll(student.roll_no)}
             >
               <div className="w-12 h-12 bg-accent rounded-full flex items-center justify-center font-bold text-ink">
                 #{index + 1}
               </div>
               <div className="flex-1">
-                <h3 className="font-bold text-ink">{student.name}</h3>
+                <h3 className="font-brand font-bold text-ink">{student.name}</h3>
                 <p className="text-sm text-body">{student.class}</p>
               </div>
               <div className="text-right">
                 <div className="text-2xl font-bold text-ink">
-                  {sortMetric === 'sgpa' ? student.sgpa : `${student.attendance}%`}
+                  {sortMetric === 'cgpa' ? student.cgpa : `${student.attendance}%`}
                 </div>
-                <p className="text-xs text-body">{sortMetric === 'sgpa' ? 'SGPA' : 'Attendance'}</p>
+                <p className="text-xs text-body">{sortMetric === 'cgpa' ? 'SGPA' : 'Attendance'}</p>
               </div>
             </div>
           ))}
@@ -183,7 +186,7 @@ export default function HomePage() {
       {/* Birthday Spotlight */}
       {birthdays.length > 0 && (
         <div className="max-w-4xl mx-auto mb-16">
-          <h2 className="text-3xl font-bold text-ink mb-6">🎉 Today's Birthdays</h2>
+          <h2 className="text-3xl font-brand font-bold text-ink mb-6">🎉 Today's Birthdays</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {birthdays.map((student) => (
               <div
@@ -191,7 +194,7 @@ export default function HomePage() {
                 className="bubble p-6 rounded-bubble-lg text-center hover:scale-105 transition-transform"
               >
                 <div className="text-5xl mb-3">🎂</div>
-                <h3 className="font-bold text-ink mb-1">{student.name}</h3>
+                <h3 className="font-brand font-bold text-ink mb-1">{student.name}</h3>
                 <p className="text-body">{student.class}</p>
               </div>
             ))}
@@ -241,6 +244,14 @@ export default function HomePage() {
       <p className="text-center text-body/70 text-sm mt-16">
         Playful rankings for serious semesters.
       </p>
+
+      {/* Student Modal */}
+      {selectedStudentRoll && (
+        <StudentModal 
+          rollNo={selectedStudentRoll} 
+          onClose={() => setSelectedStudentRoll(null)} 
+        />
+      )}
     </div>
   )
 }

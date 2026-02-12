@@ -8,7 +8,7 @@ export default function GamePage() {
   const [round, setRound] = useState(0)
   const [student1, setStudent1] = useState(null)
   const [student2, setStudent2] = useState(null)
-  const [metric, setMetric] = useState('sgpa') // sgpa, attendance, or subject
+  const [metric, setMetric] = useState('cgpa') // cgpa, attendance, or subject
   const [currentSubject, setCurrentSubject] = useState(null) // For subject mode
   const [difficulty, setDifficulty] = useState('easy')
   const [isLoading, setIsLoading] = useState(true)
@@ -61,8 +61,8 @@ export default function GamePage() {
       s1Value = student1.totalMarks || 0
       s2Value = student2.totalMarks || 0
     } else {
-      s1Value = metric === 'sgpa' ? student1.sgpa : student1.attendance
-      s2Value = metric === 'sgpa' ? student2.sgpa : student2.attendance  
+      s1Value = metric === 'cgpa' ? student1.cgpa : student1.attendance
+      s2Value = metric === 'cgpa' ? student2.cgpa : student2.attendance  
     }
 
     const isCorrect =
@@ -124,10 +124,10 @@ export default function GamePage() {
       <div className="max-w-4xl mx-auto">
         {/* Header */}
         <div className="text-center mb-8">
-          <h1 className="text-5xl font-bold text-ink mb-4">🎮 Higher or Lower</h1>
+          <h1 className="text-5xl font-brand font-bold text-ink mb-4">🎮 Higher or Lower</h1>
           <p className="text-body text-lg mb-4">
             Guess if the next student has higher or lower {
-              metric === 'sgpa' ? 'SGPA' : 
+              metric === 'cgpa' ? 'SGPA' : 
               metric === 'attendance' ? 'attendance' :
               currentSubject ? `marks in ${currentSubject.name}` : 'subject marks'
             }
@@ -208,19 +208,19 @@ export default function GamePage() {
                   👤
                 </div>
               </div>
-              <h3 className="text-2xl font-bold text-ink">{student1.name}</h3>
+              <h3 className="text-2xl font-brand font-bold text-ink">{student1.name}</h3>
               <p className="text-body">Class: {student1.class}</p>
               <div className="pt-4 border-t border-ink/10">
                 <p className="text-4xl font-bold text-ink">
-                  {metric === 'sgpa' 
-                    ? student1.sgpa 
+                  {metric === 'cgpa' 
+                    ? student1.cgpa 
                     : metric === 'attendance'
                     ? `${student1.attendance}%`
                     : student1.totalMarks || 0
                   }
                 </p>
                 <p className="text-body text-sm">
-                  {metric === 'sgpa' 
+                  {metric === 'cgpa' 
                     ? 'SGPA' 
                     : metric === 'attendance'
                     ? 'Attendance'
@@ -251,15 +251,15 @@ export default function GamePage() {
                     👤
                   </div>
                 </div>
-                <h3 className="text-2xl font-bold text-ink">{student2.name}</h3>
+                <h3 className="text-2xl font-brand font-bold text-ink">{student2.name}</h3>
                 <p className="text-body">Class: {student2.class}</p>
                 <div className="pt-4 border-t border-ink/10">
                   {gameState === 'playing' ? (
                     <p className="text-4xl font-bold text-ink">?</p>
                   ) : (
                     <p className="text-4xl font-bold text-ink">
-                      {metric === 'sgpa' 
-                        ? student2.sgpa 
+                      {metric === 'cgpa' 
+                        ? student2.cgpa 
                         : metric === 'attendance'
                         ? `${student2.attendance}%`
                         : student2.totalMarks || 0
@@ -267,7 +267,7 @@ export default function GamePage() {
                     </p>
                   )}
                   <p className="text-body text-sm">
-                    {metric === 'sgpa' 
+                    {metric === 'cgpa' 
                       ? 'SGPA' 
                       : metric === 'attendance'
                       ? 'Attendance'

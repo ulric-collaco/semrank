@@ -83,7 +83,7 @@ export default function ClassStatsSection() {
     <div className="space-y-6">
       {/* Section Header */}
       <div className="text-center">
-        <h2 className="text-3xl font-bold text-ink mb-2">🎉 Fun Insights</h2>
+        <h2 className="text-3xl font-brand font-bold text-ink mb-2">🎉 Fun Insights</h2>
         <p className="text-body">College stats you didn't know you needed!</p>
       </div>
 
