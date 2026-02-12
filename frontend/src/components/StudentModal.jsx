@@ -10,6 +10,7 @@ export default function StudentModal({ rollNo, onClose }) {
 
   const modalRef = useRef(null)
   const contentRef = useRef(null)
+  const isClosing = useRef(false)
 
   useEffect(() => {
     if (rollNo) {
@@ -18,6 +19,8 @@ export default function StudentModal({ rollNo, onClose }) {
   }, [rollNo])
 
   const handleClose = useCallback(() => {
+    if (isClosing.current) return
+    isClosing.current = true
     if (contentRef.current && modalRef.current) {
       gsap.to(contentRef.current, {
         scale: 0.95,
@@ -29,12 +32,29 @@ export default function StudentModal({ rollNo, onClose }) {
         opacity: 0,
         duration: 0.2,
         delay: 0.1,
-        onComplete: onClose
+        onComplete: () => {
+          isClosing.current = false
+          onClose()
+        }
       })
     } else {
+      isClosing.current = false
       onClose()
     }
   }, [onClose])
+
+  useEffect(() => {
+    // Close when clicking/tapping outside content (robust across canvases)
+    const onPointerDown = (e) => {
+      if (!contentRef.current) return
+      if (!contentRef.current.contains(e.target)) {
+        handleClose()
+      }
+    }
+
+    document.addEventListener('pointerdown', onPointerDown, { capture: true })
+    return () => document.removeEventListener('pointerdown', onPointerDown, { capture: true })
+  }, [handleClose])
 
   useEffect(() => {
     // Entrance animation
