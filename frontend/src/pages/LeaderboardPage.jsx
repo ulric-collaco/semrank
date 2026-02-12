@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react'
 import { gsap } from 'gsap'
 import StudentBubble from '../components/StudentBubble'
 import { leaderboardAPI, statsAPI } from '../utils/api'
+import { formatClassName } from '../utils/format'
 import StudentModal from '../components/StudentModal'
 
 export default function LeaderboardPage() {
@@ -11,13 +12,13 @@ export default function LeaderboardPage() {
   const [subjectList, setSubjectList] = useState([])
   const [isLoading, setIsLoading] = useState(true)
   const [selectedStudentRoll, setSelectedStudentRoll] = useState(null)
-  
+
   // Student leaderboard filters
   const [sortBy, setSortBy] = useState('cgpa') // 'cgpa', 'attendance', or 'subject'
   const [filterClass, setFilterClass] = useState('all')
   const [selectedSubject, setSelectedSubject] = useState('')
   const [limit, setLimit] = useState(10) // 10, 50, or 'all'
-  
+
   const gridRef = useRef(null)
   const tabsRef = useRef(null)
 
@@ -128,21 +129,19 @@ export default function LeaderboardPage() {
         <div ref={tabsRef} className="flex gap-4 justify-center mb-8">
           <button
             onClick={() => setActiveTab('student')}
-            className={`px-8 py-4 rounded-bubble font-semibold text-lg transition-all ${
-              activeTab === 'student'
+            className={`px-8 py-4 rounded-bubble font-semibold text-lg transition-all ${activeTab === 'student'
                 ? 'bg-accent text-ink shadow-bubble-hover scale-105'
                 : 'bubble hover:scale-105'
-            }`}
+              }`}
           >
             📚 Student Leaderboard
           </button>
           <button
             onClick={() => setActiveTab('class')}
-            className={`px-8 py-4 rounded-bubble font-semibold text-lg transition-all ${
-              activeTab === 'class'
+            className={`px-8 py-4 rounded-bubble font-semibold text-lg transition-all ${activeTab === 'class'
                 ? 'bg-accent text-ink shadow-bubble-hover scale-105'
                 : 'bubble hover:scale-105'
-            }`}
+              }`}
           >
             🎓 Class Rankings
           </button>
@@ -157,31 +156,28 @@ export default function LeaderboardPage() {
               <div className="flex flex-wrap gap-3 justify-center">
                 <button
                   onClick={() => setSortBy('cgpa')}
-                  className={`px-6 py-3 rounded-bubble font-medium transition-all ${
-                    sortBy === 'cgpa'
+                  className={`px-6 py-3 rounded-bubble font-medium transition-all ${sortBy === 'cgpa'
                       ? 'bg-accent text-ink shadow-bubble-hover scale-105'
                       : 'bubble hover:scale-105'
-                  }`}
+                    }`}
                 >
                   📊 SGPA
                 </button>
                 <button
                   onClick={() => setSortBy('attendance')}
-                  className={`px-6 py-3 rounded-bubble font-medium transition-all ${
-                    sortBy === 'attendance'
+                  className={`px-6 py-3 rounded-bubble font-medium transition-all ${sortBy === 'attendance'
                       ? 'bg-accent text-ink shadow-bubble-hover scale-105'
                       : 'bubble hover:scale-105'
-                  }`}
+                    }`}
                 >
                   📅 Attendance
                 </button>
                 <button
                   onClick={() => setSortBy('subject')}
-                  className={`px-6 py-3 rounded-bubble font-medium transition-all ${
-                    sortBy === 'subject'
+                  className={`px-6 py-3 rounded-bubble font-medium transition-all ${sortBy === 'subject'
                       ? 'bg-accent text-ink shadow-bubble-hover scale-105'
                       : 'bubble hover:scale-105'
-                  }`}
+                    }`}
                 >
                   📖 Subject
                 </button>
@@ -210,13 +206,12 @@ export default function LeaderboardPage() {
                   <button
                     key={cls}
                     onClick={() => setFilterClass(cls)}
-                    className={`px-4 py-2 rounded-bubble text-sm font-medium transition-all ${
-                      filterClass === cls
+                    className={`px-4 py-2 rounded-bubble text-sm font-medium transition-all ${filterClass === cls
                         ? 'bg-bubbleSecondary text-ink shadow-bubble-hover scale-105'
                         : 'bubble hover:scale-105'
-                    }`}
+                      }`}
                   >
-                    {cls === 'all' ? 'All Classes' : cls}
+                    {cls === 'all' ? 'All Classes' : formatClassName(cls)}
                   </button>
                 ))}
               </div>
@@ -225,25 +220,22 @@ export default function LeaderboardPage() {
               <div className="flex gap-2 justify-center">
                 <button
                   onClick={() => setLimit(10)}
-                  className={`px-4 py-2 rounded-bubble text-sm font-medium transition-all ${
-                    limit === 10 ? 'bg-bubbleSecondary  text-ink' : 'bubble hover:scale-105'
-                  }`}
+                  className={`px-4 py-2 rounded-bubble text-sm font-medium transition-all ${limit === 10 ? 'bg-bubbleSecondary  text-ink' : 'bubble hover:scale-105'
+                    }`}
                 >
                   Top 10
                 </button>
                 <button
                   onClick={() => setLimit(50)}
-                  className={`px-4 py-2 rounded-bubble text-sm font-medium transition-all ${
-                    limit === 50 ? 'bg-bubbleSecondary text-ink' : 'bubble hover:scale-105'
-                  }`}
+                  className={`px-4 py-2 rounded-bubble text-sm font-medium transition-all ${limit === 50 ? 'bg-bubbleSecondary text-ink' : 'bubble hover:scale-105'
+                    }`}
                 >
                   Top 50
                 </button>
                 <button
                   onClick={() => setLimit('all')}
-                  className={`px-4 py-2 rounded-bubble text-sm font-medium transition-all ${
-                    limit === 'all' ? 'bg-bubbleSecondary text-ink' : 'bubble hover:scale-105'
-                  }`}
+                  className={`px-4 py-2 rounded-bubble text-sm font-medium transition-all ${limit === 'all' ? 'bg-bubbleSecondary text-ink' : 'bubble hover:scale-105'
+                    }`}
                 >
                   All
                 </button>
@@ -286,7 +278,7 @@ export default function LeaderboardPage() {
                     #{index + 1}
                   </div>
                   <div className="flex-1">
-                    <h3 className="text-2xl font-display font-bold text-ink mb-2">{classData.class_name}</h3>
+                    <h3 className="text-2xl font-display font-bold text-ink mb-2">{formatClassName(classData.class_name)}</h3>
                     <div className="grid grid-cols-2 gap-4 text-sm">
                       <div>
                         <p className="text-body">Avg SGPA</p>
@@ -319,9 +311,9 @@ export default function LeaderboardPage() {
 
       {/* Student Modal */}
       {selectedStudentRoll && (
-        <StudentModal 
-          rollNo={selectedStudentRoll} 
-          onClose={() => setSelectedStudentRoll(null)} 
+        <StudentModal
+          rollNo={selectedStudentRoll}
+          onClose={() => setSelectedStudentRoll(null)}
         />
       )}
     </div>

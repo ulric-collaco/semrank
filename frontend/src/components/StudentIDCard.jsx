@@ -1,6 +1,7 @@
 
 import React, { useState } from 'react';
 import { User } from 'lucide-react';
+import { formatClassName } from '../utils/format';
 
 export default function StudentIDCard({ student, loading, error, onClose }) {
     // Setup state for tabs
@@ -139,7 +140,7 @@ export default function StudentIDCard({ student, loading, error, onClose }) {
                                 </div>
                                 <div className="flex justify-between md:flex-col md:items-start">
                                     <span className="text-[10px] uppercase tracking-wide opacity-50 font-medium">Class</span>
-                                    <span className="text-slate-300">{student.class}</span>
+                                    <span className="text-slate-300">{formatClassName(student.class)}</span>
                                 </div>
                             </div>
                         </div>

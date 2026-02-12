@@ -1,5 +1,6 @@
 import { useRef, useEffect } from 'react'
 import { gsap } from 'gsap'
+import { formatClassName } from '../utils/format'
 
 export default function StudentBubble({ student, rank, onStudentClick }) {
   const bubbleRef = useRef(null)
@@ -71,8 +72,8 @@ export default function StudentBubble({ student, rank, onStudentClick }) {
         {/* Photo */}
         <div className="w-24 h-24 mx-auto bg-bubbleSecondary rounded-full flex items-center justify-center text-4xl relative overflow-hidden">
           {photoPath ? (
-            <img 
-              src={photoPath} 
+            <img
+              src={photoPath}
               alt={student.name}
               className="w-full h-full object-cover"
               onError={(e) => {
@@ -129,7 +130,7 @@ export default function StudentBubble({ student, rank, onStudentClick }) {
         {/* Class Badge */}
         <div className="pt-2">
           <span className="inline-block px-3 py-1 bg-bubbleSecondary rounded-full text-xs font-medium text-ink">
-            {student.class}
+            {formatClassName(student.class)}
           </span>
         </div>
       </div>

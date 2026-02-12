@@ -159,8 +159,28 @@ export default function HomePage() {
               className="bubble bubble-hover p-4 rounded-bubble flex items-center gap-4 transition-all cursor-pointer"
               onClick={() => setSelectedStudentRoll(student.roll_no)}
             >
-              <div className="w-12 h-12 bg-accent rounded-full flex items-center justify-center font-bold text-ink">
-                #{index + 1}
+              <div className="relative flex items-center">
+                <div className="absolute -left-4 top-1/2 transform -translate-y-1/2 w-8 h-8 bg-accent rounded-full flex items-center justify-center font-bold text-ink">
+                  #{index + 1}
+                </div>
+                <div className="w-12 h-12 bg-bubbleSecondary rounded-full overflow-hidden flex items-center justify-center">
+                  {student.roll_no ? (
+                    <>
+                      <img
+                        src={`/student_faces/${student.roll_no}.png`}
+                        alt={student.name}
+                        className="w-full h-full object-cover"
+                        onError={(e) => {
+                          e.target.style.display = 'none'
+                          e.target.nextSibling.style.display = 'flex'
+                        }}
+                      />
+                      <div className="hidden absolute inset-0 bg-bubbleSecondary flex items-center justify-center text-sm text-ink">🙂</div>
+                    </>
+                  ) : (
+                    <div className="text-sm text-ink">?</div>
+                  )}
+                </div>
               </div>
               <div className="flex-1">
                 <h3 className="font-display font-bold text-ink">{student.name}</h3>

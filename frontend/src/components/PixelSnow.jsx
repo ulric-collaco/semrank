@@ -243,7 +243,54 @@ export default function PixelSnow({
   useEffect(() => {
     const container = containerRef.current;
     if (!container) return;
+    // Use a singleton global canvas/renderer to survive React StrictMode double-mounts
+    // This avoids expensive shader re-compiles and accidental breakage of the Three.js background
+    const globalKey = '__PIXEL_SNOW_GLOBAL__';
+    const existing = window[globalKey];
 
+    // compute a low-res starter and target resolution
+    const targetPixelRes = pixelResolution;
+    const lowPixelRes = Math.max(40, Math.floor(targetPixelRes / 4));
+
+    if (existing && existing.canvas) {
+      // Reuse global renderer/canvas: attach to our container and update resolution
+      const global = existing;
+      container.appendChild(global.canvas);
+      rendererRef.current = global.renderer;
+      materialRef.current = global.material;
+      // start with lower pixel resolution for faster shader compile and render
+      if (materialRef.current.uniforms.uPixelResolution) materialRef.current.uniforms.uPixelResolution.value = lowPixelRes;
+      materialRef.current.uniforms.uResolution.value.set(container.offsetWidth, container.offsetHeight);
+
+      // Make sure resize updates the global uniforms
+      window.addEventListener('resize', handleResize);
+
+      // Schedule upgrade to high-res when idle
+      const upgrade = () => {
+        try {
+          const g = window[globalKey];
+          if (!g) return;
+          g.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+          g.renderer.setSize(container.offsetWidth, container.offsetHeight);
+          if (g.material && g.material.uniforms && g.material.uniforms.uPixelResolution) {
+            g.material.uniforms.uPixelResolution.value = targetPixelRes;
+            g.material.needsUpdate = true;
+          }
+        } catch (e) {
+          // ignore
+        }
+      };
+      if ('requestIdleCallback' in window) requestIdleCallback(upgrade, { timeout: 1500 });
+      else setTimeout(upgrade, 1500);
+
+      return () => {
+        window.removeEventListener('resize', handleResize);
+        // detach canvas from this container but do not dispose the global renderer
+        if (container.contains(global.canvas)) container.removeChild(global.canvas);
+      };
+    }
+
+    // No global instance exists — create renderer and keep it on window for reuse
     const scene = new Scene();
     const camera = new OrthographicCamera(-1, 1, 1, -1, 0, 1);
     const renderer = new WebGLRenderer({
@@ -255,7 +302,8 @@ export default function PixelSnow({
       depth: false
     });
 
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    // start with lower DPR to reduce initial GPU/JS work
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1));
     renderer.setSize(container.offsetWidth, container.offsetHeight);
     renderer.setClearColor(0x000000, 0);
     container.appendChild(renderer.domElement);
@@ -269,7 +317,8 @@ export default function PixelSnow({
         uResolution: { value: new Vector2(container.offsetWidth, container.offsetHeight) },
         uFlakeSize: { value: flakeSize },
         uMinFlakeSize: { value: minFlakeSize },
-        uPixelResolution: { value: pixelResolution },
+        // initialize to lowPixelRes for faster initial compile
+        uPixelResolution: { value: lowPixelRes },
         uSpeed: { value: speed },
         uDepthFade: { value: depthFade },
         uFarPlane: { value: farPlane },
@@ -301,18 +350,46 @@ export default function PixelSnow({
     };
     animate();
 
+    // Store global singleton for reuse (helps in dev with StrictMode)
+    window[globalKey] = {
+      renderer,
+      material,
+      canvas: renderer.domElement,
+    };
+
+    // Schedule upgrade to full resolution after idle
+    const upgrade = () => {
+      try {
+        const g = window[globalKey];
+        if (!g) return;
+        g.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        g.renderer.setSize(container.offsetWidth, container.offsetHeight);
+        if (g.material && g.material.uniforms && g.material.uniforms.uPixelResolution) {
+          g.material.uniforms.uPixelResolution.value = targetPixelRes;
+          g.material.needsUpdate = true;
+        }
+      } catch (e) {}
+    };
+    if ('requestIdleCallback' in window) requestIdleCallback(upgrade, { timeout: 1500 });
+    else setTimeout(upgrade, 1500);
+
     return () => {
       cancelAnimationFrame(animationRef.current);
       window.removeEventListener('resize', handleResize);
       if (resizeTimeoutRef.current) {
         clearTimeout(resizeTimeoutRef.current);
       }
-      if (container.contains(renderer.domElement)) {
-        container.removeChild(renderer.domElement);
+      // Detach canvas from this container but keep renderer/material alive globally
+      const global = window[globalKey];
+      try {
+        if (global && global.canvas && container.contains(global.canvas)) {
+          container.removeChild(global.canvas);
+        }
+      } catch (e) {
+        // ignore detach errors
       }
-      renderer.dispose();
-      geometry.dispose();
-      material.dispose();
+
+      // Do not dispose the global renderer/material here — keep alive for reuse in dev
       rendererRef.current = null;
       materialRef.current = null;
     };

@@ -1,6 +1,6 @@
 import { useState, useEffect, Suspense, lazy } from 'react'
 import BubbleMenu from './components/BubbleMenu'
-const PixelSnow = lazy(() => import('./components/PixelSnow'))
+const GridScan = lazy(() => import('./components/GridScan'))
 import HomePage from './pages/HomePage'
 import LeaderboardPage from './pages/LeaderboardPage'
 import ComparePage from './pages/ComparePage'
@@ -75,19 +75,17 @@ function App() {
       {/* PixelSnow Background */}
       <div className="fixed inset-0 z-0">
         <Suspense fallback={null}>
-          <PixelSnow
-            color="#a78bfa"
-            flakeSize={0.01}
-            minFlakeSize={1.25}
-            pixelResolution={200}
-            speed={1.25}
-            density={0.35}
-            direction={125}
-            brightness={1.2}
-            depthFade={8}
-            farPlane={20}
-            gamma={0.4545}
-            variant="snowflake"
+          <GridScan
+            sensitivity={0.55}
+            lineThickness={1}
+            linesColor="#392e4e"
+            gridScale={0.1}
+            scanColor="#FF9FFC"
+            scanOpacity={0.4}
+            enablePost
+            bloomIntensity={0.6}
+            chromaticAberration={0.002}
+            noiseIntensity={0.01}
           />
         </Suspense>
       </div>
