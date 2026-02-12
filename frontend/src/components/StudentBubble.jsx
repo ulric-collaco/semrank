@@ -62,6 +62,7 @@ export default function StudentBubble({ student, rank, onStudentClick }) {
       onMouseLeave={handleHoverExit}
       onClick={handleClick}
       className="bubble p-6 rounded-bubble-lg shadow-bubble cursor-pointer relative"
+      style={{ opacity: 0 }}
     >
       {/* Rank Badge */}
       <div className="absolute -top-3 -right-3 w-12 h-12 bg-accent rounded-full flex items-center justify-center shadow-bubble">

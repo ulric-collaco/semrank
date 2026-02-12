@@ -10,6 +10,20 @@ export default defineConfig({
       '@': path.resolve(__dirname, './src'),
     },
   },
+  server: {
+    // Pre-transform entry files on server start so the first page load is fast
+    warmup: {
+      clientFiles: [
+        './src/main.jsx',
+        './src/App.jsx',
+        './src/components/BubbleMenu.jsx',
+        './src/components/PixelSnow.jsx',
+        './src/components/GridScan.jsx',
+        './src/pages/HomePage.jsx',
+      ],
+    },
+    preTransformRequests: true,
+  },
   optimizeDeps: {
     include: [
       'three',

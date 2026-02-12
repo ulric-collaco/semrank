@@ -19,22 +19,27 @@ export default function HomePage() {
   const quickLeaderRef = useRef(null)
   const hasAnimated = useRef(false)
 
+  // Animate hero immediately on mount
   useEffect(() => {
-    // Entrance animations - only play once on mount
-    if (!hasAnimated.current && topStudents.length > 0) {
-      hasAnimated.current = true
-      const tl = gsap.timeline()
-      tl.fromTo(
+    if (heroRef.current) {
+      gsap.fromTo(
         heroRef.current,
         { y: 30, opacity: 0 },
         { y: 0, opacity: 1, duration: 0.8, ease: 'back.out(1.5)' }
       )
-        .fromTo(
-          top3Ref.current?.children || [],
-          { scale: 0, opacity: 0 },
-          { scale: 1, opacity: 1, duration: 0.5, stagger: 0.1, ease: 'back.out(1.5)' },
-          '-=0.3'
-        )
+    }
+  }, [])
+
+  useEffect(() => {
+    // Animate cards + leaderboard once data loads — only play once
+    if (!hasAnimated.current && topStudents.length > 0) {
+      hasAnimated.current = true
+      const tl = gsap.timeline()
+      tl.fromTo(
+        top3Ref.current?.children || [],
+        { scale: 0, opacity: 0 },
+        { scale: 1, opacity: 1, duration: 0.5, stagger: 0.1, ease: 'back.out(1.5)' }
+      )
         .fromTo(
           quickLeaderRef.current,
           { y: 20, opacity: 0 },
@@ -82,7 +87,7 @@ export default function HomePage() {
   return (
     <div className="min-h-screen px-6 py-20">
       {/* Hero Section */}
-      <div ref={heroRef} className="max-w-6xl mx-auto text-center mb-16">
+      <div ref={heroRef} className="max-w-6xl mx-auto text-center mb-16" style={{ opacity: 0 }}>
         <h1 className="text-[60px] md:text-[84px] lg:text-[100px] font-display text-ink mb-4 leading-none tracking-tight">
           SemRank
         </h1>
@@ -127,7 +132,7 @@ export default function HomePage() {
       </div>
 
       {/* Quick Leaderboard */}
-      <div ref={quickLeaderRef} className="max-w-4xl mx-auto mb-16">
+      <div ref={quickLeaderRef} className="max-w-4xl mx-auto mb-16" style={{ opacity: 0 }}>
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-[22px] md:text-[28px] font-display text-ink">📊 Quick Leaderboard</h2>
           <div className="flex gap-2">

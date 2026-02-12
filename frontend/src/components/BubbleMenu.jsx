@@ -15,7 +15,8 @@ export default function BubbleMenu({
   animationEase = 'back.out(1.5)',
   animationDuration = 0.5,
   staggerDelay = 0.12,
-  currentPage
+  currentPage,
+  hideLogo = false
 }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [showOverlay, setShowOverlay] = useState(false);
@@ -128,8 +129,8 @@ export default function BubbleMenu({
           style={{
             background: menuBg,
             cursor: 'pointer',
-            opacity: currentPage === 'home' && !isMenuOpen ? 0 : 1,
-            pointerEvents: currentPage === 'home' && !isMenuOpen ? 'none' : 'auto',
+            opacity: hideLogo ? 0 : (currentPage === 'home' && !isMenuOpen ? 0 : 1),
+            pointerEvents: hideLogo || (currentPage === 'home' && !isMenuOpen) ? 'none' : 'auto',
             transition: 'opacity 0.3s ease'
           }}
         >

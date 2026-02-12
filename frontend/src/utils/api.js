@@ -5,10 +5,39 @@ const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000/api'
 
 const api = axios.create({
   baseURL: API_BASE_URL,
+  timeout: 10000, // 10s timeout per request
   headers: {
     'Content-Type': 'application/json',
   },
 })
+
+// Retry interceptor — handles Cloudflare Worker cold starts
+const MAX_RETRIES = 3
+const RETRY_DELAY_BASE = 1000 // 1s, doubles each retry
+
+api.interceptors.response.use(
+  (response) => response,
+  async (error) => {
+    const config = error.config
+    if (!config) return Promise.reject(error)
+
+    config.__retryCount = config.__retryCount || 0
+
+    // Only retry on network errors or 5xx status codes
+    const shouldRetry =
+      config.__retryCount < MAX_RETRIES &&
+      (!error.response || error.response.status >= 500 || error.code === 'ECONNABORTED')
+
+    if (!shouldRetry) return Promise.reject(error)
+
+    config.__retryCount += 1
+    const delay = RETRY_DELAY_BASE * Math.pow(2, config.__retryCount - 1)
+    console.log(`API retry ${config.__retryCount}/${MAX_RETRIES} after ${delay}ms: ${config.url}`)
+
+    await new Promise((resolve) => setTimeout(resolve, delay))
+    return api(config)
+  }
+)
 
 // API endpoints for future integration
 
