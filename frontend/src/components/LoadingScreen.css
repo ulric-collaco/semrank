@@ -1,25 +1,47 @@
 .loading-screen {
     position: fixed;
     inset: 0;
+    width: 100%;
+    height: 100%;
     background-color: #000000;
     z-index: 9999;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: opacity 0.8s ease-out, visibility 0.8s;
+    transition: opacity 0.3s ease-out;
+    overflow: hidden;
+    overscroll-behavior: none;
 }
 
-.loading-screen.hidden {
+.loading-screen.fading {
     opacity: 0;
-    visibility: hidden;
     pointer-events: none;
 }
 
+.loading-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+    max-width: 90vw;
+}
+
+.loading-logo {
+    font-family: 'Slackey', cursive;
+    font-size: clamp(3rem, 8vw, 6rem);
+    color: #ffffff;
+    margin: 0;
+    line-height: 1;
+    text-align: center;
+}
+
 .loading-bar-container {
-    width: 200px;
-    height: 4px;
-    background-color: rgba(255, 255, 255, 0.2);
-    border-radius: 2px;
+    width: 300px;
+    max-width: 80vw;
+    height: 6px;
+    background-color: rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 999px;
     overflow: hidden;
     position: relative;
 }
@@ -28,6 +50,9 @@
     height: 100%;
     background-color: #ffffff;
     width: 0%;
-    border-radius: 2px;
-    transition: width 0.2s linear;
+    border-radius: 999px;
+    transition: width 0.15s ease-out;
+    /* Smooth fill */
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
+    /* Slight separation glow, not neon */
 }
