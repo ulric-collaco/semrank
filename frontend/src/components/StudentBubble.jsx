@@ -87,7 +87,6 @@ export default function StudentBubble({ student, rank, onStudentClick }) {
             />
           ) : null}
           <div className={photoPath ? 'hidden' : 'flex'} style={{ fontSize: '3rem' }}>
-            👤
           </div>
           {/* Attendance Ring */}
           <svg className="absolute inset-0 w-full h-full -rotate-90">

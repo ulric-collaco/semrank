@@ -48,6 +48,7 @@ export const studentAPI = {
   getStudentByEnrollment: (enrollmentId) => fetchWithRetry(`/students/enrollment/${enrollmentId}`),
   searchStudents: (query) => fetchWithRetry(`/students/search?q=${query}`),
   getStudentRank: (rollNo) => fetchWithRetry(`/students/rank/${rollNo}`),
+  getSGPIAnalysis: (studentId) => fetchWithRetry(`/students/id/${studentId}/analysis`),
 }
 
 export const leaderboardAPI = {

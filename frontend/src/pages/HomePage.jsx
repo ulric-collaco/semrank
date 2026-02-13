@@ -153,7 +153,7 @@ export default function HomePage() {
                               }}
                             />
                           ) : null}
-                          <div className="w-full h-full hidden items-center justify-center text-lg md:text-3xl">👤</div>
+                          <div className="w-full h-full hidden items-center justify-center text-lg md:text-3xl"></div>
                         </div>
                         <h3 className="text-xs md:text-lg font-display font-bold text-ink leading-tight mb-1 top3-name px-0.5">
                           {student.name}
@@ -185,7 +185,7 @@ export default function HomePage() {
       {/* Quick Leaderboard */}
       <div ref={quickLeaderRef} className="max-w-4xl mx-auto mb-16" style={{ opacity: 0 }}>
         <div className="flex justify-between items-center mb-6">
-          <h2 className="text-[22px] md:text-[28px] font-display text-ink">📊 Quick Leaderboard</h2>
+          <h2 className="text-[22px] md:text-[28px] font-display text-ink">Quick Leaderboard</h2>
           <div className="flex gap-2">
             <button
               onClick={() => setSortMetric('cgpa')}
@@ -234,7 +234,7 @@ export default function HomePage() {
                           e.target.nextSibling.style.display = 'flex'
                         }}
                       />
-                      <div className="hidden absolute inset-0 bg-bubbleSecondary flex items-center justify-center text-sm text-ink">🙂</div>
+                      <div className="hidden absolute inset-0 bg-bubbleSecondary flex items-center justify-center text-sm text-ink"></div>
                     </>
                   ) : (
                     <div className="text-sm text-ink">?</div>
@@ -259,14 +259,14 @@ export default function HomePage() {
       {/* Birthday Spotlight */}
       {birthdays.length > 0 && (
         <div className="max-w-4xl mx-auto mb-16">
-          <h2 className="text-3xl font-display font-bold text-ink mb-6">🎉 Today's Birthdays</h2>
+          <h2 className="text-3xl font-display font-bold text-ink mb-6">Today's Birthdays</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {birthdays.map((student) => (
               <div
                 key={student.student_id}
                 className="bubble p-6 rounded-bubble-lg text-center hover:scale-105 transition-transform"
               >
-                <div className="text-5xl mb-3">🎂</div>
+                <div className="text-5xl mb-3"></div>
                 <h3 className="font-display font-bold text-ink mb-1">{student.name}</h3>
                 <p className="text-body">{student.class}</p>
               </div>
@@ -288,7 +288,7 @@ export default function HomePage() {
                    hover:scale-105
                    active:scale-95 transition-all duration-300"
         >
-          📊 View Full Leaderboard
+          View Full Leaderboard
         </a>
         <a
           href="#compare"
@@ -296,7 +296,7 @@ export default function HomePage() {
                    hover:scale-105
                    active:scale-95 transition-all duration-300"
         >
-          ⚖️ Compare Students
+          Compare Students
         </a>
         <a
           href="#game"
@@ -304,7 +304,7 @@ export default function HomePage() {
                    hover:scale-105
                    active:scale-95 transition-all duration-300"
         >
-          🎮 Play Higher/Lower
+          Play Higher/Lower
         </a>
       </div>
 

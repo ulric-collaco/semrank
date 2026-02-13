@@ -124,7 +124,7 @@ export default function GamePage() {
       <div className="max-w-4xl mx-auto">
         {/* Header */}
         <div className="text-center mb-8">
-          <h1 className="text-5xl font-display font-bold text-ink mb-4">🎮 Higher or Lower</h1>
+          <h1 className="text-5xl font-display font-bold text-ink mb-4">Higher or Lower</h1>
           <p className="text-body text-lg mb-4">
             Guess if the next student has higher or lower {
               metric === 'cgpa' ? 'SGPA' :
@@ -204,9 +204,7 @@ export default function GamePage() {
                     }}
                   />
                 ) : null}
-                <div className={student1.roll_no ? 'hidden' : 'flex'} style={{ fontSize: '3rem' }}>
-                  👤
-                </div>
+                <div className={student1.roll_no ? 'hidden' : 'flex'} style={{ fontSize: '3rem' }}></div>
               </div>
               <h3 className="text-2xl font-display font-bold text-ink">{student1.name}</h3>
               <p className="text-body">Class: {student1.class}</p>
@@ -250,9 +248,7 @@ export default function GamePage() {
                       }}
                     />
                   ) : null}
-                  <div className={student2.roll_no ? 'hidden' : 'flex'} style={{ fontSize: '3rem' }}>
-                    👤
-                  </div>
+                  <div className={student2.roll_no ? 'hidden' : 'flex'} style={{ fontSize: '3rem' }}></div>
                 </div>
                 <h3 className="text-2xl font-display font-bold text-ink">{student2.name}</h3>
                 <p className="text-body">Class: {student2.class}</p>
@@ -306,26 +302,30 @@ export default function GamePage() {
         </div>
 
         {/* Feedback */}
-        {gameState === 'correct' && (
-          <div className="text-center mt-8">
-            <p className="text-2xl font-bold text-accent">✅ Correct!</p>
-          </div>
-        )}
-        {gameState === 'wrong' && (
-          <div className="text-center mt-8 space-y-4">
-            <p className="text-2xl font-bold text-ink">❌ Wrong!</p>
-            <p className="text-lg text-body">Final Score: {score}</p>
-            <button
-              onClick={resetGame}
-              className="px-8 py-4 bg-accent text-ink rounded-bubble font-semibold
+        {
+          gameState === 'correct' && (
+            <div className="text-center mt-8">
+              <p className="text-2xl font-bold text-accent">Correct!</p>
+            </div>
+          )
+        }
+        {
+          gameState === 'wrong' && (
+            <div className="text-center mt-8 space-y-4">
+              <p className="text-2xl font-bold text-ink">Wrong!</p>
+              <p className="text-lg text-body">Final Score: {score}</p>
+              <button
+                onClick={resetGame}
+                className="px-8 py-4 bg-accent text-ink rounded-bubble font-semibold
                        shadow-bubble hover:shadow-bubble-hover hover:scale-105
                        active:scale-95 transition-all duration-300"
-            >
-              Play Again
-            </button>
-          </div>
-        )}
-      </div>
-    </div>
+              >
+                Play Again
+              </button>
+            </div>
+          )
+        }
+      </div >
+    </div >
   )
 }

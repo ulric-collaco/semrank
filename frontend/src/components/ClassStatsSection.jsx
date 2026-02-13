@@ -49,25 +49,25 @@ export default function ClassStatsSection() {
 
   const statCards = [
     {
-      emoji: '🏆',
+      emoji: '',
       label: 'Best Class by SGPA',
       value: formatClassName(stats.bestSGPA?.class_name) || 'N/A',
       detail: stats.bestSGPA ? `${stats.bestSGPA.avg_cgpa} SGPA` : '',
     },
     {
-      emoji: '👑',
+      emoji: '',
       label: 'Best Attendance',
       value: formatClassName(stats.bestAttendance?.class_name) || 'N/A',
       detail: stats.bestAttendance ? `${stats.bestAttendance.avg_attendance}%` : '',
     },
     {
-      emoji: '😴',
+      emoji: '',
       label: 'Most Bunked Class',
       value: formatClassName(stats.mostBunked?.class_name) || 'N/A',
       detail: stats.mostBunked ? `${stats.mostBunked.avg_attendance}% attendance` : '',
     },
     {
-      emoji: '📉',
+      emoji: '',
       label: 'Worst Performing Subject',
       value: stats.worstSubject?.subject_name || 'N/A',
       detail: stats.worstSubject ? `${stats.worstSubject.avg_marks.toFixed(1)} avg marks` : '',
@@ -78,7 +78,7 @@ export default function ClassStatsSection() {
     <div className="space-y-6">
       {/* Section Header */}
       <div className="text-center">
-        <h2 className="text-3xl font-display font-bold text-ink mb-2">🎉 Fun Insights</h2>
+        <h2 className="text-3xl font-display font-bold text-ink mb-2">Fun Insights</h2>
       </div>
 
       {/* Stats Grid */}

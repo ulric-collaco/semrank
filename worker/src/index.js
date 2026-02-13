@@ -85,6 +85,91 @@ async function getStudentLeaderboardData(db, classFilter = 'all') {
 }
 
 // Get student with all details including subjects and marks (for single student lookup)
+// Calculate SGPI Analysis breakdown
+async function getStudentSGPIAnalysis(db, prn) {
+  // Dynamically build the dropped subjects set from DB subject codes
+  // 25MDM* = Minor Degree subjects, 25DM* = Double Minor (Emerging Areas) subjects
+  const droppableQuery = `SELECT subject_name FROM SUBJECT WHERE subject_code LIKE '25MDM%' OR subject_code LIKE '25DM%'`;
+  const droppableResult = await db.prepare(droppableQuery).all();
+  const DROPPED_SUBJECTS = new Set(
+    (droppableResult.results || []).map(s => s.subject_name.toUpperCase())
+  );
+
+  // Get all marks for this student
+  const marksQuery = `SELECT subject, marks, exam_type FROM marks WHERE prn = ?`;
+  const marksResult = await db.prepare(marksQuery).bind(prn).all();
+  const marks = marksResult.results || [];
+
+  // Get subject credits
+  const subjectsQuery = `SELECT subject_name, credits FROM SUBJECT`;
+  const subjectsResult = await db.prepare(subjectsQuery).all();
+  const subjectCredits = {};
+  subjectsResult.results.forEach(s => {
+    subjectCredits[s.subject_name.toUpperCase()] = s.credits;
+  });
+
+  // Group marks by subject to get total
+  const subjectTotals = {};
+  marks.forEach(m => {
+    const subName = m.subject.toUpperCase();
+    if (!subjectTotals[subName]) {
+      subjectTotals[subName] = 0;
+    }
+    subjectTotals[subName] += (m.marks || 0);
+  });
+
+  const breakdown = [];
+  const dropped = [];
+  let totalWeightedPoints = 0;
+  let totalCredits = 0;
+
+  for (const [subName, totalMarks] of Object.entries(subjectTotals)) {
+    const credits = subjectCredits[subName] || 2; // Default to 2 if missing
+
+    // Check if dropped (minor/double-minor with 0 marks)
+    if (totalMarks === 0 && DROPPED_SUBJECTS.has(subName)) {
+      dropped.push({
+        subject: subName,
+        credits: credits,
+        reason: "Minor/Double-Minor subject with 0 marks — excluded from SGPI"
+      });
+      continue;
+    }
+
+    let gp = 0;
+    if (totalMarks >= 85) gp = 10;
+    else if (totalMarks >= 80) gp = 9;
+    else if (totalMarks >= 70) gp = 8;
+    else if (totalMarks >= 60) gp = 7;
+    else if (totalMarks >= 50) gp = 6;
+    else if (totalMarks >= 45) gp = 5;
+    else if (totalMarks >= 40) gp = 4;
+    else gp = 0;
+
+    totalWeightedPoints += (gp * credits);
+    totalCredits += credits;
+
+    breakdown.push({
+      subject: subName,
+      marks: totalMarks,
+      credits: credits,
+      gradePoint: gp,
+      weightedPoint: gp * credits
+    });
+  }
+
+  const sgpi = totalCredits > 0 ? (totalWeightedPoints / totalCredits) : 0;
+
+  return {
+    prn,
+    sgpi: parseFloat(sgpi.toFixed(2)),
+    totalWeightedPoints,
+    totalCredits,
+    breakdown,
+    dropped
+  };
+}
+
 async function getStudentDetails(db, studentId) {
   // Get student basic info with CGPA and attendance from leaderboard
   const studentQuery = `
@@ -219,6 +304,23 @@ async function handleRequest(request, env) {
 
       const details = await getStudentDetails(db, student.student_id);
       return jsonResponse(details);
+    }
+
+    // GET /api/students/id/:studentId/analysis - Get SGPI analysis breakdown
+    if (path.match(/^\/api\/students\/id\/\d+\/analysis$/) && method === 'GET') {
+      const studentId = path.split('/')[4];
+
+      const student = await db
+        .prepare('SELECT prn FROM STUDENT WHERE student_id = ?')
+        .bind(parseInt(studentId))
+        .first();
+
+      if (!student) {
+        return errorResponse('Student not found', 404);
+      }
+
+      const analysis = await getStudentSGPIAnalysis(db, student.prn);
+      return jsonResponse(analysis);
     }
 
     // GET /api/students/search?q=query - Search students by name or roll

@@ -1,9 +1,31 @@
-import React, { useState } from 'react';
-import { User } from 'lucide-react';
+import { useState } from 'react';
+import { User, Calculator, Info, ChevronRight, X } from 'lucide-react';
 import { formatClassName } from '../utils/format';
+import { studentAPI } from '../utils/api';
 
 export default function StudentIDCard({ student, loading, error, onClose }) {
     const [selectedSubjectIndex, setSelectedSubjectIndex] = useState(0);
+    const [analysisData, setAnalysisData] = useState(null);
+    const [showAnalysis, setShowAnalysis] = useState(false);
+    const [isAnalyzing, setIsAnalyzing] = useState(false);
+
+    const handleAnalyze = async () => {
+        if (analysisData) {
+            setShowAnalysis(true);
+            return;
+        }
+        setIsAnalyzing(true);
+        try {
+            const data = await studentAPI.getSGPIAnalysis(student.student_id);
+            setAnalysisData(data);
+            setShowAnalysis(true);
+        } catch (err) {
+            console.error("Analysis failed:", err);
+            alert("Could not load calculation breakdown.");
+        } finally {
+            setIsAnalyzing(false);
+        }
+    };
 
     if (loading) {
         return (
@@ -235,6 +257,17 @@ export default function StudentIDCard({ student, loading, error, onClose }) {
                                         </div>
                                         <div className="absolute -right-3 -bottom-3 w-6 h-6 bg-blue-500/10 rounded-full blur-md group-hover:bg-blue-500/20 transition-all"></div>
                                     </div>
+                                    <button
+                                        onClick={handleAnalyze}
+                                        disabled={isAnalyzing}
+                                        className="bg-indigo-500/20 border border-indigo-500/30 rounded-lg px-2.5 py-1 min-w-fit flex flex-col justify-center items-center gap-0 relative overflow-hidden group hover:bg-indigo-500/30 transition-all disabled:opacity-50"
+                                    >
+                                        <span className="text-[7px] uppercase tracking-wide text-indigo-300 font-medium z-10 leading-none mb-0.5">Calculation</span>
+                                        <div className="flex items-center gap-1 z-10">
+                                            <Calculator className={`w-3.5 h-3.5 text-indigo-400 ${isAnalyzing ? 'animate-pulse' : ''}`} />
+                                            <span className="text-[10px] font-bold text-white uppercase tracking-tight">Analyze</span>
+                                        </div>
+                                    </button>
                                 </div>
                             </div>
 
@@ -313,6 +346,139 @@ export default function StudentIDCard({ student, loading, error, onClose }) {
                     </div>
                 )}
             </div>
+
+            {/* SGPI Analysis Overlay */}
+            {showAnalysis && analysisData && (
+                <div className="absolute inset-0 z-[110] bg-slate-950/90 backdrop-blur-xl p-4 md:p-8 overflow-y-auto no-scrollbar animate-in fade-in zoom-in duration-300">
+                    <div className="max-w-3xl mx-auto">
+                        <div className="flex justify-between items-center mb-6">
+                            <div>
+                                <h3 className="text-xl md:text-2xl font-bold text-white flex items-center gap-2">
+                                    <Calculator className="w-6 h-6 text-indigo-400" />
+                                    SGPI Calculation Analysis
+                                </h3>
+                                <p className="text-slate-400 text-sm mt-1">
+                                    According to <span className="text-indigo-300 font-semibold">Section 16.2</span> — Calculation of SGPI and CGPI
+                                </p>
+                                <a href="https://frcrce.ac.in/wp-content/uploads/2025/11/Academic_Rule_Book_FrCRCE_2024_25.pdf" target="_blank" rel="noopener noreferrer" className="text-[10px] text-slate-500 hover:text-indigo-400 transition-colors mt-0.5 inline-block">
+                                    Fr. CRCE Academic Rule Book 2024-25, Page 53 ↗
+                                </a>
+                            </div>
+                            <button onClick={() => setShowAnalysis(false)} className="w-10 h-10 flex items-center justify-center bg-white/5 hover:bg-white/10 rounded-full text-slate-400 border border-white/10 transition-colors">
+                                <X className="w-5 h-5" />
+                            </button>
+                        </div>
+
+                        {/* Summary Cards */}
+                        <div className="grid grid-cols-2 md:grid-cols-3 gap-3 mb-8">
+                            <div className="bg-white/5 border border-white/10 rounded-xl p-4">
+                                <span className="text-[10px] uppercase font-bold text-slate-500 block mb-1">Final SGPI</span>
+                                <span className="text-3xl font-display font-bold text-emerald-400">{analysisData.sgpi}</span>
+                            </div>
+                            <div className="bg-white/5 border border-white/10 rounded-xl p-4">
+                                <span className="text-[10px] uppercase font-bold text-slate-500 block mb-1">Σ Cᵢ × GPᵢ</span>
+                                <span className="text-3xl font-display font-bold text-indigo-400">{analysisData.totalWeightedPoints}</span>
+                            </div>
+                            <div className="bg-white/5 border border-white/10 rounded-xl p-4 col-span-2 md:col-span-1">
+                                <span className="text-[10px] uppercase font-bold text-slate-500 block mb-1">Σ Cᵢ</span>
+                                <span className="text-3xl font-display font-bold text-blue-400">{analysisData.totalCredits}</span>
+                            </div>
+                        </div>
+
+                        {/* Main Formula */}
+                        <div className="bg-black/40 border border-white/5 rounded-xl p-5 mb-8 text-center">
+                            <p className="text-slate-400 text-[10px] uppercase font-bold mb-4 tracking-widest">Applied Formula (Section 16.2)</p>
+                            <div className="text-lg md:text-2xl font-mono text-white inline-flex items-center gap-3">
+                                <span className="italic">SGPI</span>
+                                <span>=</span>
+                                <div className="flex flex-col items-center">
+                                    <span className="border-b border-white/30 pb-1 px-2 text-sm md:text-lg">
+                                        <span className="text-slate-400">Σ</span> Cᵢ <span className="text-slate-400">×</span> GPᵢ
+                                    </span>
+                                    <span className="pt-1 px-2 text-sm md:text-lg">
+                                        <span className="text-slate-400">Σ</span> Cᵢ
+                                    </span>
+                                </div>
+                                <span>=</span>
+                                <div className="flex flex-col items-center">
+                                    <span className="border-b border-white/20 pb-1 text-indigo-300">{analysisData.totalWeightedPoints}</span>
+                                    <span className="pt-1 text-blue-300">{analysisData.totalCredits}</span>
+                                </div>
+                                <span className="text-emerald-400 font-bold">= {analysisData.sgpi}</span>
+                            </div>
+                            <div className="mt-4 flex flex-wrap justify-center gap-x-6 gap-y-1 text-[11px] text-slate-500">
+                                <span><span className="text-slate-400 font-medium">n</span> = Number of papers in the semester</span>
+                                <span><span className="text-slate-400 font-medium">Cᵢ</span> = Credit for iᵗʰ subject</span>
+                                <span><span className="text-slate-400 font-medium">GPᵢ</span> = Grade Points obtained in the iᵗʰ subject</span>
+                            </div>
+                        </div>
+
+                        {/* Breakdown Table */}
+                        <div className="space-y-4">
+                            <h4 className="text-sm font-bold text-slate-300 uppercase tracking-wider flex items-center gap-2">
+                                <div className="w-1 h-4 bg-indigo-500 rounded-full"></div>
+                                Subject-wise Breakdown
+                            </h4>
+                            <div className="border border-white/10 rounded-xl overflow-hidden overflow-x-auto">
+                                <table className="w-full text-left text-sm">
+                                    <thead className="bg-white/5 text-slate-500 font-bold text-[10px] uppercase">
+                                        <tr>
+                                            <th className="px-4 py-3">Subject</th>
+                                            <th className="px-4 py-3 text-center">Marks</th>
+                                            <th className="px-4 py-3 text-center">Grade Point $(G_i)$</th>
+                                            <th className="px-4 py-3 text-center">Credits $(C_i)$</th>
+                                            <th className="px-4 py-3 text-right">Weighted $(C_i \times G_i)$</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody className="divide-y divide-white/5">
+                                        {analysisData.breakdown.map((row, idx) => (
+                                            <tr key={idx} className="hover:bg-white/[0.02] transition-colors">
+                                                <td className="px-4 py-3 font-medium text-slate-200">{row.subject}</td>
+                                                <td className="px-4 py-3 text-center text-slate-300">{row.marks}</td>
+                                                <td className={`px-4 py-3 text-center font-bold ${row.gradePoint === 0 ? 'text-red-400' : 'text-white'}`}>
+                                                    {row.gradePoint}
+                                                </td>
+                                                <td className="px-4 py-3 text-center text-slate-400">{row.credits}</td>
+                                                <td className="px-4 py-3 text-right font-mono font-bold text-indigo-300">{row.weightedPoint}</td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        {/* Dropped Subjects */}
+                        {analysisData.dropped && analysisData.dropped.length > 0 && (
+                            <div className="mt-8 space-y-4">
+                                <h4 className="text-sm font-bold text-orange-400/80 uppercase tracking-wider flex items-center gap-2">
+                                    <div className="w-1 h-4 bg-orange-500 rounded-full"></div>
+                                    Dropped Subjects (Excluded from Calculation)
+                                </h4>
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                    {analysisData.dropped.map((d, idx) => (
+                                        <div key={idx} className="bg-orange-500/5 border border-orange-500/10 rounded-lg p-3 flex justify-between items-center">
+                                            <div>
+                                                <p className="text-slate-200 font-medium text-sm">{d.subject}</p>
+                                                <p className="text-[10px] text-orange-400 font-medium">{d.reason}</p>
+                                            </div>
+                                            <div className="px-2 py-1 bg-orange-500/20 rounded text-[9px] font-bold text-orange-300 uppercase">Excluded</div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
+
+                        <div className="mt-12 text-center pb-8">
+                            <button
+                                onClick={() => setShowAnalysis(false)}
+                                className="px-8 py-3 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl text-slate-300 font-bold transition-all"
+                            >
+                                Back to Profile
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }

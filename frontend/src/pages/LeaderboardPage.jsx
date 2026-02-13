@@ -122,7 +122,7 @@ export default function LeaderboardPage() {
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="text-center mb-8">
-          <h1 className="text-5xl font-display font-bold text-ink mb-4">🏆 Leaderboard</h1>
+          <h1 className="text-5xl font-display font-bold text-ink mb-4">Leaderboard</h1>
         </div>
 
         {/* Tabs */}
@@ -130,20 +130,20 @@ export default function LeaderboardPage() {
           <button
             onClick={() => setActiveTab('student')}
             className={`px-8 py-4 rounded-bubble font-semibold text-lg transition-all ${activeTab === 'student'
-                ? 'bg-accent text-ink shadow-bubble-hover scale-105'
-                : 'bubble hover:scale-105'
+              ? 'bg-accent text-ink shadow-bubble-hover scale-105'
+              : 'bubble hover:scale-105'
               }`}
           >
-            📚 Student Leaderboard
+            Student Leaderboard
           </button>
           <button
             onClick={() => setActiveTab('class')}
             className={`px-8 py-4 rounded-bubble font-semibold text-lg transition-all ${activeTab === 'class'
-                ? 'bg-accent text-ink shadow-bubble-hover scale-105'
-                : 'bubble hover:scale-105'
+              ? 'bg-accent text-ink shadow-bubble-hover scale-105'
+              : 'bubble hover:scale-105'
               }`}
           >
-            🎓 Class Rankings
+            Class Rankings
           </button>
         </div>
 
@@ -157,29 +157,29 @@ export default function LeaderboardPage() {
                 <button
                   onClick={() => setSortBy('cgpa')}
                   className={`px-6 py-3 rounded-bubble font-medium transition-all ${sortBy === 'cgpa'
-                      ? 'bg-accent text-ink shadow-bubble-hover scale-105'
-                      : 'bubble hover:scale-105'
+                    ? 'bg-accent text-ink shadow-bubble-hover scale-105'
+                    : 'bubble hover:scale-105'
                     }`}
                 >
-                  📊 SGPA
+                  SGPA
                 </button>
                 <button
                   onClick={() => setSortBy('attendance')}
                   className={`px-6 py-3 rounded-bubble font-medium transition-all ${sortBy === 'attendance'
-                      ? 'bg-accent text-ink shadow-bubble-hover scale-105'
-                      : 'bubble hover:scale-105'
+                    ? 'bg-accent text-ink shadow-bubble-hover scale-105'
+                    : 'bubble hover:scale-105'
                     }`}
                 >
-                  📅 Attendance
+                  Attendance
                 </button>
                 <button
                   onClick={() => setSortBy('subject')}
                   className={`px-6 py-3 rounded-bubble font-medium transition-all ${sortBy === 'subject'
-                      ? 'bg-accent text-ink shadow-bubble-hover scale-105'
-                      : 'bubble hover:scale-105'
+                    ? 'bg-accent text-ink shadow-bubble-hover scale-105'
+                    : 'bubble hover:scale-105'
                     }`}
                 >
-                  📖 Subject
+                  Subject
                 </button>
               </div>
 
@@ -207,8 +207,8 @@ export default function LeaderboardPage() {
                     key={cls}
                     onClick={() => setFilterClass(cls)}
                     className={`px-4 py-2 rounded-bubble text-sm font-medium transition-all ${filterClass === cls
-                        ? 'bg-bubbleSecondary text-ink shadow-bubble-hover scale-105'
-                        : 'bubble hover:scale-105'
+                      ? 'bg-bubbleSecondary text-ink shadow-bubble-hover scale-105'
+                      : 'bubble hover:scale-105'
                       }`}
                   >
                     {cls === 'all' ? 'All Classes' : formatClassName(cls)}
