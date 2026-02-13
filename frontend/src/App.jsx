@@ -108,22 +108,25 @@ function App() {
 
       <div style={contentStyle} className="relative z-0 min-h-screen transition-all duration-1000">
         <div className="fixed inset-0 z-0" style={{ pointerEvents: 'none' }}>
+          {/* Only render complex snow effect on desktop to prevent mobile lag */}
           <Suspense fallback={null}>
-            <PixelSnow
-              color="#ffffff"
-              flakeSize={0.01}
-              minFlakeSize={1.25}
-              pixelResolution={200}
-              speed={1.25}
-              density={0.3}
-              direction={125}
-              brightness={1}
-              depthFade={8}
-              farPlane={20}
-              gamma={0.4545}
-              variant="square"
-              style={{ width: '100%', height: '100vh' }}
-            />
+            {typeof window !== 'undefined' && window.innerWidth > 768 && (
+              <PixelSnow
+                color="#ffffff"
+                flakeSize={0.01}
+                minFlakeSize={1.25}
+                pixelResolution={200}
+                speed={1.25}
+                density={0.3}
+                direction={125}
+                brightness={1}
+                depthFade={8}
+                farPlane={20}
+                gamma={0.4545}
+                variant="square"
+                style={{ width: '100%', height: '100vh' }}
+              />
+            )}
           </Suspense>
         </div>
 
