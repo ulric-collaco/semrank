@@ -100,12 +100,15 @@ async function getStudentSGPIAnalysis(db, prn) {
   const marksResult = await db.prepare(marksQuery).bind(prn).all();
   const marks = marksResult.results || [];
 
-  // Get subject credits
-  const subjectsQuery = `SELECT subject_name, credits FROM SUBJECT`;
+  // Get subject credits and max marks
+  const subjectsQuery = `SELECT subject_name, credits, maxMarks FROM SUBJECT`;
   const subjectsResult = await db.prepare(subjectsQuery).all();
-  const subjectCredits = {};
+  const subjectInfo = {};
   subjectsResult.results.forEach(s => {
-    subjectCredits[s.subject_name.toUpperCase()] = s.credits;
+    subjectInfo[s.subject_name.toUpperCase()] = {
+      credits: s.credits,
+      maxMarks: s.maxMarks || 100
+    };
   });
 
   // Group marks by subject to get total
@@ -124,9 +127,12 @@ async function getStudentSGPIAnalysis(db, prn) {
   let totalCredits = 0;
 
   for (const [subName, totalMarks] of Object.entries(subjectTotals)) {
-    const credits = subjectCredits[subName] || 2; // Default to 2 if missing
+    const info = subjectInfo[subName] || { credits: 2, maxMarks: 100 };
+    const credits = info.credits;
+    const maxMarks = info.maxMarks;
 
     // Check if dropped (minor/double-minor with 0 marks)
+    // Note: totalMarks is raw marks. If maxMarks is e.g. 50, and total is 0, it's still 0.
     if (totalMarks === 0 && DROPPED_SUBJECTS.has(subName)) {
       dropped.push({
         subject: subName,
@@ -136,15 +142,23 @@ async function getStudentSGPIAnalysis(db, prn) {
       continue;
     }
 
+    // Calculate Percentage for Grading
+    // Marks are converted to percentage (out of 100) before grading
+    const percentage = maxMarks > 0 ? (totalMarks / maxMarks) * 100 : 0;
+
     let gp = 0;
-    if (totalMarks >= 85) gp = 10;
-    else if (totalMarks >= 80) gp = 9;
-    else if (totalMarks >= 70) gp = 8;
-    else if (totalMarks >= 60) gp = 7;
-    else if (totalMarks >= 50) gp = 6;
-    else if (totalMarks >= 45) gp = 5;
-    else if (totalMarks >= 40) gp = 4;
+    if (percentage >= 85) gp = 10;
+    else if (percentage >= 80) gp = 9;
+    else if (percentage >= 70) gp = 8;
+    else if (percentage >= 60) gp = 7;
+    else if (percentage >= 50) gp = 6;
+    else if (percentage >= 45) gp = 5;
+    else if (percentage >= 40) gp = 4;
     else gp = 0;
+
+    // Fail check: if marks < 40%
+    // The previous logic was `totalMarks < 40`. Now it's `percentage < 40`.
+    // Validated: 33.5/50 = 67% -> GP 7. Correct.
 
     totalWeightedPoints += (gp * credits);
     totalCredits += credits;
@@ -152,6 +166,8 @@ async function getStudentSGPIAnalysis(db, prn) {
     breakdown.push({
       subject: subName,
       marks: totalMarks,
+      normalizedMarks: parseFloat(percentage.toFixed(2)), // percentage
+      maxMarks: maxMarks,
       credits: credits,
       gradePoint: gp,
       weightedPoint: gp * credits

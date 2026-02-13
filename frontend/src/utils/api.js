@@ -6,7 +6,8 @@ const MAX_RETRIES = 3
 const RETRY_DELAY_BASE = 1000 // 1s, doubles each retry
 
 async function fetchWithRetry(url, options = {}) {
-  const fullUrl = `${API_BASE_URL}${url}`
+  const separator = url.includes('?') ? '&' : '?'
+  const fullUrl = `${API_BASE_URL}${url}${separator}_t=${Date.now()}`
   const config = {
     headers: { 'Content-Type': 'application/json' },
     signal: AbortSignal.timeout(10000), // 10s timeout
