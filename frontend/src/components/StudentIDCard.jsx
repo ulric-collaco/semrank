@@ -68,10 +68,16 @@ export default function StudentIDCard({ student, loading, error, onClose }) {
                 <style>{`
                     .no-scrollbar::-webkit-scrollbar { display: none; }
                     .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-                    .tabs-scrollbar { scrollbar-width: thin; scrollbar-color: rgba(245,130,174,0.95) rgba(255,255,255,0.03); }
-                    .tabs-scrollbar::-webkit-scrollbar { height: 8px; }
-                    .tabs-scrollbar::-webkit-scrollbar-track { background: rgba(255,255,255,0.03); border-radius: 9999px; }
-                    .tabs-scrollbar::-webkit-scrollbar-thumb { background: linear-gradient(90deg, rgba(245,130,174,0.95), rgba(245,130,174,0.75)); border-radius: 9999px; }
+                    .tabs-scrollbar { scrollbar-width: auto; scrollbar-color: rgba(245,130,174,0.95) rgba(255,255,255,0.06); }
+                    .tabs-scrollbar::-webkit-scrollbar { height: 14px; }
+                    .tabs-scrollbar::-webkit-scrollbar-track { background: rgba(255,255,255,0.06); border-radius: 9999px; margin: 0 4px; }
+                    .tabs-scrollbar::-webkit-scrollbar-thumb { background: linear-gradient(90deg, rgba(245,130,174,0.95), rgba(245,130,174,0.75)); border-radius: 9999px; border: 2px solid transparent; background-clip: padding-box; }
+                    @media (min-width: 768px) {
+                        .tabs-scrollbar { scrollbar-width: thin; }
+                        .tabs-scrollbar::-webkit-scrollbar { height: 8px; }
+                        .tabs-scrollbar::-webkit-scrollbar-track { margin: 6px 0; }
+                        .tabs-scrollbar::-webkit-scrollbar-thumb { border: 0; background-clip: unset; }
+                    }
                 `}</style>
 
                 {/* Close — mobile: absolute z-100 so burger can't cover it; desktop: original position */}
@@ -157,7 +163,6 @@ export default function StudentIDCard({ student, loading, error, onClose }) {
                             {topSubjects.map((sub, idx) => (
                                 <div key={idx} className="flex items-center justify-between p-2 rounded-md bg-white/5 border border-white/5 hover:bg-white/10 transition-colors h-auto min-h-[44px]">
                                     <div className="flex flex-col justify-center min-w-0 pr-2">
-                                        <span className="text-[8px] uppercase tracking-wider text-slate-500 font-bold mb-0 leading-none">Subject</span>
                                         <span className="text-[11px] font-medium text-slate-200 truncate leading-tight mt-0.5" title={sub.subject_name}>{sub.subject_name}</span>
                                     </div>
                                     <div className="flex flex-col items-end justify-center pl-2 border-l border-white/10">
@@ -197,18 +202,11 @@ export default function StudentIDCard({ student, loading, error, onClose }) {
                             ))}
                         </div>
 
-                        {/* MOBILE: Clickable square grid */}
-                        <div className="md:hidden mb-3">
-                            <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Tap a subject</h3>
-                            <div className="grid grid-cols-3 gap-1.5">
-                                {subjects.map((subj, idx) => (
-                                    <button key={idx} onClick={() => setSelectedSubjectIndex(selectedSubjectIndex === idx ? null : idx)} className={`aspect-square flex flex-col items-center justify-center p-1.5 rounded-lg border text-center transition-all duration-200 ${selectedSubjectIndex === idx ? 'bg-indigo-500/20 border-indigo-500/40 ring-1 ring-indigo-500/30' : 'bg-white/[0.03] border-white/5 hover:bg-white/[0.08]'}`}>
-                                        <span className="text-[9px] font-medium text-slate-300 leading-tight line-clamp-2 text-center">{shortName(subj.subject_name)}</span>
-                                        <span className="text-sm font-bold text-white leading-none mt-1">{subj.total_marks || 0}</span>
-                                        {subj.rank && <span className={`text-[8px] font-bold mt-0.5 ${subj.rank <= 3 ? 'text-amber-400' : 'text-slate-500'}`}>#{subj.rank}</span>}
-                                    </button>
-                                ))}
-                            </div>
+                        {/* MOBILE: Scrolling tabs — taller than desktop */}
+                        <div className="flex md:hidden gap-2 tabs-scrollbar overflow-x-auto w-full mb-4 pb-1" onWheel={(e) => { const el = e.currentTarget; if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) { el.scrollLeft += e.deltaY; e.preventDefault(); } }}>
+                            {subjects.map((subj, idx) => (
+                                <button key={idx} onClick={() => setSelectedSubjectIndex(idx)} className={`px-4 py-3 rounded-md text-sm font-medium whitespace-nowrap transition-all border shrink-0 ${selectedSubjectIndex === idx ? 'bg-white/10 text-white border-white/10' : 'bg-transparent text-slate-500 border-transparent hover:bg-white/5 hover:text-slate-300'}`}>{shortName(subj.subject_name)}</button>
+                            ))}
                         </div>
 
                         {/* Shared bar graph */}
