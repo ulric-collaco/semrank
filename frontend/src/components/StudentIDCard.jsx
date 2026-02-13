@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { User } from 'lucide-react';
 import { formatClassName } from '../utils/format';
@@ -161,7 +160,9 @@ export default function StudentIDCard({ student, loading, error, onClose }) {
                         <div className="flex-grow min-w-0 w-full flex flex-col gap-2">
                             {/* Header: stacked on mobile, inline row on desktop (original) */}
                             <div className="flex flex-col md:flex-row md:justify-between items-start md:items-center gap-2 md:gap-3">
-                                <h1 className="text-base md:text-2xl lg:text-3xl font-bold text-white leading-tight tracking-tight break-words text-left flex-shrink min-w-0 md:pr-0 w-full">{student.name}</h1>
+                                <div className="flex items-center gap-2 min-w-0 w-full md:w-auto">
+                                    <h1 className="text-base md:text-2xl lg:text-3xl font-bold text-white leading-tight tracking-tight break-words text-left flex-shrink min-w-0">{student.name}</h1>
+                                </div>
 
                                 {/* Mobile Layout: Grid for meta info and stats to fill space below name */}
                                 <div className="md:hidden grid grid-cols-2 gap-2 w-full">

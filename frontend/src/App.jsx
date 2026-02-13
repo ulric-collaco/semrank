@@ -8,7 +8,7 @@ const HomePage = lazy(() => import('./pages/HomePage'))
 const LeaderboardPage = lazy(() => import('./pages/LeaderboardPage'))
 const ComparePage = lazy(() => import('./pages/ComparePage'))
 const GamePage = lazy(() => import('./pages/GamePage'))
-const StudentDetailPage = lazy(() => import('./pages/StudentDetailPage'))
+
 
 const menuItems = [
   {
@@ -81,7 +81,7 @@ function App() {
       case 'leaderboard': page = <LeaderboardPage />; break
       case 'compare': page = <ComparePage />; break
       case 'game': page = <GamePage />; break
-      case 'student': page = <StudentDetailPage />; break
+      case 'game': page = <GamePage />; break
       default: page = <HomePage />
     }
     return <PageTransition key={currentPage}>{page}</PageTransition>

@@ -55,6 +55,36 @@ const CustomTooltip = ({ active, payload, label }) => {
   return null;
 };
 
+const CustomPolarAngleAxisTick = ({ payload, x, y, cx, cy, ...rest }) => {
+  // Use only the first non-trivial word or acronym for cleaner mobile view
+  // E.g. "Software Architecture" -> "Software", "Cloud Computing" -> "Cloud"
+  // Or just take the first word always.
+  let label = payload.value;
+  // Simple heuristic: if contain ' - ', split and take first part. Then take first word.
+  label = label.split(' - ')[0].trim();
+  // Take first word if it's long, or up to 2 words if short
+  const words = label.split(/\s+/);
+  const shortLabel = words[0].length > 4 ? words[0] : (words.slice(0, 2).join(' '));
+
+  // Calculate a slight offset multiplier based on position if needed,
+  // but for now, just pushing them out a bit more with a fixed radius offset logic
+  // handled by Recharts, or we can adjust dy manually.
+  // Recharts passes x,y for the tick. We can shift it slightly outward.
+
+  return (
+    <text
+      {...rest}
+      x={x}
+      y={y}
+      className="text-[10px] md:text-[11px] font-bold fill-gray-300"
+      textAnchor="middle"
+      alignmentBaseline="central"
+    >
+      <tspan x={x} dy="0.3em">{shortLabel}</tspan>
+    </text>
+  );
+};
+
 export default function ComparePage() {
   const [students, setStudents] = useState([]);
   const [selectedStudents, setSelectedStudents] = useState([]);
@@ -248,17 +278,17 @@ export default function ComparePage() {
     uniqueCategories.forEach(category => {
       // Shorter labels for radar chart
       // For simplified view, we might try to abbreviate common subject names
-      let displayLabel = category;
-      if (displayLabel.length > 15) {
-        // Try to create initials if it's long? Or just truncate
-        displayLabel = category.substring(0, 15) + '...';
-      }
+      // Use full category name, wrapping handled by custom tick
+      const displayLabel = category;
 
       const dataPoint = { subject: displayLabel, fullSubject: category };
       const potentialSubjects = categoryMap[category];
 
+      // CRITICAL FIX: Iterate through ALL selected students to ensure everyone has a value (even 0)
+      // This guarantees the radar chart draws a point/line for every student at every axis.
       selectedStudents.forEach(student => {
         let total = 0;
+        // Find if this student has any subject that maps to this category
         const match = potentialSubjects.find(s => student.subjectsObj?.[s]);
         if (match) {
           total = student.subjectsObj[match]['Total'] || 0;
@@ -266,9 +296,10 @@ export default function ComparePage() {
         dataPoint[student.name] = total;
       });
 
-      if (selectedStudents.some(s => dataPoint[s.name] > 0)) {
-        dataPoints.push(dataPoint);
-      }
+      // valid if at least one student has this subject (even if marks are 0, checking if subject exists in curriculum)
+      // Actually, we should show the axis if ANY student has the subject in their list.
+      // The `uniqueCategories` set already ensures we only look at relevant subjects.
+      dataPoints.push(dataPoint);
     });
 
     return dataPoints;
@@ -279,14 +310,12 @@ export default function ComparePage() {
   const containerClass = "bg-[#1a1a2e]/50 border border-white/5 p-6 rounded-xl backdrop-blur-sm";
 
   return (
-    <div className="min-h-screen bg-background text-ink p-8 pt-24 font-sans">
+    <div className="min-h-screen bg-background text-ink px-4 py-6 pt-32 md:p-8 md:pt-32 font-sans overflow-x-hidden">
       <div className="max-w-7xl mx-auto">
         <div className="flex items-center justify-between mb-8">
           <div>
             <h1 className="text-4xl font-display font-bold mb-2">Compare Students</h1>
-            <p className="text-body text-sm md:text-base">
-              Select up to 4 students to analyze their performance side-by-side.
-            </p>
+            
           </div>
 
           <div className={`${containerClass} px-4 py-2 flex items-center gap-2 !p-2 !rounded-lg`}>
@@ -332,7 +361,7 @@ export default function ComparePage() {
           {loading ? (
             <div className="text-center py-8 text-body">Loading students...</div>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 max-h-60 overflow-y-auto pr-2 custom-scrollbar mt-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 max-h-[60vh] overflow-y-auto pr-2 custom-scrollbar mt-6">
               {filteredStudents.map((student) => {
                 const isSelected = selectedStudents.some(s => s.roll_no === student.roll_no);
                 const isDisabled = !isSelected && selectedStudents.length >= 4;
@@ -352,11 +381,11 @@ export default function ComparePage() {
                     `}
                   >
                     <div className="flex items-center justify-between">
-                      <div className="min-w-0">
-                        <div className={`font-semibold text-sm truncate ${isSelected ? 'text-ink' : 'text-body group-hover:text-ink'}`}>
+                      <div className="min-w-0 flex-1">
+                        <div className={`font-semibold text-sm line-clamp-2 leading-tight ${isSelected ? 'text-ink' : 'text-body group-hover:text-ink'}`}>
                           {student.name}
                         </div>
-                        <div className="text-xs text-body/50 truncate font-mono mt-0.5">
+                        <div className="text-xs text-body/50 truncate font-mono mt-1">
                           {student.roll_no}
                         </div>
                       </div>
@@ -374,18 +403,19 @@ export default function ComparePage() {
         </div>
 
         {/* Selected Students Chips */}
+        {/* Selected Students Chips - Grid 2x2 on mobile, flex row on desktop */}
         {selectedStudents.length > 0 && (
-          <div className="flex flex-wrap gap-3 animate-in fade-in slide-in-from-top-4 duration-300">
+          <div className="grid grid-cols-2 lg:flex lg:flex-wrap gap-3 animate-in fade-in slide-in-from-top-4 duration-300 mb-12">
             {selectedStudents.map((student, idx) => (
               <div
                 key={student.roll_no}
-                className="flex items-center gap-2 pl-3 pr-2 py-1.5 bg-[#1a1a2e]/80 border border-white/10 rounded-full hover:bg-white/5 transition-all"
+                className="flex items-center justify-between gap-2 pl-3 pr-2 py-2 bg-[#1a1a2e]/80 border border-white/10 rounded-lg hover:bg-white/5 transition-all w-full lg:w-auto lg:rounded-full"
                 style={{ borderLeft: `4px solid ${THEME_COLORS[idx % THEME_COLORS.length]}` }}
               >
-                <span className="font-semibold text-sm text-ink max-w-[150px] truncate">{student.name}</span>
+                <span className="font-semibold text-sm text-ink truncate flex-1">{student.name}</span>
                 <button
                   onClick={() => toggleStudent(student)}
-                  className="p-1 hover:bg-red-500/10 hover:text-red-500 rounded-full transition-colors text-body/50"
+                  className="p-1 hover:bg-red-500/10 hover:text-red-500 rounded-full transition-colors text-body/50 shrink-0"
                 >
                   <X className="w-4 h-4" />
                 </button>
@@ -403,13 +433,13 @@ export default function ComparePage() {
               <h2 className="text-xl font-bold mb-6 text-center text-ink flex items-center justify-center gap-2">
                 Overall Performance
               </h2>
-              <div className="h-[300px] sm:h-[400px] w-full">
+              <div className="h-[350px] sm:h-[450px] w-full -ml-[10px] sm:ml-0">
                 <ResponsiveContainer width="100%" height="100%">
-                  <RadarChart cx="50%" cy="50%" outerRadius="80%" data={radarData}>
+                  <RadarChart cx="50%" cy="50%" outerRadius="75%" data={radarData}>
                     <PolarGrid stroke="#94a3b8" strokeOpacity={0.4} />
                     <PolarAngleAxis
                       dataKey="subject"
-                      tick={{ fill: '#f8fafc', fontSize: 12, fontWeight: 600 }}
+                      tick={<CustomPolarAngleAxisTick />}
                     />
                     <PolarRadiusAxis angle={30} domain={[0, 100]} tick={false} axisLine={false} />
                     {selectedStudents.map((student, idx) => (
@@ -423,10 +453,22 @@ export default function ComparePage() {
                         strokeWidth={3}
                       />
                     ))}
-                    <Legend iconType="circle" />
                     <Tooltip content={<CustomTooltip />} />
                   </RadarChart>
                 </ResponsiveContainer>
+              </div>
+
+              {/* Custom Legend to prevent overlap */}
+              <div className="flex flex-wrap justify-center gap-4 mt-2 px-4">
+                {selectedStudents.map((student, idx) => (
+                  <div key={student.roll_no} className="flex items-center gap-2">
+                    <div
+                      className="w-3 h-3 rounded-full"
+                      style={{ backgroundColor: THEME_COLORS[idx % THEME_COLORS.length] }}
+                    />
+                    <span className="text-sm text-body font-medium">{student.name}</span>
+                  </div>
+                ))}
               </div>
             </div>
 
