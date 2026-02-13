@@ -105,7 +105,7 @@ export default function HomePage() {
                 word-break: break-word;
               }
             `}</style>
-            <div ref={top3Ref} className="flex flex-row flex-nowrap justify-center items-end gap-2 md:gap-6 mt-4 py-8 md:py-12 w-full px-2">
+            <div ref={top3Ref} className="flex flex-row flex-nowrap justify-center items-end gap-3 md:gap-8 mt-4 py-8 md:py-12 w-full px-2">
               {/** Render in visual order: show 2,1,3 so rank 1 is centered */}
               {(() => {
                 const order = topStudents.length >= 3 ? [1, 0, 2] : topStudents.map((_, i) => i)
@@ -120,7 +120,7 @@ export default function HomePage() {
 
                   // Position classes - center is elevated
                   const posClasses = isFirst
-                    ? '-translate-y-3 md:-translate-y-6 z-10'
+                    ? '-translate-y-3 md:-translate-y-8 z-10'
                     : 'translate-y-0 z-0'
 
                   // Border colors based on rank
@@ -133,17 +133,17 @@ export default function HomePage() {
                   return (
                     <div
                       key={student.student_id}
-                      className={`bubble p-2 md:p-4 rounded-xl md:rounded-bubble-lg flex-1 min-w-0 max-w-[32%] md:max-w-none md:w-48 ${posClasses} ${borderClass} bg-bubble transition-transform duration-300 ease-in-out cursor-pointer flex flex-col justify-between min-h-[160px] md:min-h-[280px]`}
+                      className={`bubble p-2 rounded-xl md:rounded-bubble-lg flex-1 md:flex-none min-w-0 max-w-[32%] md:max-w-none md:w-56 ${posClasses} ${borderClass} bg-bubble transition-transform duration-300 ease-in-out cursor-pointer flex flex-col justify-between min-h-[160px] md:min-h-[340px]`}
                       onClick={() => setSelectedStudentRoll(student.roll_no)}
                     >
                       <div className="text-center w-full">
-                        <div className="w-12 h-12 md:w-24 md:h-24 mx-auto mb-2 md:mb-4 relative bg-bubbleSecondary rounded-full overflow-hidden shadow-sm">
+                        <div className="w-16 h-20 md:w-40 md:h-52 mx-auto mb-2 md:mb-4 relative bg-bubbleSecondary rounded-lg md:rounded-2xl overflow-hidden shadow-sm aspect-[3/4]">
                           {student.student_id ? (
                             <img
                               src={`/student_faces/${student.roll_no}.png`}
                               alt={student.name}
-                              width={96}
-                              height={96}
+                              width={160}
+                              height={208}
                               loading="lazy"
                               className="w-full h-full object-cover"
                               onError={(e) => {
@@ -157,7 +157,7 @@ export default function HomePage() {
                         <h3 className="text-xs md:text-lg font-display font-bold text-ink leading-tight mb-1 top3-name px-0.5">
                           {student.name}
                         </h3>
-                        <p className="text-[9px] md:text-xs text-body truncate opacity-80">Roll: {student.roll_no}</p>
+                        <p className="text-[9px] md:text-[10px] text-body truncate opacity-80">Roll: {student.roll_no}</p>
                       </div>
 
                       <div className="text-center mt-1 md:mt-2">
