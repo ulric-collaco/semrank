@@ -88,6 +88,27 @@ export default function StudentIDCard({ student, loading, error, onClose }) {
                 -ms-overflow-style: none;
                 scrollbar-width: none;
             }
+
+            /* Styled thin scrollbar for horizontal tabs */
+            .tabs-scrollbar {
+                scrollbar-width: thin;
+                scrollbar-color: rgba(255,215,64,0.85) rgba(255,255,255,0.03);
+            }
+            .tabs-scrollbar::-webkit-scrollbar {
+                height: 8px;
+            }
+            .tabs-scrollbar::-webkit-scrollbar-track {
+                background: rgba(255,255,255,0.03);
+                border-radius: 9999px;
+                margin: 6px 0;
+            }
+            .tabs-scrollbar::-webkit-scrollbar-thumb {
+                background: linear-gradient(90deg, rgba(255,215,64,0.95), rgba(255,180,60,0.75));
+                border-radius: 9999px;
+            }
+            .tabs-scrollbar::-webkit-scrollbar-thumb:hover {
+                background: linear-gradient(90deg, rgba(255,215,64,1), rgba(255,180,60,0.9));
+            }
         `}</style>
 
                 {/* Header / Close button */}
@@ -221,12 +242,23 @@ export default function StudentIDCard({ student, loading, error, onClose }) {
                 {subjects.length > 0 && (
                     <div className="border-t border-white/5 mt-2 bg-black/20 p-4 md:p-6">
                         {/* Compact Tabs - Full Width */}
-                        <div className="flex gap-2 overflow-x-auto no-scrollbar w-full mb-4 pb-1">
+                        <div
+                            ref={tabsRef => { /* placeholder for ref assignment via inline callback */ }}
+                            className="flex gap-2 tabs-scrollbar overflow-x-auto w-full mb-4 pb-1"
+                            onWheel={(e) => {
+                                // allow vertical wheel to scroll horizontally when over tabs
+                                const el = e.currentTarget
+                                if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
+                                    el.scrollLeft += e.deltaY
+                                    e.preventDefault()
+                                }
+                            }}
+                        >
                             {subjects.map((subj, idx) => (
                                 <button
                                     key={idx}
                                     onClick={() => setSelectedSubjectIndex(idx)}
-                                    className={`px-3 py-1.5 rounded-md text-[10px] font-medium whitespace-nowrap transition-all border shrink-0 ${selectedSubjectIndex === idx
+                                    className={`px-4 py-2 rounded-md text-sm md:text-base font-medium whitespace-nowrap transition-all border shrink-0 ${selectedSubjectIndex === idx
                                         ? 'bg-white/10 text-white border-white/10'
                                         : 'bg-transparent text-slate-500 border-transparent hover:bg-white/5 hover:text-slate-300'
                                         }`}

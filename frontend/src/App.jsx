@@ -70,10 +70,8 @@ function App() {
     setShowLoader(false)
     sessionStorage.setItem('semrank_loaded', '1')
 
-    // 2. Wait 1 second before unblurring the site content
-    setTimeout(() => {
-      setIsBlurred(false)
-    }, 1000)
+    // 2. Start unblurring immediately
+    setIsBlurred(false)
   }
 
   const renderPage = () => {

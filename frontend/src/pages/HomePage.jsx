@@ -104,21 +104,21 @@ export default function HomePage() {
                 if (!student) return null
 
                 const posClasses = origIdx === 0
-                  ? 'transform md:-translate-y-6 -translate-y-4 md:scale-[1.12] scale-105 z-20'
+                  ? 'transform md:-translate-y-6 -translate-y-4 z-20'
                   : origIdx === 1
-                    ? 'transform md:-translate-y-2 translate-y-1 md:scale-100 scale-95 z-10'
-                    : 'transform md:translate-y-2 translate-y-3 md:scale-95 scale-90 z-0'
+                    ? 'transform md:-translate-y-2 translate-y-1 z-10'
+                    : 'transform md:translate-y-2 translate-y-3 z-0'
 
                 const borderClass = origIdx === 0
-                  ? 'ring-4 ring-yellow-400/80' // gold
+                  ? 'ring-4 ring-accent/60' // accent (site pink)
                   : origIdx === 1
-                    ? 'ring-3 ring-slate-300/60' // silver
-                    : 'ring-2 ring-amber-600/40' // bronze
+                    ? 'ring-4 ring-slate-300/60' // silver
+                    : 'ring-4 ring-amber-600/40' // bronze
 
                 return (
                   <div
                     key={student.student_id}
-                    className={`bubble p-6 rounded-bubble-lg ${posClasses} ${borderClass} bg-bubble transition-transform duration-300 ease-in-out cursor-pointer`}
+                    className={`bubble p-6 rounded-bubble-lg w-56 md:w-64 ${posClasses} ${borderClass} bg-bubble transition-transform duration-300 ease-in-out cursor-pointer`}
                     onClick={() => setSelectedStudentRoll(student.roll_no)}
                   >
                     <div className="text-center">
