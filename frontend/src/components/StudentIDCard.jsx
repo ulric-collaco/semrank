@@ -89,7 +89,10 @@ export default function StudentIDCard({ student, loading, error, onClose }) {
                             <span className="text-sm font-medium text-slate-200 truncate leading-tight mt-0.5" title={sub.subject_name}>{sub.subject_name}</span>
                         </div>
                         <div className="flex flex-col items-end justify-center pl-2 border-l border-white/10">
-                            <span className="text-sm font-bold text-white leading-none">{sub.total_marks}</span>
+                            <span className="text-sm font-bold text-white leading-none">
+                                {sub.total_marks}
+                                <span className="text-[10px] text-slate-500 font-medium ml-0.5">/{sub.maxMarks || 100}</span>
+                            </span>
                             <span className={`text-[8px] font-bold mt-0.5 ${sub.rank <= 3 ? 'text-amber-400' : 'text-slate-500'}`}>#{sub.rank || '-'}</span>
                         </div>
                     </div>
@@ -106,7 +109,10 @@ export default function StudentIDCard({ student, loading, error, onClose }) {
                                 <span className="text-[10px] font-medium text-slate-200 truncate leading-tight" title={sub.subject_name}>{shortName(sub.subject_name)}</span>
                             </div>
                             <div className="flex flex-col items-end justify-center pl-1.5 border-l border-white/10 shrink-0">
-                                <span className="text-xs font-bold text-white leading-none">{sub.total_marks}</span>
+                                <span className="text-xs font-bold text-white leading-none">
+                                    {sub.total_marks}
+                                    <span className="text-[9px] text-slate-500 font-medium ml-0.5">/{sub.maxMarks || 100}</span>
+                                </span>
                                 <span className={`text-[7px] font-bold mt-0.5 ${sub.rank <= 3 ? 'text-amber-400' : 'text-slate-500'}`}>#{sub.rank || '-'}</span>
                             </div>
                         </div>
@@ -281,7 +287,10 @@ export default function StudentIDCard({ student, loading, error, onClose }) {
                                     <div className="flex gap-3 md:gap-4">
                                         <div className="text-right">
                                             <span className="text-[9px] uppercase font-bold text-slate-600 block">Total</span>
-                                            <span className="text-sm font-bold text-white">{activeSubject.total_marks || 0}</span>
+                                            <span className="text-sm font-bold text-white">
+                                                {activeSubject.total_marks || 0}
+                                                <span className="text-[10px] text-slate-500 font-medium ml-1">/{activeSubject.maxMarks || 100}</span>
+                                            </span>
                                         </div>
                                         {activeSubject.rank && (
                                             <div className="text-right pl-3 md:pl-4 border-l border-white/5">

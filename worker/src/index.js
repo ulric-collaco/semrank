@@ -10,9 +10,9 @@ function getCorsHeaders(origin) {
     'http://localhost:3000',
     'https://c5c5-115-69-246-236.ngrok-free.app'
   ];
-  
+
   const originAllowed = allowedOrigins.includes(origin) || origin?.includes('.ngrok');
-  
+
   return {
     'Access-Control-Allow-Origin': originAllowed ? origin : '*',
     'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
@@ -72,15 +72,15 @@ async function getStudentLeaderboardData(db, classFilter = 'all') {
     FROM STUDENT s
     JOIN STUDENT_LEADERBOARD sl ON s.student_id = sl.student_id
   `;
-  
+
   if (classFilter !== 'all') {
     query += ` WHERE s.class = ?`;
   }
-  
-  const results = classFilter === 'all' 
+
+  const results = classFilter === 'all'
     ? await db.prepare(query).all()
     : await db.prepare(query).bind(classFilter).all();
-  
+
   return results.results || [];
 }
 
@@ -107,11 +107,11 @@ async function getStudentDetails(db, studentId) {
     JOIN STUDENT_LEADERBOARD sl ON s.student_id = sl.student_id
     WHERE s.student_id = ?
   `;
-  
+
   const student = await db.prepare(studentQuery).bind(studentId).first();
-  
+
   if (!student) return null;
-  
+
   // Get subject details with marks and ranks
   const subjectsQuery = `
     SELECT 
@@ -119,6 +119,7 @@ async function getStudentDetails(db, studentId) {
       sub.subject_code,
       sub.subject_name,
       sub.is_open_elective,
+      sub.maxMarks,
       m.mse,
       m.th_ise1,
       m.th_ise2,
@@ -135,14 +136,15 @@ async function getStudentDetails(db, studentId) {
       AND ss.subject_id = ssl.subject_id
     WHERE ss.student_id = ?
   `;
-  
+
   const subjectsResult = await db.prepare(subjectsQuery).bind(studentId).all();
-  
+
   const subjects = subjectsResult.results.map(sub => ({
     subject_id: sub.subject_id,
     subject_code: sub.subject_code,
     subject_name: sub.subject_name,
     is_open_elective: Boolean(sub.is_open_elective),
+    maxMarks: sub.maxMarks || 100,
     mse: sub.mse,
     th_ise1: sub.th_ise1,
     th_ise2: sub.th_ise2,
@@ -152,7 +154,7 @@ async function getStudentDetails(db, studentId) {
     total_marks: sub.total_marks,
     rank: sub.rank
   }));
-  
+
   return {
     ...student,
     subjects
@@ -165,118 +167,118 @@ async function handleRequest(request, env) {
   const path = url.pathname;
   const method = request.method;
   const origin = request.headers.get('Origin');
-  
+
   // Handle CORS preflight
   if (method === 'OPTIONS') {
     return handleOptions(request);
   }
-  
+
   const db = env.DB;
-  
+
   try {
     // GET /api/students - Get all students with rankings
     if (path === '/api/students' && method === 'GET') {
       //Batch fetch all students with CGPA and attendance from leaderboard
       const students = await getStudentLeaderboardData(db, 'all');
-      
+
       // Sort by roll_no
       students.sort((a, b) => a.roll_no - b.roll_no);
-      
+
       return jsonResponse(students);
     }
-    
+
     // GET /api/students/roll/:rollNo - Get student by roll number
     if (path.match(/^\/api\/students\/roll\/\d+$/) && method === 'GET') {
       const rollNo = path.split('/').pop();
-      
+
       const student = await db
         .prepare('SELECT student_id FROM STUDENT WHERE roll_no = ?')
         .bind(parseInt(rollNo))
         .first();
-      
+
       if (!student) {
         return errorResponse('Student not found', 404);
       }
-      
+
       const details = await getStudentDetails(db, student.student_id);
       return jsonResponse(details);
     }
-    
+
     // GET /api/students/enrollment/:enrollmentId - Get student by enrollment ID
     if (path.match(/^\/api\/students\/enrollment\/[^\/]+$/) && method === 'GET') {
       const enrollmentId = decodeURIComponent(path.split('/').pop());
-      
+
       const student = await db
         .prepare('SELECT student_id FROM STUDENT WHERE enrollment_id = ?')
         .bind(enrollmentId)
         .first();
-      
+
       if (!student) {
         return errorResponse('Student not found', 404);
       }
-      
+
       const details = await getStudentDetails(db, student.student_id);
       return jsonResponse(details);
     }
-    
+
     // GET /api/students/search?q=query - Search students by name or roll
     if (path === '/api/students/search' && method === 'GET') {
       const query = url.searchParams.get('q') || '';
-      
+
       // Get all students from leaderboard
       const allStudents = await getStudentLeaderboardData(db, 'all');
-      
+
       // Filter in memory
-      const filtered = allStudents.filter(student => 
+      const filtered = allStudents.filter(student =>
         student.name.toLowerCase().includes(query.toLowerCase()) ||
         student.roll_no.toString().includes(query)
       ).slice(0, 20);
-      
+
       return jsonResponse(filtered);
     }
-    
+
     // GET /api/leaderboard/cgpa - Top students by CGPA
     if (path === '/api/leaderboard/cgpa' && method === 'GET') {
       const limit = parseInt(url.searchParams.get('limit') || '10');
       const classFilter = url.searchParams.get('class') || 'all';
-      
+
       // Get students from pre-computed leaderboard
       const students = await getStudentLeaderboardData(db, classFilter);
-      
+
       // Sort by appropriate rank (college or class)
       const rankKey = classFilter === 'all' ? 'rank_cgpa_college' : 'rank_cgpa_class';
       students.sort((a, b) => a[rankKey] - b[rankKey]);
-      
+
       // Add rank field and limit results
       const topStudents = students.slice(0, limit).map(s => ({
         ...s,
         rank: s[rankKey]
       }));
-      
+
       return jsonResponse(topStudents);
     }
-    
+
     // GET /api/leaderboard/attendance - Top students by attendance
     if (path === '/api/leaderboard/attendance' && method === 'GET') {
       const limit = parseInt(url.searchParams.get('limit') || '10');
       const classFilter = url.searchParams.get('class') || 'all';
-      
+
       // Get students from pre-computed leaderboard
       const students = await getStudentLeaderboardData(db, classFilter);
-      
+
       // Sort by appropriate rank (college or class)
       const rankKey = classFilter === 'all' ? 'rank_attendance_college' : 'rank_attendance_class';
       students.sort((a, b) => a[rankKey] - b[rankKey]);
-      
+
       // Add rank field and limit results
       const topStudents = students.slice(0, limit).map(s => ({
         ...s,
         rank: s[rankKey]
       }));
-      
+
       return jsonResponse(topStudents);
     }
-    
+
     // GET /api/leaderboard/classes - Class rankings
     if (path === '/api/leaderboard/classes' && method === 'GET') {
       // Query pre-computed class leaderboard
@@ -292,9 +294,9 @@ async function handleRequest(request, env) {
         JOIN CLASS c ON cl.class_id = c.class_id
         ORDER BY cl.rank_avg_cgpa
       `;
-      
+
       const results = await db.prepare(query).all();
-      
+
       // For each class, get top student info
       const classStats = await Promise.all(
         results.results.map(async (classData) => {
@@ -310,7 +312,7 @@ async function handleRequest(request, env) {
             `)
             .bind(classData.class_name)
             .first();
-          
+
           return {
             class_name: classData.class_name,
             student_count: classData.total_students,
@@ -326,42 +328,42 @@ async function handleRequest(request, env) {
           };
         })
       );
-      
+
       return jsonResponse(classStats);
     }
-    
+
     // GET /api/birthdays/today - Get today's birthdays
     if (path === '/api/birthdays/today' && method === 'GET') {
       const today = new Date();
       const day = String(today.getDate()).padStart(2, '0');
       const month = String(today.getMonth() + 1).padStart(2, '0');
-      
+
       // Get all students from leaderboard
       const allStudents = await getStudentLeaderboardData(db, 'all');
-      
+
       // Filter by birthday
       const birthdayStudents = allStudents.filter(student => {
         if (!student.dob) return false;
         const parts = student.dob.split('/');
         return parts[0] === day && parts[1] === month;
       });
-      
+
       return jsonResponse(birthdayStudents);
     }
-    
+
     // GET /api/game/random-pair - Get two random students for game
     if (path === '/api/game/random-pair' && method === 'GET') {
       // Get all students from leaderboard
       const allStudents = await getStudentLeaderboardData(db, 'all');
-      
+
       if (allStudents.length < 2) {
         return errorResponse('Not enough students for game', 400);
       }
-      
+
       // Pick 2 random students in memory
       const shuffled = allStudents.sort(() => Math.random() - 0.5);
       const pair = shuffled.slice(0, 2);
-      
+
       return jsonResponse(pair);
     }
 
@@ -371,13 +373,13 @@ async function handleRequest(request, env) {
       const subjects = await db
         .prepare('SELECT subject_id, subject_name, subject_code FROM SUBJECT')
         .all();
-      
+
       if (subjects.results.length === 0) {
         return errorResponse('No subjects available', 404);
       }
-      
+
       const randomSubject = subjects.results[Math.floor(Math.random() * subjects.results.length)];
-      
+
       // Get all students who have marks in this subject
       const studentsWithMarks = await db
         .prepare(`
@@ -400,14 +402,14 @@ async function handleRequest(request, env) {
         `)
         .bind(randomSubject.subject_id)
         .all();
-      
+
       if (studentsWithMarks.results.length < 2) {
         return errorResponse('Not enough students for this subject', 400);
       }
-      
+
       // Pick 2 random students
       const pair = studentsWithMarks.results.slice(0, 2);
-      
+
       return jsonResponse({
         subject: {
           id: randomSubject.subject_id,
@@ -417,23 +419,23 @@ async function handleRequest(request, env) {
         students: pair
       });
     }
-    
+
     // GET /api/leaderboard/subject/:subject_code - Top students by subject
     if (path.match(/^\/api\/leaderboard\/subject\/[^\/]+$/) && method === 'GET') {
       const subjectCode = decodeURIComponent(path.split('/').pop());
       const limit = parseInt(url.searchParams.get('limit') || '10');
       const classFilter = url.searchParams.get('class') || 'all';
-      
+
       // Get subject_id from subject_code
       const subject = await db
         .prepare('SELECT subject_id, subject_name FROM SUBJECT WHERE subject_code = ?')
         .bind(subjectCode)
         .first();
-      
+
       if (!subject) {
         return errorResponse('Subject not found', 404);
       }
-      
+
       // Get students from pre-computed subject leaderboard
       let query = `
         SELECT 
@@ -451,21 +453,21 @@ async function handleRequest(request, env) {
         LEFT JOIN MARKS_backup m ON ssl.ss_id = m.ss_id
         WHERE ssl.subject_id = ?
       `;
-      
+
       if (classFilter !== 'all') {
         query += ` AND s.class = ?`;
       }
-      
+
       const students = classFilter === 'all'
         ? await db.prepare(query).bind(subject.subject_id).all()
         : await db.prepare(query).bind(subject.subject_id, classFilter).all();
-      
+
       // Sort by appropriate rank
       const rankKey = classFilter === 'all' ? 'rank_subject_college' : 'rank_subject_class';
       const sorted = students.results
         .sort((a, b) => a[rankKey] - b[rankKey])
         .slice(0, limit);
-      
+
       // Format response
       const formattedStudents = sorted.map(student => ({
         student_id: student.student_id,
@@ -486,7 +488,7 @@ async function handleRequest(request, env) {
           total: student.subject_total
         }
       }));
-      
+
       return jsonResponse({
         subject_code: subjectCode,
         subject_name: subject.subject_name,
@@ -494,11 +496,11 @@ async function handleRequest(request, env) {
         students: formattedStudents
       });
     }
-    
+
     // GET /api/stats/subjects - Subject-wise statistics
     if (path === '/api/stats/subjects' && method === 'GET') {
       const classFilter = url.searchParams.get('class') || 'all';
-      
+
       // Query pre-computed subject-class leaderboard
       let query = `
         SELECT 
@@ -512,17 +514,17 @@ async function handleRequest(request, env) {
         JOIN SUBJECT_CLASS_LEADERBOARD scl ON sub.subject_id = scl.subject_id
         JOIN CLASS c ON scl.class_id = c.class_id
       `;
-      
+
       if (classFilter !== 'all') {
         query += ` WHERE c.class_name = ?`;
       }
-      
+
       query += ` ORDER BY scl.rank_in_subject`;
-      
+
       const results = classFilter === 'all'
         ? await db.prepare(query).all()
         : await db.prepare(query).bind(classFilter).all();
-      
+
       // Group by subject and get additional details
       const subjectMap = {};
       results.results.forEach(row => {
@@ -539,7 +541,7 @@ async function handleRequest(request, env) {
           rank: row.rank_in_subject
         });
       });
-      
+
       // For each subject, get enrollment count and top student
       const subjectStats = await Promise.all(
         Object.values(subjectMap).map(async (subject) => {
@@ -553,15 +555,15 @@ async function handleRequest(request, env) {
             JOIN SUBJECT sub ON ssl.subject_id = sub.subject_id
             WHERE sub.subject_code = ?
           `;
-          
+
           if (classFilter !== 'all') {
             studentQuery += ` AND ssl.class_id = (SELECT class_id FROM CLASS WHERE class_name = ?)`;
           }
-          
+
           const stats = classFilter === 'all'
             ? await db.prepare(studentQuery).bind(subject.subject_code).first()
             : await db.prepare(studentQuery).bind(subject.subject_code, classFilter).first();
-          
+
           // Get top student
           let topStudentQuery = `
             SELECT s.name, s.class, ssl.subject_total
@@ -570,20 +572,20 @@ async function handleRequest(request, env) {
             JOIN SUBJECT sub ON ssl.subject_id = sub.subject_id
             WHERE sub.subject_code = ?
           `;
-          
+
           if (classFilter !== 'all') {
             topStudentQuery += ` AND s.class = ?`;
           }
-          
+
           topStudentQuery += ` ORDER BY ssl.rank_subject_college LIMIT 1`;
-          
+
           const topStudent = classFilter === 'all'
             ? await db.prepare(topStudentQuery).bind(subject.subject_code).first()
             : await db.prepare(topStudentQuery).bind(subject.subject_code, classFilter).first();
-          
+
           // Calculate average across all classes for this subject
           const avgMarks = subject.classes.reduce((sum, c) => sum + c.avg_marks, 0) / subject.classes.length;
-          
+
           return {
             subject_code: subject.subject_code,
             subject_name: subject.subject_name,
@@ -599,17 +601,17 @@ async function handleRequest(request, env) {
           };
         })
       );
-      
+
       return jsonResponse({
         class_filter: classFilter,
         subjects: subjectStats
       });
     }
-    
+
     // GET /api/students/rank/:rollNo - Get student rank
     if (path.match(/^\/api\/students\/rank\/\d+$/) && method === 'GET') {
       const rollNo = parseInt(path.split('/').pop());
-      
+
       // Get student from leaderboard with pre-computed ranks
       const student = await db
         .prepare(`
@@ -633,11 +635,11 @@ async function handleRequest(request, env) {
         `)
         .bind(rollNo)
         .first();
-      
+
       if (!student) {
         return errorResponse('Student not found', 404);
       }
-      
+
       // Get total counts
       const totals = await db
         .prepare(`
@@ -648,7 +650,7 @@ async function handleRequest(request, env) {
         `)
         .bind(student.class)
         .first();
-      
+
       return jsonResponse({
         ...student,
         ranks: {
@@ -659,12 +661,12 @@ async function handleRequest(request, env) {
         }
       });
     }
-    
+
     // Health check
     if (path === '/api/health' && method === 'GET') {
       return jsonResponse({ status: 'ok', timestamp: new Date().toISOString() });
     }
-    
+
     // API documentation
     if (path === '/api' && method === 'GET') {
       return jsonResponse({
@@ -688,7 +690,7 @@ async function handleRequest(request, env) {
         },
       });
     }
-    
+
     return errorResponse('Not Found', 404);
   } catch (error) {
     console.error('Error:', error);

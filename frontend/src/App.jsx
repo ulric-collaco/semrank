@@ -81,7 +81,6 @@ function App() {
       case 'leaderboard': page = <LeaderboardPage />; break
       case 'compare': page = <ComparePage />; break
       case 'game': page = <GamePage />; break
-      case 'game': page = <GamePage />; break
       default: page = <HomePage />
     }
     return <PageTransition key={currentPage}>{page}</PageTransition>
