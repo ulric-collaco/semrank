@@ -133,12 +133,12 @@ export default function HomePage() {
                   return (
                     <div
                       key={student.student_id}
-                      className={`bubble p-2 md:p-6 rounded-xl md:rounded-bubble-lg flex-1 min-w-0 max-w-[33%] md:max-w-none md:w-64 ${posClasses} ${borderClass} bg-bubble transition-transform duration-300 ease-in-out cursor-pointer`}
+                      className={`bubble p-2 md:p-4 rounded-xl md:rounded-bubble-lg flex-1 min-w-0 max-w-[32%] md:max-w-none md:w-48 ${posClasses} ${borderClass} bg-bubble transition-transform duration-300 ease-in-out cursor-pointer flex flex-col justify-between min-h-[160px] md:min-h-[280px]`}
                       onClick={() => setSelectedStudentRoll(student.roll_no)}
                     >
-                      <div className="text-center">
-                        <div className="w-10 h-10 md:w-24 md:h-24 mx-auto mb-1.5 md:mb-3 relative bg-bubbleSecondary rounded-full overflow-hidden">
-                          {student.student_id ? ( // Assuming we can derive image path
+                      <div className="text-center w-full">
+                        <div className="w-12 h-12 md:w-24 md:h-24 mx-auto mb-2 md:mb-4 relative bg-bubbleSecondary rounded-full overflow-hidden shadow-sm">
+                          {student.student_id ? (
                             <img
                               src={`/student_faces/${student.roll_no}.png`}
                               alt={student.name}
@@ -154,15 +154,17 @@ export default function HomePage() {
                           ) : null}
                           <div className="w-full h-full hidden items-center justify-center text-lg md:text-3xl">👤</div>
                         </div>
-                        <h3 className="text-sm md:text-xl font-display font-bold text-ink leading-tight mb-0.5 md:mb-1 top3-name px-1">
+                        <h3 className="text-xs md:text-lg font-display font-bold text-ink leading-tight mb-1 top3-name px-0.5">
                           {student.name}
                         </h3>
-                        <p className="text-[8px] md:text-sm text-body mb-1 md:mb-3 truncate">Roll: {student.roll_no}</p>
+                        <p className="text-[9px] md:text-xs text-body truncate opacity-80">Roll: {student.roll_no}</p>
+                      </div>
 
-                        <div className="text-lg md:text-4xl font-bold text-ink mb-0 md:mb-1">
+                      <div className="text-center mt-1 md:mt-2">
+                        <div className="text-lg md:text-3xl font-bold text-ink leading-none">
                           {student.cgpa}
                         </div>
-                        <div className="text-[7px] md:text-xs font-bold text-body uppercase tracking-wider">SGPA</div>
+                        <div className="text-[7px] md:text-[10px] font-bold text-body uppercase tracking-wider mt-0.5">SGPA</div>
                       </div>
                     </div>
                   )
