@@ -106,66 +106,70 @@ export default function HomePage() {
               }
             `}</style>
             <div ref={top3Ref} className="flex flex-row flex-nowrap justify-center items-end gap-2 md:gap-6 mt-4 py-8 md:py-12 w-full px-2">
-            {/** Render in visual order: show 2,1,3 so rank 1 is centered */}
-            {(() => {
-              const order = topStudents.length >= 3 ? [1, 0, 2] : topStudents.map((_, i) => i)
-              return order.map((idx) => {
-                const student = topStudents[idx]
-                if (!student) return null
+              {/** Render in visual order: show 2,1,3 so rank 1 is centered */}
+              {(() => {
+                const order = topStudents.length >= 3 ? [1, 0, 2] : topStudents.map((_, i) => i)
+                return order.map((idx) => {
+                  const student = topStudents[idx]
+                  if (!student) return null
 
-                // Original rank for styling (0=1st, 1=2nd, 2=3rd)
-                const origIdx = idx
-                // Rank 1 is taller/higher
-                const isFirst = origIdx === 0
+                  // Original rank for styling (0=1st, 1=2nd, 2=3rd)
+                  const origIdx = idx
+                  // Rank 1 is taller/higher
+                  const isFirst = origIdx === 0
 
-                // Position classes - center is elevated
-                const posClasses = isFirst
-                  ? '-translate-y-3 md:-translate-y-6 z-10'
-                  : 'translate-y-0 z-0'
+                  // Position classes - center is elevated
+                  const posClasses = isFirst
+                    ? '-translate-y-3 md:-translate-y-6 z-10'
+                    : 'translate-y-0 z-0'
 
-                // Border colors based on rank
-                const borderClass = origIdx === 0
-                  ? 'ring-2 md:ring-4 ring-yellow-400/80' // gold for #1
-                  : origIdx === 1
-                    ? 'ring-2 md:ring-4 ring-slate-300/60' // silver
-                    : 'ring-2 md:ring-4 ring-amber-600/40' // bronze
+                  // Border colors based on rank
+                  const borderClass = origIdx === 0
+                    ? 'ring-2 md:ring-4 ring-yellow-400/80' // gold for #1
+                    : origIdx === 1
+                      ? 'ring-2 md:ring-4 ring-slate-300/60' // silver
+                      : 'ring-2 md:ring-4 ring-amber-600/40' // bronze
 
-                return (
-                  <div
-                    key={student.student_id}
-                    className={`bubble p-2 md:p-6 rounded-xl md:rounded-bubble-lg flex-1 min-w-0 max-w-[33%] md:max-w-none md:w-64 ${posClasses} ${borderClass} bg-bubble transition-transform duration-300 ease-in-out cursor-pointer`}
-                    onClick={() => setSelectedStudentRoll(student.roll_no)}
-                  >
-                    <div className="text-center">
-                      <div className="w-10 h-10 md:w-24 md:h-24 mx-auto mb-1.5 md:mb-3 relative bg-bubbleSecondary rounded-full overflow-hidden">
-                        {student.student_id ? ( // Assuming we can derive image path
-                          <img
-                            src={`/student_faces/${student.roll_no}.png`}
-                            className="w-full h-full object-cover"
-                            onError={(e) => {
-                              e.target.style.display = 'none'
-                              e.target.nextSibling.style.display = 'flex'
-                            }}
-                          />
-                        ) : null}
-                        <div className="w-full h-full hidden items-center justify-center text-lg md:text-3xl">👤</div>
+                  return (
+                    <div
+                      key={student.student_id}
+                      className={`bubble p-2 md:p-6 rounded-xl md:rounded-bubble-lg flex-1 min-w-0 max-w-[33%] md:max-w-none md:w-64 ${posClasses} ${borderClass} bg-bubble transition-transform duration-300 ease-in-out cursor-pointer`}
+                      onClick={() => setSelectedStudentRoll(student.roll_no)}
+                    >
+                      <div className="text-center">
+                        <div className="w-10 h-10 md:w-24 md:h-24 mx-auto mb-1.5 md:mb-3 relative bg-bubbleSecondary rounded-full overflow-hidden">
+                          {student.student_id ? ( // Assuming we can derive image path
+                            <img
+                              src={`/student_faces/${student.roll_no}.png`}
+                              alt={student.name}
+                              width={96}
+                              height={96}
+                              loading="lazy"
+                              className="w-full h-full object-cover"
+                              onError={(e) => {
+                                e.target.style.display = 'none'
+                                e.target.nextSibling.style.display = 'flex'
+                              }}
+                            />
+                          ) : null}
+                          <div className="w-full h-full hidden items-center justify-center text-lg md:text-3xl">👤</div>
+                        </div>
+                        <h3 className="text-sm md:text-xl font-display font-bold text-ink leading-tight mb-0.5 md:mb-1 top3-name px-1">
+                          {student.name}
+                        </h3>
+                        <p className="text-[8px] md:text-sm text-body mb-1 md:mb-3 truncate">Roll: {student.roll_no}</p>
+
+                        <div className="text-lg md:text-4xl font-bold text-ink mb-0 md:mb-1">
+                          {student.cgpa}
+                        </div>
+                        <div className="text-[7px] md:text-xs font-bold text-body uppercase tracking-wider">SGPA</div>
                       </div>
-                      <h3 className="text-sm md:text-xl font-display font-bold text-ink leading-tight mb-0.5 md:mb-1 top3-name px-1">
-                        {student.name}
-                      </h3>
-                      <p className="text-[8px] md:text-sm text-body mb-1 md:mb-3 truncate">Roll: {student.roll_no}</p>
-
-                      <div className="text-lg md:text-4xl font-bold text-ink mb-0 md:mb-1">
-                        {student.cgpa}
-                      </div>
-                      <div className="text-[7px] md:text-xs font-bold text-body uppercase tracking-wider">SGPA</div>
                     </div>
-                  </div>
-                )
-              })
-            })()}
-          </div>
-            </>
+                  )
+                })
+              })()}
+            </div>
+          </>
         )}
       </div>
 
@@ -212,6 +216,9 @@ export default function HomePage() {
                       <img
                         src={`/student_faces/${student.roll_no}.png`}
                         alt={student.name}
+                        width={48}
+                        height={48}
+                        loading="lazy"
                         className="w-full h-full object-cover"
                         onError={(e) => {
                           e.target.style.display = 'none'

@@ -76,6 +76,9 @@ export default function StudentBubble({ student, rank, onStudentClick }) {
             <img
               src={photoPath}
               alt={student.name}
+              width={96}
+              height={96}
+              loading="lazy"
               className="w-full h-full object-cover"
               onError={(e) => {
                 e.target.style.display = 'none'

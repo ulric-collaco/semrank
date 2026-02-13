@@ -1,140 +1,85 @@
-import axios from 'axios'
-
 // Base API URL - update this when backend is ready
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000/api'
 
-const api = axios.create({
-  baseURL: API_BASE_URL,
-  timeout: 10000, // 10s timeout per request
-  headers: {
-    'Content-Type': 'application/json',
-  },
-})
-
-// Retry interceptor — handles Cloudflare Worker cold starts
+// Retry config — handles Cloudflare Worker cold starts
 const MAX_RETRIES = 3
 const RETRY_DELAY_BASE = 1000 // 1s, doubles each retry
 
-api.interceptors.response.use(
-  (response) => response,
-  async (error) => {
-    const config = error.config
-    if (!config) return Promise.reject(error)
-
-    config.__retryCount = config.__retryCount || 0
-
-    // Only retry on network errors or 5xx status codes
-    const shouldRetry =
-      config.__retryCount < MAX_RETRIES &&
-      (!error.response || error.response.status >= 500 || error.code === 'ECONNABORTED')
-
-    if (!shouldRetry) return Promise.reject(error)
-
-    config.__retryCount += 1
-    const delay = RETRY_DELAY_BASE * Math.pow(2, config.__retryCount - 1)
-    console.log(`API retry ${config.__retryCount}/${MAX_RETRIES} after ${delay}ms: ${config.url}`)
-
-    await new Promise((resolve) => setTimeout(resolve, delay))
-    return api(config)
+async function fetchWithRetry(url, options = {}) {
+  const fullUrl = `${API_BASE_URL}${url}`
+  const config = {
+    headers: { 'Content-Type': 'application/json' },
+    signal: AbortSignal.timeout(10000), // 10s timeout
+    ...options,
   }
-)
 
-// API endpoints for future integration
+  let lastError
+  for (let attempt = 0; attempt <= MAX_RETRIES; attempt++) {
+    try {
+      const response = await fetch(fullUrl, config)
+      if (!response.ok) {
+        if (response.status >= 500 && attempt < MAX_RETRIES) {
+          throw new Error(`Server error: ${response.status}`)
+        }
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`)
+      }
+      return await response.json()
+    } catch (error) {
+      lastError = error
+      if (attempt < MAX_RETRIES && (error.name === 'TypeError' || error.message.startsWith('Server error'))) {
+        const delay = RETRY_DELAY_BASE * Math.pow(2, attempt)
+        console.log(`API retry ${attempt + 1}/${MAX_RETRIES} after ${delay}ms: ${url}`)
+        await new Promise((resolve) => setTimeout(resolve, delay))
+      } else if (attempt >= MAX_RETRIES) {
+        break
+      } else {
+        throw error
+      }
+    }
+  }
+  throw lastError
+}
+
+// API endpoints
 
 export const studentAPI = {
-  // Get all students with rankings
-  getAllStudents: async () => {
-    const response = await api.get('/students')
-    return response.data
-  },
-
-  // Get student by roll number
-  getStudentByRoll: async (rollNo) => {
-    const response = await api.get(`/students/roll/${rollNo}`)
-    return response.data
-  },
-
-  // Get student by enrollment ID
-  getStudentByEnrollment: async (enrollmentId) => {
-    const response = await api.get(`/students/enrollment/${enrollmentId}`)
-    return response.data
-  },
-
-  // Search students by name
-  searchStudents: async (query) => {
-    const response = await api.get(`/students/search?q=${query}`)
-    return response.data
-  },
-
-  // Get student rank (overall and in class)
-  getStudentRank: async (rollNo) => {
-    const response = await api.get(`/students/rank/${rollNo}`)
-    return response.data
-  },
+  getAllStudents: () => fetchWithRetry('/students'),
+  getStudentByRoll: (rollNo) => fetchWithRetry(`/students/roll/${rollNo}`),
+  getStudentByEnrollment: (enrollmentId) => fetchWithRetry(`/students/enrollment/${enrollmentId}`),
+  searchStudents: (query) => fetchWithRetry(`/students/search?q=${query}`),
+  getStudentRank: (rollNo) => fetchWithRetry(`/students/rank/${rollNo}`),
 }
 
 export const leaderboardAPI = {
-  // Get top students by SGPA
-  getTopBySGPA: async (limit = 10, classFilter = 'all') => {
-    const response = await api.get(`/leaderboard/cgpa`, {
-      params: { limit, class: classFilter },
-    })
-    return response.data
+  getTopBySGPA: (limit = 10, classFilter = 'all') => {
+    const params = new URLSearchParams({ limit, class: classFilter })
+    return fetchWithRetry(`/leaderboard/cgpa?${params}`)
   },
-
-  // Get top students by attendance
-  getTopByAttendance: async (limit = 10, classFilter = 'all') => {
-    const response = await api.get(`/leaderboard/attendance`, {
-      params: { limit, class: classFilter },
-    })
-    return response.data
+  getTopByAttendance: (limit = 10, classFilter = 'all') => {
+    const params = new URLSearchParams({ limit, class: classFilter })
+    return fetchWithRetry(`/leaderboard/attendance?${params}`)
   },
-
-  // Get class rankings
-  getClassRankings: async () => {
-    const response = await api.get(`/leaderboard/classes`)
-    return response.data
-  },
-
-  // Get top students by subject
-  getTopBySubject: async (subjectCode, limit = 10, classFilter = 'all') => {
-    const response = await api.get(`/leaderboard/subject/${subjectCode}`, {
-      params: { limit, class: classFilter },
-    })
-    return response.data
+  getClassRankings: () => fetchWithRetry('/leaderboard/classes'),
+  getTopBySubject: (subjectCode, limit = 10, classFilter = 'all') => {
+    const params = new URLSearchParams({ limit, class: classFilter })
+    return fetchWithRetry(`/leaderboard/subject/${subjectCode}?${params}`)
   },
 }
 
 export const statsAPI = {
-  // Get subject-wise statistics
-  getSubjectStats: async (classFilter = 'all') => {
-    const response = await api.get('/stats/subjects', {
-      params: { class: classFilter },
-    })
-    return response.data
+  getSubjectStats: (classFilter = 'all') => {
+    const params = new URLSearchParams({ class: classFilter })
+    return fetchWithRetry(`/stats/subjects?${params}`)
   },
 }
 
 export const birthdayAPI = {
-  // Get today's birthdays
-  getTodaysBirthdays: async () => {
-    const response = await api.get('/birthdays/today')
-    return response.data
-  },
+  getTodaysBirthdays: () => fetchWithRetry('/birthdays/today'),
 }
 
 export const gameAPI = {
-  // Get two random students for game
-  getRandomPair: async () => {
-    const response = await api.get('/game/random-pair')
-    return response.data
-  },
-
-  // Get two random students with subject data for subject mode
-  getRandomPairWithSubject: async () => {
-    const response = await api.get('/game/random-pair-subject')
-    return response.data
-  },
+  getRandomPair: () => fetchWithRetry('/game/random-pair'),
+  getRandomPairWithSubject: () => fetchWithRetry('/game/random-pair-subject'),
 }
 
-export default api
+export default { fetchWithRetry }

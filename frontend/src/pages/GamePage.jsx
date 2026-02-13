@@ -12,7 +12,7 @@ export default function GamePage() {
   const [currentSubject, setCurrentSubject] = useState(null) // For subject mode
   const [difficulty, setDifficulty] = useState('easy')
   const [isLoading, setIsLoading] = useState(true)
-  
+
   const student2Ref = useRef(null)
 
   useEffect(() => {
@@ -55,14 +55,14 @@ export default function GamePage() {
     if (gameState !== 'playing') return
 
     let s1Value, s2Value
-    
+
     if (metric === 'subject') {
       // For subject mode, compare total marks in the subject
       s1Value = student1.totalMarks || 0
       s2Value = student2.totalMarks || 0
     } else {
       s1Value = metric === 'cgpa' ? student1.cgpa : student1.attendance
-      s2Value = metric === 'cgpa' ? student2.cgpa : student2.attendance  
+      s2Value = metric === 'cgpa' ? student2.cgpa : student2.attendance
     }
 
     const isCorrect =
@@ -127,9 +127,9 @@ export default function GamePage() {
           <h1 className="text-5xl font-display font-bold text-ink mb-4">🎮 Higher or Lower</h1>
           <p className="text-body text-lg mb-4">
             Guess if the next student has higher or lower {
-              metric === 'cgpa' ? 'SGPA' : 
-              metric === 'attendance' ? 'attendance' :
-              currentSubject ? `marks in ${currentSubject.name}` : 'subject marks'
+              metric === 'cgpa' ? 'SGPA' :
+                metric === 'attendance' ? 'attendance' :
+                  currentSubject ? `marks in ${currentSubject.name}` : 'subject marks'
             }
           </p>
 
@@ -150,10 +150,9 @@ export default function GamePage() {
             onClick={() => setMetric('cgpa')}
             disabled={gameState === 'playing'}
             className={`px-6 py-3 rounded-bubble font-medium transition-all duration-300
-              ${
-                metric === 'cgpa'
-                  ? 'bg-accent text-ink shadow-bubble-hover'
-                  : 'bubble hover:scale-105'
+              ${metric === 'cgpa'
+                ? 'bg-accent text-ink shadow-bubble-hover'
+                : 'bubble hover:scale-105'
               }
               ${gameState === 'playing' ? 'opacity-50 cursor-not-allowed' : ''}`}
           >
@@ -163,10 +162,9 @@ export default function GamePage() {
             onClick={() => setMetric('attendance')}
             disabled={gameState === 'playing'}
             className={`px-6 py-3 rounded-bubble font-medium transition-all duration-300
-              ${
-                metric === 'attendance'
-                  ? 'bg-accent text-ink shadow-bubble-hover'
-                  : 'bubble hover:scale-105'
+              ${metric === 'attendance'
+                ? 'bg-accent text-ink shadow-bubble-hover'
+                : 'bubble hover:scale-105'
               }
               ${gameState === 'playing' ? 'opacity-50 cursor-not-allowed' : ''}`}
           >
@@ -176,10 +174,9 @@ export default function GamePage() {
             onClick={() => setMetric('subject')}
             disabled={gameState === 'playing'}
             className={`px-6 py-3 rounded-bubble font-medium transition-all duration-300
-              ${
-                metric === 'subject'
-                  ? 'bg-accent text-ink shadow-bubble-hover'
-                  : 'bubble hover:scale-105'
+              ${metric === 'subject'
+                ? 'bg-accent text-ink shadow-bubble-hover'
+                : 'bubble hover:scale-105'
               }
               ${gameState === 'playing' ? 'opacity-50 cursor-not-allowed' : ''}`}
           >
@@ -194,9 +191,12 @@ export default function GamePage() {
             <div className="text-center space-y-4">
               <div className="w-32 h-32 mx-auto bg-bubbleSecondary rounded-full flex items-center justify-center text-5xl overflow-hidden">
                 {student1.roll_no ? (
-                  <img 
+                  <img
                     src={`/student_faces/${student1.roll_no}.png`}
                     alt={student1.name}
+                    width={128}
+                    height={128}
+                    loading="lazy"
                     className="w-full h-full object-cover"
                     onError={(e) => {
                       e.target.style.display = 'none'
@@ -212,19 +212,19 @@ export default function GamePage() {
               <p className="text-body">Class: {student1.class}</p>
               <div className="pt-4 border-t border-ink/10">
                 <p className="text-4xl font-bold text-ink">
-                  {metric === 'cgpa' 
-                    ? student1.cgpa 
+                  {metric === 'cgpa'
+                    ? student1.cgpa
                     : metric === 'attendance'
-                    ? `${student1.attendance}%`
-                    : student1.totalMarks || 0
+                      ? `${student1.attendance}%`
+                      : student1.totalMarks || 0
                   }
                 </p>
                 <p className="text-body text-sm">
-                  {metric === 'cgpa' 
-                    ? 'SGPA' 
+                  {metric === 'cgpa'
+                    ? 'SGPA'
                     : metric === 'attendance'
-                    ? 'Attendance'
-                    : currentSubject ? `${currentSubject.name} Marks` : 'Subject Marks'
+                      ? 'Attendance'
+                      : currentSubject ? `${currentSubject.name} Marks` : 'Subject Marks'
                   }
                 </p>
               </div>
@@ -237,9 +237,12 @@ export default function GamePage() {
               <div className="text-center space-y-4">
                 <div className="w-32 h-32 mx-auto bg-bubbleSecondary rounded-full flex items-center justify-center text-5xl overflow-hidden">
                   {student2.roll_no ? (
-                    <img 
+                    <img
                       src={`/student_faces/${student2.roll_no}.png`}
                       alt={student2.name}
+                      width={128}
+                      height={128}
+                      loading="lazy"
                       className="w-full h-full object-cover"
                       onError={(e) => {
                         e.target.style.display = 'none'
@@ -258,20 +261,20 @@ export default function GamePage() {
                     <p className="text-4xl font-bold text-ink">?</p>
                   ) : (
                     <p className="text-4xl font-bold text-ink">
-                      {metric === 'cgpa' 
-                        ? student2.cgpa 
+                      {metric === 'cgpa'
+                        ? student2.cgpa
                         : metric === 'attendance'
-                        ? `${student2.attendance}%`
-                        : student2.totalMarks || 0
+                          ? `${student2.attendance}%`
+                          : student2.totalMarks || 0
                       }
                     </p>
                   )}
                   <p className="text-body text-sm">
-                    {metric === 'cgpa' 
-                      ? 'SGPA' 
+                    {metric === 'cgpa'
+                      ? 'SGPA'
                       : metric === 'attendance'
-                      ? 'Attendance'
-                      : currentSubject ? `${currentSubject.name} Marks` : 'Subject Marks'
+                        ? 'Attendance'
+                        : currentSubject ? `${currentSubject.name} Marks` : 'Subject Marks'
                     }
                   </p>
                 </div>

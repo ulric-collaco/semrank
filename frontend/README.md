@@ -1,37 +1,10 @@
 # 🎈 SemRank
 
-**Tagline:** Rankings that move.
 
 A playful, motion-first academic ranking website that visualizes semester performance across students, subjects, and classes.
 
-## 🎯 Product Vision
 
-SemRank transforms traditional academic data (marks, CGPA, attendance) into:
 
-- 🏆 **Interactive Leaderboards** - Top 10 students with organic, bubble-based layouts
-- ⚖️ **Student Comparisons** - Side-by-side performance analysis
-- 🎮 **Higher/Lower Game** - Guess student rankings in a fun, adaptive game
-- 📊 **Class Insights** - Performance statistics across divisions
-- 🎨 **Personal Profiles** - ID card-style student views
-
-## 🎨 Design Language
-
-SemRank uses the **Happy Hues #17** color palette for a soft, playful aesthetic:
-
-- **Background:** `#fef6e4` (Warm cream)
-- **Primary Ink:** `#001858` (Deep navy)
-- **Body Text:** `#172c66` (Navy blue)
-- **Main Bubble:** `#f3d2c1` (Soft peach)
-- **Secondary Bubble:** `#8bd3dd` (Sky blue)
-- **Accent:** `#f582ae` (Rose pink)
-
-### Motion Principles
-
-- All interactions use GSAP for smooth, bouncy animations
-- Hover: `scale(1.06)` with `back.out(1.5)` easing
-- Active: `scale(0.94)` for tactile feedback
-- Sorting: Physical reshuffle with staggered animations
-- Reduced motion support included
 
 ## 🚀 Getting Started
 
