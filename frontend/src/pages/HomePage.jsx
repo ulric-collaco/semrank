@@ -85,10 +85,10 @@ export default function HomePage() {
   }
 
   return (
-    <div className="min-h-screen px-6 py-20">
+    <div className="min-h-screen px-6 pt-2 pb-12 md:pt-4">
       {/* Hero Section */}
-      <div ref={heroRef} className="max-w-6xl mx-auto text-center mb-16" style={{ opacity: 0 }}>
-        <h1 className="text-[60px] md:text-[84px] lg:text-[100px] font-display text-ink mb-4 leading-none tracking-tight">
+      <div ref={heroRef} className="max-w-6xl mx-auto text-center mb-4" style={{ opacity: 0 }}>
+        <h1 className="text-[60px] md:text-[84px] lg:text-[100px] font-display text-ink mb-0 leading-none tracking-tight">
           SemRank
         </h1>
 
@@ -105,7 +105,7 @@ export default function HomePage() {
                 word-break: break-word;
               }
             `}</style>
-            <div ref={top3Ref} className="flex flex-row flex-nowrap justify-center items-end gap-3 md:gap-8 mt-4 py-8 md:py-12 w-full px-2">
+            <div ref={top3Ref} className="flex flex-row flex-nowrap justify-center items-end gap-3 md:gap-8 mt-0 py-2 md:py-4 w-full px-2">
               {/** Render in visual order: show 2,1,3 so rank 1 is centered */}
               {(() => {
                 const order = topStudents.length >= 3 ? [1, 0, 2] : topStudents.map((_, i) => i)
