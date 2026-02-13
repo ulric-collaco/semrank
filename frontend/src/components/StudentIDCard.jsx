@@ -89,10 +89,11 @@ export default function StudentIDCard({ student, loading, error, onClose }) {
                 scrollbar-width: none;
             }
 
-            /* Styled thin scrollbar for horizontal tabs */
+            /* Styled thin scrollbar for horizontal tabs (use site accent/pink) */
             .tabs-scrollbar {
                 scrollbar-width: thin;
-                scrollbar-color: rgba(255,215,64,0.85) rgba(255,255,255,0.03);
+                /* thumb color then track color */
+                scrollbar-color: rgba(245,130,174,0.95) rgba(255,255,255,0.03);
             }
             .tabs-scrollbar::-webkit-scrollbar {
                 height: 8px;
@@ -103,11 +104,11 @@ export default function StudentIDCard({ student, loading, error, onClose }) {
                 margin: 6px 0;
             }
             .tabs-scrollbar::-webkit-scrollbar-thumb {
-                background: linear-gradient(90deg, rgba(255,215,64,0.95), rgba(255,180,60,0.75));
+                background: linear-gradient(90deg, rgba(245,130,174,0.95), rgba(245,130,174,0.75));
                 border-radius: 9999px;
             }
             .tabs-scrollbar::-webkit-scrollbar-thumb:hover {
-                background: linear-gradient(90deg, rgba(255,215,64,1), rgba(255,180,60,0.9));
+                background: linear-gradient(90deg, rgba(245,130,174,1), rgba(245,130,174,0.9));
             }
         `}</style>
 
@@ -123,15 +124,15 @@ export default function StudentIDCard({ student, loading, error, onClose }) {
                     </div>
                 )}
 
-                <div className="p-4 md:p-6 grid grid-cols-1 md:grid-cols-12 gap-6">
+                <div className="p-4 md:p-5 flex flex-col md:flex-row gap-4 md:gap-5 items-start">
 
-                    {/* Left Column: Profile (Takes 4 cols) */}
-                    <div className="md:col-span-4 flex flex-col items-center md:items-start text-center md:text-left space-y-4">
-                        <div className="relative">
-                            {/* Subtle radial glow */}
-                            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-32 h-32 bg-indigo-500/20 blur-2xl rounded-full -z-10"></div>
+                    {/* Left: Avatar Only */}
+                    <div className="flex-shrink-0 mx-auto md:mx-0">
+                        <div className="relative group">
+                            {/* Glow effect */}
+                            <div className="absolute inset-0 bg-indigo-500/20 blur-2xl rounded-full -z-10 group-hover:bg-indigo-500/30 transition-all duration-500"></div>
 
-                            <div className="w-24 h-24 md:w-[100px] md:h-[100px] bg-white/5 rounded-[16px] overflow-hidden border border-white/10 flex items-center justify-center relative shadow-md shadow-black/20">
+                            <div className="w-32 h-32 md:w-48 md:h-48 bg-white/5 rounded-2xl overflow-hidden border border-white/10 shadow-lg flex items-center justify-center relative backdrop-blur-sm">
                                 {student.roll_no ? (
                                     <img
                                         src={`/student_faces/${student.roll_no}.png`}
@@ -143,96 +144,100 @@ export default function StudentIDCard({ student, loading, error, onClose }) {
                                         }}
                                     />
                                 ) : null}
-                                <div className="hidden w-full h-full flex-col items-center justify-center text-slate-600">
-                                    <User className="w-8 h-8 opacity-50" />
-                                </div>
-                            </div>
-                        </div>
-
-                        <div className="w-full space-y-2">
-                            <h1 className="text-lg md:text-xl font-semibold text-white leading-tight">
-                                {student.name}
-                            </h1>
-
-                            <div className="space-y-1.5 text-xs text-slate-400">
-                                <div className="flex justify-between md:flex-col md:items-start border-b border-white/5 pb-1.5 md:border-0 md:pb-0">
-                                    <span className="text-[10px] uppercase tracking-wide opacity-50 font-medium">Roll No</span>
-                                    <span className="font-mono text-slate-300">{student.roll_no}</span>
-                                </div>
-                                <div className="flex justify-between md:flex-col md:items-start">
-                                    <span className="text-[10px] uppercase tracking-wide opacity-50 font-medium">Class</span>
-                                    <span className="text-slate-300">{formatClassName(student.class)}</span>
+                                <div className="hidden w-full h-full flex-col items-center justify-center text-slate-500">
+                                    <User className="w-8 h-8 opacity-60" />
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    {/* Right Column: Stats & Data (Takes 8 cols) */}
-                    <div className="md:col-span-8 flex flex-col gap-5">
+                    {/* Right: Main Content */}
+                    <div className="flex-grow w-full flex flex-col gap-2">
 
-                        {/* Row 1: Metrics */}
-                        <div className="grid grid-cols-2 gap-4">
-                            {/* SGPA Card */}
-                            <div className="bg-white/5 border border-white/5 rounded-lg p-3 md:p-4 backdrop-blur-md flex flex-col justify-between hover:bg-white/[0.07] transition-colors">
-                                <span className="text-[10px] uppercase tracking-wide text-slate-400 font-medium">Sem SGPA</span>
-                                <div className="mt-1 text-white flex items-baseline">
-                                    <span className="text-2xl md:text-3xl font-bold tracking-tight">
-                                        {formatFloat(student.cgpa, 2)}
-                                    </span>
-                                    <span className="text-slate-500 text-xs ml-1.5 font-medium">/ 10</span>
-                                </div>
-                            </div>
+                        {/* Header: Name + Roll/Class + Stats */}
+                        <div className="flex flex-col md:flex-row justify-between items-center md:items-end gap-2 md:gap-0">
 
-                            {/* Attendance Card */}
-                            <div className="bg-white/5 border border-white/5 rounded-lg p-3 md:p-4 backdrop-blur-md flex flex-col justify-between hover:bg-white/[0.07] transition-colors">
-                                <span className="text-[10px] uppercase tracking-wide text-slate-400 font-medium">Attendance</span>
-                                <div className="mt-1 text-white flex items-baseline">
-                                    <span className="text-2xl md:text-3xl font-semibold tracking-tight">
-                                        {formatFloat(student.attendance, 1)}
-                                    </span>
-                                    <span className="text-slate-500 text-sm ml-1">%</span>
-                                </div>
-                            </div>
-                        </div>
-
-                        {/* Row 2: Ranks */}
-                        <div>
-                            <div className="flex flex-wrap gap-2">
-                                {[
-                                    { label: 'College Rank', val: student.rank_cgpa_college },
-                                    { label: 'Class Rank', val: student.rank_cgpa_class },
-                                    { label: 'College Att.', val: student.rank_attendance_college },
-                                    { label: 'Class Att.', val: student.rank_attendance_class }
-                                ].map((rank, idx) => (
-                                    rank.val && (
-                                        <div key={idx} className="px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-xs text-slate-300 flex items-center gap-1.5 hover:bg-white/10 transition-colors">
-                                            <span className="opacity-50 text-[9px] uppercase tracking-wider">{rank.label}</span>
-                                            <span className="font-mono font-semibold text-white">#{rank.val}</span>
-                                        </div>
-                                    )
-                                ))}
-                            </div>
-                        </div>
-
-                        {/* Row 3: Top Subjects Grid (Compact) */}
-                        <div>
-                            <span className="text-[10px] uppercase tracking-wide text-slate-500 font-semibold mb-2 block pl-0.5">Top Subjects</span>
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                                {topSubjects.map((sub, idx) => (
-                                    <div key={idx} className="flex items-center justify-between p-2 rounded-md hover:bg-white/5 border border-transparent hover:border-white/5 transition-colors">
-                                        <div className="flex flex-col min-w-0">
-                                            <span className="text-xs font-medium text-slate-200 truncate">{sub.subject_name}</span>
-
-                                        </div>
-                                        <div className="flex items-center gap-2">
-                                            <span className="text-xs font-semibold text-white/80">{sub.total_marks}</span>
-                                            <span className={`text-[10px] font-bold w-6 text-right ${sub.rank <= 3 ? 'text-amber-400' : 'text-slate-600'}`}>
-                                                #{sub.rank || '-'}
-                                            </span>
-                                        </div>
+                            {/* Name + Roll/Class */}
+                            <div className="text-center md:text-left mb-1 md:mb-0 flex-grow pr-2">
+                                <h1 className="text-xl md:text-2xl lg:text-3xl font-bold text-white leading-tight tracking-tight break-words">
+                                    {student.name}
+                                </h1>
+                                <div className="flex items-center justify-center md:justify-start gap-3 text-xs font-medium text-slate-400/80 mt-1">
+                                    <div className="flex items-center gap-1.5">
+                                        <span className="uppercase text-[9px] tracking-wider opacity-70 font-semibold">Roll</span>
+                                        <span className="font-mono text-slate-300">{student.roll_no}</span>
                                     </div>
-                                ))}
+                                    <div className="w-1 h-1 rounded-full bg-slate-600"></div>
+                                    <div className="flex items-center gap-1.5">
+                                        <span className="uppercase text-[9px] tracking-wider opacity-70 font-semibold">Class</span>
+                                        <span className="text-slate-300">{formatClassName(student.class)}</span>
+                                    </div>
+                                </div>
                             </div>
+
+                            {/* Stats Cards - Compact */}
+                            <div className="flex justify-end gap-2 flex-nowrap flex-shrink-0">
+                                {/* SGPA Card */}
+                                <div className="bg-white/5 border border-white/10 rounded-lg px-2.5 py-1 min-w-fit flex flex-col justify-center items-center gap-0 relative overflow-hidden group hover:bg-white/[0.08] transition-all">
+                                    <span className="text-[7px] uppercase tracking-wide text-slate-400 font-medium z-10 leading-none whitespace-nowrap mb-0.5">Sem SGPA</span>
+                                    <div className="flex items-baseline gap-1 z-10">
+                                        <span className="text-lg md:text-xl font-bold text-white tracking-tight leading-none">
+                                            {formatFloat(student.cgpa, 2)}
+                                        </span>
+                                        <span className="text-slate-500 text-[7px] font-semibold whitespace-nowrap">/ 10</span>
+                                    </div>
+                                    <div className="absolute -right-3 -bottom-3 w-6 h-6 bg-emerald-500/10 rounded-full blur-md group-hover:bg-emerald-500/20 transition-all"></div>
+                                </div>
+
+                                {/* Attendance Card */}
+                                <div className="bg-white/5 border border-white/10 rounded-lg px-2.5 py-1 min-w-fit flex flex-col justify-center items-center gap-0 relative overflow-hidden group hover:bg-white/[0.08] transition-all">
+                                    <span className="text-[7px] uppercase tracking-wide text-slate-400 font-medium z-10 leading-none whitespace-nowrap mb-0.5">Attendance</span>
+                                    <div className="flex items-baseline gap-1 z-10">
+                                        <span className="text-lg md:text-xl font-bold text-white tracking-tight leading-none">
+                                            {formatFloat(student.attendance, 1)}
+                                        </span>
+                                        <span className="text-slate-500 text-[7px] font-semibold whitespace-nowrap">%</span>
+                                    </div>
+                                    <div className="absolute -right-3 -bottom-3 w-6 h-6 bg-blue-500/10 rounded-full blur-md group-hover:bg-blue-500/20 transition-all"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Ranks Pills - Compact */}
+                        <div className="flex flex-wrap gap-1.5 w-full">
+                            {[
+                                { label: 'Col. Rank', val: student.rank_cgpa_college },
+                                { label: 'Cls. Rank', val: student.rank_cgpa_class },
+                                { label: 'Col. Att.', val: student.rank_attendance_college },
+                                { label: 'Cls. Att.', val: student.rank_attendance_class }
+                            ].map((rank, idx) => (
+                                rank.val && (
+                                    <div key={idx} className="flex-1 min-w-[80px] py-1 px-2 bg-white/5 border border-white/10 rounded-md flex items-center justify-between gap-1 hover:bg-white/10 transition-colors">
+                                        <span className="text-[7px] uppercase tracking-wider text-slate-400 font-medium whitespace-nowrap">{rank.label}</span>
+                                        <span className="font-mono text-xs font-bold text-white">#{rank.val}</span>
+                                    </div>
+                                )
+                            ))}
+                        </div>
+
+                        {/* Top Subjects Grid - Compact */}
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5">
+                            {topSubjects.map((sub, idx) => (
+                                <div key={idx} className="flex items-center justify-between p-2 rounded-md bg-white/5 border border-white/5 hover:bg-white/10 transition-colors h-auto min-h-[44px]">
+                                    <div className="flex flex-col justify-center min-w-0 pr-2">
+                                        <span className="text-[8px] uppercase tracking-wider text-slate-500 font-bold mb-0 leading-none">Subject</span>
+                                        <span className="text-[11px] font-medium text-slate-200 truncate leading-tight mt-0.5" title={sub.subject_name}>
+                                            {sub.subject_name}
+                                        </span>
+                                    </div>
+                                    <div className="flex flex-col items-end justify-center pl-2 border-l border-white/10">
+                                        <span className="text-sm font-bold text-white leading-none">{sub.total_marks}</span>
+                                        <span className={`text-[8px] font-bold mt-0.5 ${sub.rank <= 3 ? 'text-amber-400' : 'text-slate-500'}`}>
+                                            #{sub.rank || '-'}
+                                        </span>
+                                    </div>
+                                </div>
+                            ))}
                         </div>
 
                     </div>

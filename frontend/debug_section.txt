@@ -1,0 +1,6 @@
+{/* Roll & Class - Moved back to Left */}
+                        <div className="flex flex-col gap-1 text-xs font-medium text-slate-400/80 w-full text-center">
+                            <div className="flex flex-col items-center leading-none">
+                                <span className="uppercase text-[8px] tracking-wider opacity-60 font-semibold mb-0.5">Roll</span>
+                                <span className="font-mono text-slate-300 text-[10px]">{student.roll_no}</span>
+                            </div>
