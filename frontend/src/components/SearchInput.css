@@ -1,0 +1,65 @@
+.search-input__wrapper {
+  position: relative;
+  margin: 20px auto 40px;
+  width: 100%;
+  max-width: 400px;
+}
+
+.search-input__wrapper input {
+  background: rgba(245, 130, 174, 0.1);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 0;
+  border-bottom: 2px #f582ae solid;
+  border-radius: 12px 12px 0 0;
+  /* Slight visual box hint matching blur */
+  display: block;
+  width: 100%;
+  padding: 15px 15px;
+  /* Added horizontal padding since it has background now */
+  font-size: 18px;
+  color: #f582ae;
+  font-weight: bold;
+  font-family: 'Slackey', sans-serif;
+  box-sizing: border-box;
+  /* Ensure padding doesn't overflow width */
+}
+
+.search-input__wrapper input:focus,
+.search-input__wrapper input:valid {
+  outline: 0;
+  border-bottom-color: #f582ae;
+  box-shadow: 0 4px 12px rgba(245, 130, 174, 0.2);
+}
+
+.search-input__wrapper label {
+  position: absolute;
+  top: 15px;
+  left: 15px;
+  /* Align with input padding */
+  pointer-events: none;
+  display: flex;
+}
+
+.search-input__wrapper label span {
+  display: inline-block;
+  font-size: 18px;
+  min-width: 5px;
+  color: #f582ae;
+  opacity: 0.7;
+  transition: 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  font-weight: bold;
+  text-transform: uppercase;
+  font-family: sans-serif;
+}
+
+.search-input__wrapper input:focus+label span,
+.search-input__wrapper input:valid+label span {
+  color: #f582ae;
+  opacity: 1;
+  transform: translateY(-35px);
+  /* Adjusted for new padding/layout */
+  text-shadow: 0 0 8px rgba(245, 130, 174, 0.5);
+  left: 0;
+  /* Align back to left edge visually if needed, but transform is Y only */
+}

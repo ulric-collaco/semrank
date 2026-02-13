@@ -5,6 +5,7 @@ import { formatClassName } from '../utils/format'
 import StudentBubble from '../components/StudentBubble'
 import ClassStatsSection from '../components/ClassStatsSection'
 import StudentModal from '../components/StudentModal'
+import SearchInput from '../components/SearchInput'
 
 export default function HomePage() {
   const [topStudents, setTopStudents] = useState([])
@@ -85,10 +86,10 @@ export default function HomePage() {
   }
 
   return (
-    <div className="min-h-screen px-6 pt-2 pb-12 md:pt-4">
+    <div className="min-h-screen px-6 pt-24 md:pt-32 pb-12">
       {/* Hero Section */}
-      <div ref={heroRef} className="max-w-6xl mx-auto text-center mb-4" style={{ opacity: 0 }}>
-        <h1 className="text-[60px] md:text-[84px] lg:text-[100px] font-display text-ink mb-0 leading-none tracking-tight">
+      <div ref={heroRef} className="max-w-6xl mx-auto text-center mb-12 md:mb-16" style={{ opacity: 0 }}>
+        <h1 className="text-[60px] md:text-[84px] lg:text-[100px] font-display text-ink mb-4 md:mb-8 leading-none tracking-tight">
           SemRank
         </h1>
 
@@ -173,6 +174,12 @@ export default function HomePage() {
             </div>
           </>
         )}
+      </div>
+
+
+      {/* Search Input */}
+      <div className="flex justify-center w-full px-4 mb-8 z-20 relative">
+        <SearchInput onSelectStudent={setSelectedStudentRoll} />
       </div>
 
       {/* Quick Leaderboard */}

@@ -239,34 +239,56 @@
 
 @media (max-width: 899px) {
   .bubble-menu-items {
-    padding-top: 0px;
-    align-items: flex-start;
     padding-top: 120px;
+    /* Ensure top space clearing header area if transparent */
+    align-items: flex-start;
+    overflow-y: auto;
+    /* Allow menu itself to scroll if items overflow */
   }
 
   .bubble-menu-items .pill-list {
     row-gap: 16px;
+    column-gap: 16px;
+    /* Add horizontal spacing */
+    flex-direction: row;
+    /* Allow side-by-side */
+    justify-content: center;
   }
 
   .bubble-menu-items .pill-list .pill-col {
-    flex: 0 0 100%;
+    flex: 0 0 auto;
+    /* Don't force 100% width */
+    width: 45%;
+    /* Two per row mostly */
+    min-width: 140px;
     margin-left: 0 !important;
     overflow: visible;
   }
 
+  /* Make sure the last item doesn't get weird margin from desktop specific styles */
+  .bubble-menu-items .pill-list .pill-col:nth-child(even) {
+    margin-left: 0;
+  }
+
   .bubble-menu-items .pill-link {
-    font-size: clamp(1.2rem, 3vw, 4rem);
-    padding: clamp(1rem, 2vw, 2rem) 0;
-    min-height: 80px;
+    font-size: clamp(1rem, 2.5vw, 1.5rem);
+    /* Smaller font */
+    padding: 0;
+    min-height: 60px;
+    /* Smaller height for button look */
+    height: 60px;
+    border-radius: 30px;
+    /* Pill shape */
+    aspect-ratio: auto;
   }
 
   .bubble-menu-items .pill-link:hover {
-    transform: scale(1.06);
+    transform: scale(1.03);
     background: var(--hover-bg);
     color: var(--hover-color);
   }
 
   .bubble-menu-items .pill-link:active {
-    transform: scale(0.94);
+    transform: scale(0.96);
   }
 }
