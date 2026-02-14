@@ -279,10 +279,18 @@ export default function StudentIDCard({ student, loading, error, onClose }) {
                         </div>
                     </div>
 
-                    {/* Mobile ONLY: Ranks and Top Subjects (stacked below photo, full width) */}
+                    {/* Mobile ONLY: Ranks, Top Subjects, and Analyze button */}
                     <div className="md:hidden flex flex-col gap-2 mt-2">
                         {ranksContent}
                         {topSubjectsContent}
+                        <button
+                            onClick={handleAnalyze}
+                            disabled={isAnalyzing}
+                            className="w-full py-2.5 bg-indigo-500/15 border border-indigo-500/25 rounded-lg flex items-center justify-center gap-2 hover:bg-indigo-500/25 transition-all disabled:opacity-50 mt-1"
+                        >
+                            <Calculator className={`w-4 h-4 text-indigo-400 ${isAnalyzing ? 'animate-pulse' : ''}`} />
+                            <span className="text-xs font-bold text-indigo-300 uppercase tracking-wider">{isAnalyzing ? 'Loading...' : 'SGPI Analysis'}</span>
+                        </button>
                     </div>
                 </div>
 
@@ -351,12 +359,17 @@ export default function StudentIDCard({ student, loading, error, onClose }) {
             {showAnalysis && analysisData && (
                 <div className="absolute inset-0 z-[110] bg-slate-950/90 backdrop-blur-xl p-4 md:p-8 overflow-y-auto no-scrollbar animate-in fade-in zoom-in duration-300">
                     <div className="max-w-3xl mx-auto">
-                        <div className="flex justify-between items-center mb-6">
-                            <div>
-                                <h3 className="text-xl md:text-2xl font-bold text-white flex items-center gap-2">
-                                    <Calculator className="w-6 h-6 text-indigo-400" />
-                                    SGPI Calculation Analysis
-                                </h3>
+                        <div className="flex flex-col md:flex-row md:items-start justify-between gap-4 mb-6">
+                            <div className="flex-1 min-w-0">
+                                <div className="flex items-center justify-between gap-3">
+                                    <h3 className="text-lg md:text-2xl font-bold text-white flex items-center gap-2 min-w-0">
+                                        <Calculator className="w-5 h-5 md:w-6 md:h-6 text-indigo-400 flex-shrink-0" />
+                                        <span className="truncate">SGPI Calculation Analysis</span>
+                                    </h3>
+                                    <button onClick={() => setShowAnalysis(false)} className="w-9 h-9 flex items-center justify-center bg-white/5 hover:bg-white/10 rounded-full text-slate-400 border border-white/10 transition-colors flex-shrink-0 md:hidden">
+                                        <X className="w-4 h-4" />
+                                    </button>
+                                </div>
                                 <p className="text-slate-400 text-sm mt-1">
                                     According to <span className="text-indigo-300 font-semibold">Section 16.2</span> — Calculation of SGPI and CGPI
                                 </p>
@@ -364,9 +377,28 @@ export default function StudentIDCard({ student, loading, error, onClose }) {
                                     Fr. CRCE Academic Rule Book 2024-25, Page 53 ↗
                                 </a>
                             </div>
-                            <button onClick={() => setShowAnalysis(false)} className="w-10 h-10 flex items-center justify-center bg-white/5 hover:bg-white/10 rounded-full text-slate-400 border border-white/10 transition-colors">
-                                <X className="w-5 h-5" />
-                            </button>
+
+                            <div className="flex items-start gap-2">
+                                {/* Double Minor Subjects (excluded from SGPI) */}
+                                {analysisData.dropped && analysisData.dropped.length > 0 && (
+                                    <div className="bg-orange-500/5 border border-orange-500/10 rounded-xl p-3 md:max-w-[280px] flex-shrink-0">
+                                        <p className="text-[10px] font-bold text-orange-400/80 uppercase tracking-wider mb-1.5">
+                                            ⚠ Double Minor — Not in SGPI
+                                        </p>
+                                        <div className="space-y-1.5">
+                                            {analysisData.dropped.map((d, idx) => (
+                                                <div key={idx} className="flex items-center justify-between gap-2">
+                                                    <p className="text-slate-300 text-xs font-medium truncate">{d.subject}</p>
+                                                    <span className="px-1.5 py-0.5 bg-orange-500/20 rounded text-[8px] font-bold text-orange-300 uppercase flex-shrink-0">Excluded</span>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
+                                )}
+                                <button onClick={() => setShowAnalysis(false)} className="w-10 h-10 hidden md:flex items-center justify-center bg-white/5 hover:bg-white/10 rounded-full text-slate-400 border border-white/10 transition-colors flex-shrink-0">
+                                    <X className="w-5 h-5" />
+                                </button>
+                            </div>
                         </div>
 
                         {/* Summary Cards */}
@@ -447,26 +479,6 @@ export default function StudentIDCard({ student, loading, error, onClose }) {
                             </div>
                         </div>
 
-                        {/* Dropped Subjects */}
-                        {analysisData.dropped && analysisData.dropped.length > 0 && (
-                            <div className="mt-8 space-y-4">
-                                <h4 className="text-sm font-bold text-orange-400/80 uppercase tracking-wider flex items-center gap-2">
-                                    <div className="w-1 h-4 bg-orange-500 rounded-full"></div>
-                                    Dropped Subjects (Excluded from Calculation)
-                                </h4>
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                                    {analysisData.dropped.map((d, idx) => (
-                                        <div key={idx} className="bg-orange-500/5 border border-orange-500/10 rounded-lg p-3 flex justify-between items-center">
-                                            <div>
-                                                <p className="text-slate-200 font-medium text-sm">{d.subject}</p>
-                                                <p className="text-[10px] text-orange-400 font-medium">{d.reason}</p>
-                                            </div>
-                                            <div className="px-2 py-1 bg-orange-500/20 rounded text-[9px] font-bold text-orange-300 uppercase">Excluded</div>
-                                        </div>
-                                    ))}
-                                </div>
-                            </div>
-                        )}
 
                         <div className="mt-12 text-center pb-8">
                             <button

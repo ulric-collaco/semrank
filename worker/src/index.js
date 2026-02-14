@@ -87,11 +87,11 @@ async function getStudentLeaderboardData(db, classFilter = 'all') {
 // Get student with all details including subjects and marks (for single student lookup)
 // Calculate SGPI Analysis breakdown
 async function getStudentSGPIAnalysis(db, prn) {
-  // Dynamically build the dropped subjects set from DB subject codes
-  // 25MDM* = Minor Degree subjects, 25DM* = Double Minor (Emerging Areas) subjects
-  const droppableQuery = `SELECT subject_name FROM SUBJECT WHERE subject_code LIKE '25MDM%' OR subject_code LIKE '25DM%'`;
+  // Dynamically build the Double Minor subjects set from DB subject codes
+  // 25DM* = Double Minor (Emerging Areas) subjects — always excluded from SGPI
+  const droppableQuery = `SELECT subject_name FROM SUBJECT WHERE subject_code LIKE '25DM%'`;
   const droppableResult = await db.prepare(droppableQuery).all();
-  const DROPPED_SUBJECTS = new Set(
+  const DM_SUBJECTS = new Set(
     (droppableResult.results || []).map(s => s.subject_name.toUpperCase())
   );
 
@@ -131,13 +131,12 @@ async function getStudentSGPIAnalysis(db, prn) {
     const credits = info.credits;
     const maxMarks = info.maxMarks;
 
-    // Check if dropped (minor/double-minor with 0 marks)
-    // Note: totalMarks is raw marks. If maxMarks is e.g. 50, and total is 0, it's still 0.
-    if (totalMarks === 0 && DROPPED_SUBJECTS.has(subName)) {
+    // Double Minor (DM) subjects are always excluded from SGPI
+    if (DM_SUBJECTS.has(subName)) {
       dropped.push({
         subject: subName,
         credits: credits,
-        reason: "Minor/Double-Minor subject with 0 marks — excluded from SGPI"
+        reason: "Double Minor subject — not counted in SGPI"
       });
       continue;
     }
