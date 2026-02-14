@@ -20,10 +20,40 @@ export default function BubbleMenu({
 }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [showOverlay, setShowOverlay] = useState(false);
+  const [navVisible, setNavVisible] = useState(true);
 
   const overlayRef = useRef(null);
   const bubblesRef = useRef([]);
   const labelRefs = useRef([]);
+
+  // On mobile home screen, hide nav until user scrolls down
+  useEffect(() => {
+    const SCROLL_THRESHOLD = 100;
+
+    const handleScroll = () => {
+      // Only apply scroll-based hiding on home page
+      if (currentPage !== 'home') {
+        setNavVisible(true);
+        return;
+      }
+      const isMobile = window.innerWidth < 900;
+      if (!isMobile) {
+        setNavVisible(true);
+        return;
+      }
+      setNavVisible(window.scrollY > SCROLL_THRESHOLD);
+    };
+
+    // Check initial state
+    handleScroll();
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    window.addEventListener('resize', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('resize', handleScroll);
+    };
+  }, [currentPage]);
 
   const containerClassName = ['bubble-menu', useFixedPosition ? 'fixed' : 'absolute', className]
     .filter(Boolean)
@@ -131,7 +161,16 @@ export default function BubbleMenu({
 
   return (
     <>
-      <nav className={containerClassName} style={style} aria-label="Main navigation">
+      <nav
+        className={containerClassName}
+        style={{
+          ...style,
+          opacity: (navVisible || isMenuOpen) ? 1 : 0,
+          transform: (navVisible || isMenuOpen) ? 'translateY(0)' : 'translateY(-100%)',
+          transition: 'opacity 0.3s ease, transform 0.3s ease',
+        }}
+        aria-label="Main navigation"
+      >
         <button
           type="button"
           className="bubble logo-bubble"
@@ -168,6 +207,12 @@ export default function BubbleMenu({
           className={`bubble-menu-items ${useFixedPosition ? 'fixed' : 'absolute'}`}
           aria-hidden={!isMenuOpen}
         >
+          <h2
+            className="menu-hero-title"
+            style={{ fontFamily: "'Slackey', cursive", color: '#ffffff' }}
+          >
+            SemRank
+          </h2>
           <ul className="pill-list" role="menu" aria-label="Menu links">
             {items.map((item, idx) => (
               <li key={idx} role="none" className="pill-col">

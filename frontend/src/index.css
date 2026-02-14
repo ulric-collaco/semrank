@@ -73,4 +73,54 @@
   select option {
     @apply bg-bubble text-ink;
   }
+
+  /* ── Toggle Switch ── */
+  .toggle-track {
+    display: flex;
+    position: relative;
+    width: fit-content;
+    background: #1e1e36;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 0.5rem;
+    padding: 3px;
+    gap: 3px;
+  }
+
+  .toggle-thumb {
+    position: absolute;
+    top: 3px;
+    bottom: 3px;
+    border-radius: 0.35rem;
+    background-color: #f582ae;
+    transition: left 0.3s ease, width 0.3s ease;
+    pointer-events: none;
+  }
+
+  .toggle-label {
+    position: relative;
+    z-index: 1;
+    flex: 1 1 0%;
+    padding: 0.45rem 1.2rem;
+    border: none;
+    background: transparent;
+    border-radius: 0.35rem;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 0.85rem;
+    font-family: 'Inter', sans-serif;
+    color: rgba(255, 255, 255, 0.45);
+    transition: color 0.3s ease;
+    white-space: nowrap;
+    letter-spacing: 0.02em;
+    text-align: center;
+    outline: none;
+  }
+
+  .toggle-label:hover:not(.active) {
+    color: rgba(255, 255, 255, 0.7);
+  }
+
+  .toggle-label.active {
+    color: #0a0a0f;
+  }
 }

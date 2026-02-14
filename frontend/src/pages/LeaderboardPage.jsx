@@ -4,6 +4,7 @@ import StudentBubble from '../components/StudentBubble'
 import { leaderboardAPI, statsAPI } from '../utils/api'
 import { formatClassName } from '../utils/format'
 import StudentModal from '../components/StudentModal'
+import ToggleSwitch from '../components/ToggleSwitch'
 
 export default function LeaderboardPage() {
   const [activeTab, setActiveTab] = useState('student') // 'student' or 'class'
@@ -154,33 +155,15 @@ export default function LeaderboardPage() {
             <div className="space-y-4 mb-8">
               {/* Sort Options */}
               <div className="flex flex-wrap gap-3 justify-center">
-                <button
-                  onClick={() => setSortBy('cgpa')}
-                  className={`px-6 py-3 rounded-bubble font-medium transition-all ${sortBy === 'cgpa'
-                    ? 'bg-accent text-ink shadow-bubble-hover scale-105'
-                    : 'bubble hover:scale-105'
-                    }`}
-                >
-                  SGPA
-                </button>
-                <button
-                  onClick={() => setSortBy('attendance')}
-                  className={`px-6 py-3 rounded-bubble font-medium transition-all ${sortBy === 'attendance'
-                    ? 'bg-accent text-ink shadow-bubble-hover scale-105'
-                    : 'bubble hover:scale-105'
-                    }`}
-                >
-                  Attendance
-                </button>
-                <button
-                  onClick={() => setSortBy('subject')}
-                  className={`px-6 py-3 rounded-bubble font-medium transition-all ${sortBy === 'subject'
-                    ? 'bg-accent text-ink shadow-bubble-hover scale-105'
-                    : 'bubble hover:scale-105'
-                    }`}
-                >
-                  Subject
-                </button>
+                <ToggleSwitch
+                  options={[
+                    { label: 'SGPA', value: 'cgpa' },
+                    { label: 'Attendance', value: 'attendance' },
+                    { label: 'Subject', value: 'subject' },
+                  ]}
+                  activeValue={sortBy}
+                  onChange={setSortBy}
+                />
               </div>
 
               {/* Subject Selector (when subject mode) */}
@@ -189,7 +172,7 @@ export default function LeaderboardPage() {
                   <select
                     value={selectedSubject}
                     onChange={(e) => setSelectedSubject(e.target.value)}
-                    className="px-6 py-3 bubble rounded-bubble font-medium"
+                    className="px-6 py-3 bubble rounded-lg font-medium"
                   >
                     {subjectList.map((subject) => (
                       <option key={subject.subject_code} value={subject.subject_code}>
@@ -206,7 +189,7 @@ export default function LeaderboardPage() {
                   <button
                     key={cls}
                     onClick={() => setFilterClass(cls)}
-                    className={`px-4 py-2 rounded-bubble text-sm font-medium transition-all ${filterClass === cls
+                    className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${filterClass === cls
                       ? 'bg-bubbleSecondary text-ink shadow-bubble-hover scale-105'
                       : 'bubble hover:scale-105'
                       }`}
@@ -220,21 +203,21 @@ export default function LeaderboardPage() {
               <div className="flex gap-2 justify-center">
                 <button
                   onClick={() => setLimit(10)}
-                  className={`px-4 py-2 rounded-bubble text-sm font-medium transition-all ${limit === 10 ? 'bg-bubbleSecondary  text-ink' : 'bubble hover:scale-105'
+                  className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${limit === 10 ? 'bg-bubbleSecondary  text-ink' : 'bubble hover:scale-105'
                     }`}
                 >
                   Top 10
                 </button>
                 <button
                   onClick={() => setLimit(50)}
-                  className={`px-4 py-2 rounded-bubble text-sm font-medium transition-all ${limit === 50 ? 'bg-bubbleSecondary text-ink' : 'bubble hover:scale-105'
+                  className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${limit === 50 ? 'bg-bubbleSecondary text-ink' : 'bubble hover:scale-105'
                     }`}
                 >
                   Top 50
                 </button>
                 <button
                   onClick={() => setLimit('all')}
-                  className={`px-4 py-2 rounded-bubble text-sm font-medium transition-all ${limit === 'all' ? 'bg-bubbleSecondary text-ink' : 'bubble hover:scale-105'
+                  className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${limit === 'all' ? 'bg-bubbleSecondary text-ink' : 'bubble hover:scale-105'
                     }`}
                 >
                   All

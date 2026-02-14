@@ -6,6 +6,7 @@ import StudentBubble from '../components/StudentBubble'
 import ClassStatsSection from '../components/ClassStatsSection'
 import StudentModal from '../components/StudentModal'
 import SearchInput from '../components/SearchInput'
+import ToggleSwitch from '../components/ToggleSwitch'
 
 export default function HomePage() {
   const [topStudents, setTopStudents] = useState([])
@@ -86,10 +87,10 @@ export default function HomePage() {
   }
 
   return (
-    <div className="min-h-screen px-6 pt-32 md:pt-48 pb-12">
+    <div className="min-h-screen px-6 pt-20 md:pt-24 pb-12">
       {/* Hero Section */}
-      <div ref={heroRef} className="max-w-6xl mx-auto text-center mb-16 md:mb-24" style={{ opacity: 0 }}>
-        <h1 className="text-[60px] md:text-[84px] lg:text-[100px] font-display text-ink mb-6 md:mb-12 leading-none tracking-tight">
+      <div ref={heroRef} className="max-w-6xl mx-auto text-center mb-8 md:mb-12" style={{ opacity: 0 }}>
+        <h1 className="text-[48px] md:text-[72px] lg:text-[90px] font-display text-ink mb-4 md:mb-6 leading-none tracking-tight">
           SemRank
         </h1>
 
@@ -185,27 +186,20 @@ export default function HomePage() {
       {/* Quick Leaderboard */}
       <div ref={quickLeaderRef} className="max-w-4xl mx-auto mb-16" style={{ opacity: 0 }}>
         <div className="flex justify-between items-center mb-6">
-          <h2 className="text-[22px] md:text-[28px] font-display text-ink">Quick Leaderboard</h2>
-          <div className="flex gap-2">
-            <button
-              onClick={() => setSortMetric('cgpa')}
-              className={`px-4 py-2 rounded-bubble font-medium transition-all ${sortMetric === 'cgpa'
-                ? 'bg-accent text-ink'
-                : 'bubble bubble-hover'
-                }`}
-            >
-              SGPA
-            </button>
-            <button
-              onClick={() => setSortMetric('attendance')}
-              className={`px-4 py-2 rounded-bubble font-medium transition-all ${sortMetric === 'attendance'
-                ? 'bg-accent text-ink'
-                : 'bubble bubble-hover'
-                }`}
-            >
-              Attendance
-            </button>
-          </div>
+          <button
+            onClick={() => window.location.hash = '#leaderboard'}
+            className="text-[22px] md:text-[36px] font-display text-ink hover:text-accent transition-colors duration-300 bg-transparent border-none cursor-pointer focus:outline-none p-0"
+          >
+            Leaderboard
+          </button>
+          <ToggleSwitch
+            options={[
+              { label: 'SGPA', value: 'cgpa' },
+              { label: 'Attendance', value: 'attendance' },
+            ]}
+            activeValue={sortMetric}
+            onChange={setSortMetric}
+          />
         </div>
 
         <div className="space-y-3">
