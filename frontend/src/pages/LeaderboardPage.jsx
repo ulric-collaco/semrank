@@ -4,79 +4,64 @@ import StudentBubble from '../components/StudentBubble'
 import { leaderboardAPI, statsAPI } from '../utils/api'
 import { formatClassName } from '../utils/format'
 import StudentModal from '../components/StudentModal'
-import ToggleSwitch from '../components/ToggleSwitch'
+import { Filter, ChevronDown, BookOpen, Trophy, Users, Calculator } from 'lucide-react'
 
 export default function LeaderboardPage() {
-  const [activeTab, setActiveTab] = useState('student') // 'student' or 'class'
   const [students, setStudents] = useState([])
-  const [classRankings, setClassRankings] = useState([])
   const [subjectList, setSubjectList] = useState([])
   const [isLoading, setIsLoading] = useState(true)
   const [selectedStudentRoll, setSelectedStudentRoll] = useState(null)
 
-  // Student leaderboard filters
-  const [sortBy, setSortBy] = useState('cgpa') // 'cgpa', 'attendance', or 'subject'
+  // Primary Mode: 'cgpa', 'attendance', 'subject'
+  const [activeMode, setActiveMode] = useState('cgpa')
+
+  // Filters
   const [filterClass, setFilterClass] = useState('all')
   const [selectedSubject, setSelectedSubject] = useState('')
-  const [limit, setLimit] = useState(10) // 10, 50, or 'all'
 
-  const gridRef = useRef(null)
-  const tabsRef = useRef(null)
-
+  // Constants
+  const LIMIT = 1000 // Always fetch all (or a high limit)
   const classes = ['all', 'COMPS_A', 'COMPS_B', 'COMPS_C', 'MECH']
 
-  // Fetch student leaderboard
-  useEffect(() => {
-    if (activeTab === 'student') {
-      fetchStudentLeaderboard()
-    }
-  }, [activeTab, sortBy, filterClass, limit, selectedSubject])
+  const gridRef = useRef(null)
 
-  // Fetch class leaderboard
+  // Initial Data Fetch & Mode Changes
   useEffect(() => {
-    if (activeTab === 'class') {
-      fetchClassLeaderboard()
-    }
-  }, [activeTab])
+    fetchLeaderboardData()
+  }, [activeMode, filterClass, selectedSubject])
 
-  // Fetch subject list for subject mode
+  // Fetch Subject List when entering Subject mode
   useEffect(() => {
-    if (sortBy === 'subject') {
+    if (activeMode === 'subject' && subjectList.length === 0) {
       fetchSubjects()
     }
-  }, [sortBy])
+  }, [activeMode])
 
-  const fetchStudentLeaderboard = async () => {
+  const fetchLeaderboardData = async () => {
     setIsLoading(true)
     try {
-      let data
-      const fetchLimit = limit === 'all' ? 1000 : limit
+      let data = []
 
-      if (sortBy === 'subject' && selectedSubject) {
-        const response = await leaderboardAPI.getTopBySubject(selectedSubject, fetchLimit, filterClass)
-        data = response.students || []
-      } else if (sortBy === 'cgpa') {
-        data = await leaderboardAPI.getTopBySGPA(fetchLimit, filterClass)
+      if (activeMode === 'subject') {
+        if (selectedSubject) {
+          // Fetch Subject Leaderboard
+          const response = await leaderboardAPI.getTopBySubject(selectedSubject, LIMIT, filterClass)
+          data = response.students || []
+        } else {
+          // Waiting for subject selection
+          data = []
+        }
+      } else if (activeMode === 'attendance') {
+        data = await leaderboardAPI.getTopByAttendance(LIMIT, filterClass)
       } else {
-        data = await leaderboardAPI.getTopByAttendance(fetchLimit, filterClass)
+        // Default: SGPA
+        data = await leaderboardAPI.getTopBySGPA(LIMIT, filterClass)
       }
+
       setStudents(data)
     } catch (error) {
-      console.error('Failed to fetch students:', error)
+      console.error('Failed to fetch leaderboard:', error)
       setStudents([])
-    } finally {
-      setIsLoading(false)
-    }
-  }
-
-  const fetchClassLeaderboard = async () => {
-    setIsLoading(true)
-    try {
-      const data = await leaderboardAPI.getClassRankings()
-      setClassRankings(data)
-    } catch (error) {
-      console.error('Failed to fetch class rankings:', error)
-      setClassRankings([])
     } finally {
       setIsLoading(false)
     }
@@ -85,9 +70,11 @@ export default function LeaderboardPage() {
   const fetchSubjects = async () => {
     try {
       const response = await statsAPI.getSubjectStats('all')
-      setSubjectList(response.subjects || [])
-      if (response.subjects && response.subjects.length > 0 && !selectedSubject) {
-        setSelectedSubject(response.subjects[0].subject_code)
+      const subs = response.subjects || []
+      setSubjectList(subs)
+      // Select first subject by default if none selected
+      if (subs.length > 0 && !selectedSubject) {
+        setSelectedSubject(subs[0].subject_code)
       }
     } catch (error) {
       console.error('Failed to fetch subjects:', error)
@@ -100,199 +87,222 @@ export default function LeaderboardPage() {
 
     gsap.fromTo(
       gridRef.current.children,
-      { scale: 0.8, opacity: 0 },
-      { scale: 1, opacity: 1, duration: 0.4, stagger: 0.05, ease: 'back.out(1.3)' }
+      { scale: 0.9, opacity: 0 },
+      { scale: 1, opacity: 1, duration: 0.4, stagger: 0.03, ease: 'back.out(1.2)' }
     )
-  }, [students, classRankings, isLoading])
+  }, [students, isLoading])
 
-  const handleSearchStudent = () => {
-    // Navigate to search/student detail view (to be implemented)
-    window.location.hash = '#search'
-  }
-
-  if (isLoading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-xl text-body">Loading leaderboard...</div>
-      </div>
-    )
+  // Get current active subject name
+  const getActiveSubjectName = () => {
+    const sub = subjectList.find(s => s.subject_code === selectedSubject)
+    return sub ? sub.subject_name : 'Subject'
   }
 
   return (
-    <div className="min-h-screen px-6 py-20">
-      <div className="max-w-7xl mx-auto">
+    <div className="min-h-screen px-4 md:px-6 py-20 pb-32">
+      <div className="max-w-5xl mx-auto">
+
         {/* Header */}
-        <div className="text-center mb-8">
-          <h1 className="text-5xl font-display font-bold text-ink mb-4">Leaderboard</h1>
+        <div className="text-center mb-10">
+          <h1 className="text-4xl md:text-6xl font-display font-black text-ink mb-2 tracking-tight md:tracking-normal uppercase">
+            Leaderboard
+          </h1>
+        
         </div>
 
-        {/* Tabs */}
-        <div ref={tabsRef} className="flex gap-4 justify-center mb-8">
-          <button
-            onClick={() => setActiveTab('student')}
-            className={`px-8 py-4 rounded-bubble font-semibold text-lg transition-all ${activeTab === 'student'
-              ? 'bg-accent text-ink shadow-bubble-hover scale-105'
-              : 'bubble hover:scale-105'
-              }`}
-          >
-            Student Leaderboard
-          </button>
-          <button
-            onClick={() => setActiveTab('class')}
-            className={`px-8 py-4 rounded-bubble font-semibold text-lg transition-all ${activeTab === 'class'
-              ? 'bg-accent text-ink shadow-bubble-hover scale-105'
-              : 'bubble hover:scale-105'
-              }`}
-          >
-            Class Rankings
-          </button>
-        </div>
+        {/* Controls Container */}
+        <div className="flex flex-col items-center gap-6 mb-12">
 
-        {/* Student Leaderboard Tab */}
-        {activeTab === 'student' && (
-          <>
-            {/* Filters */}
-            <div className="space-y-4 mb-8">
-              {/* Sort Options */}
-              <div className="flex flex-wrap gap-3 justify-center">
-                <ToggleSwitch
-                  options={[
-                    { label: 'SGPA', value: 'cgpa' },
-                    { label: 'Attendance', value: 'attendance' },
-                    { label: 'Subject', value: 'subject' },
-                  ]}
-                  activeValue={sortBy}
-                  onChange={setSortBy}
-                />
-              </div>
-
-              {/* Subject Selector (when subject mode) */}
-              {sortBy === 'subject' && subjectList.length > 0 && (
-                <div className="flex justify-center">
-                  <select
-                    value={selectedSubject}
-                    onChange={(e) => setSelectedSubject(e.target.value)}
-                    className="px-6 py-3 bubble rounded-lg font-medium"
-                  >
-                    {subjectList.map((subject) => (
-                      <option key={subject.subject_code} value={subject.subject_code}>
-                        {subject.subject_name}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-              )}
-
-              {/* Class Filter */}
-              <div className="flex flex-wrap gap-2 justify-center">
-                {classes.map((cls) => (
-                  <button
-                    key={cls}
-                    onClick={() => setFilterClass(cls)}
-                    className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${filterClass === cls
-                      ? 'bg-bubbleSecondary text-ink shadow-bubble-hover scale-105'
-                      : 'bubble hover:scale-105'
-                      }`}
-                  >
-                    {cls === 'all' ? 'All Classes' : formatClassName(cls)}
-                  </button>
-                ))}
-              </div>
-
-              {/* Pagination */}
-              <div className="flex gap-2 justify-center">
-                <button
-                  onClick={() => setLimit(10)}
-                  className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${limit === 10 ? 'bg-bubbleSecondary  text-ink' : 'bubble hover:scale-105'
-                    }`}
-                >
-                  Top 10
-                </button>
-                <button
-                  onClick={() => setLimit(50)}
-                  className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${limit === 50 ? 'bg-bubbleSecondary text-ink' : 'bubble hover:scale-105'
-                    }`}
-                >
-                  Top 50
-                </button>
-                <button
-                  onClick={() => setLimit('all')}
-                  className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${limit === 'all' ? 'bg-bubbleSecondary text-ink' : 'bubble hover:scale-105'
-                    }`}
-                >
-                  All
-                </button>
-              </div>
-            </div>
-
-            {/* Student Grid */}
-            <div
-              ref={gridRef}
-              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6"
+          {/* 1. Main Mode Toggles */}
+          <div className="bg-slate-900/50 p-1.5 rounded-full border border-white/10 flex flex-wrap justify-center gap-1 backdrop-blur-md">
+            <button
+              onClick={() => setActiveMode('cgpa')}
+              className={`px-4 py-2 rounded-full text-sm font-bold transition-all flex items-center gap-2 ${activeMode === 'cgpa'
+                ? 'bg-indigo-500 text-white shadow-lg'
+                : 'text-slate-400 hover:text-white hover:bg-white/5'
+                }`}
             >
-              {students.map((student, index) => (
-                <StudentBubble
-                  key={student.student_id || student.roll_no}
-                  student={student}
-                  rank={student.rank || index + 1}
-                  onStudentClick={(rollNo) => setSelectedStudentRoll(rollNo)}
-                />
+              <Trophy className="w-4 h-4" />
+              SGPA
+            </button>
+            <button
+              onClick={() => setActiveMode('attendance')}
+              className={`px-4 py-2 rounded-full text-sm font-bold transition-all flex items-center gap-2 ${activeMode === 'attendance'
+                ? 'bg-emerald-500 text-white shadow-lg'
+                : 'text-slate-400 hover:text-white hover:bg-white/5'
+                }`}
+            >
+              <Users className="w-4 h-4" />
+              Attendance
+            </button>
+            <button
+              onClick={() => setActiveMode('subject')}
+              className={`px-4 py-2 rounded-full text-sm font-bold transition-all flex items-center gap-2 ${activeMode === 'subject'
+                ? 'bg-amber-500 text-white shadow-lg'
+                : 'text-slate-400 hover:text-white hover:bg-white/5'
+                }`}
+            >
+              <BookOpen className="w-4 h-4" />
+              Subject
+            </button>
+          </div>
+
+          {/* 2. Secondary Filters (Class & Subject Selector) */}
+          <div className="flex flex-wrap justify-center gap-3 w-full max-w-2xl">
+
+            {/* Class Filter Toggle Group */}
+            <div className="bg-slate-900/50 p-1.5 rounded-xl border border-white/10 flex flex-wrap justify-center gap-1 backdrop-blur-md">
+              {classes.map(c => (
+                <button
+                  key={c}
+                  onClick={() => setFilterClass(c)}
+                  className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all uppercase tracking-wider ${filterClass === c
+                      ? 'bg-slate-700 text-white shadow-md'
+                      : 'text-slate-400 hover:text-white hover:bg-white/5'
+                    }`}
+                >
+                  {c === 'all' ? 'All Classes' : formatClassName(c)}
+                </button>
               ))}
             </div>
 
-            {students.length === 0 && (
-              <div className="text-center text-body py-12">
-                No students found with the selected filters.
+            {/* Subject Selector (Only in Subject Mode) */}
+            {activeMode === 'subject' && (
+              <div className="relative group flex-grow md:flex-grow-0">
+                <select
+                  value={selectedSubject}
+                  onChange={(e) => setSelectedSubject(e.target.value)}
+                  className="appearance-none bg-slate-800/80 border border-white/10 text-amber-200 pl-4 pr-10 py-2.5 rounded-xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-amber-500/50 hover:bg-slate-800 transition-colors w-full md:min-w-[240px] max-w-full truncate"
+                >
+                  {subjectList.map(sub => (
+                    <option key={sub.subject_code} value={sub.subject_code}>
+                      {sub.subject_name}
+                    </option>
+                  ))}
+                </select>
+                <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-amber-400 pointer-events-none" />
               </div>
             )}
-          </>
-        )}
+          </div>
+        </div>
 
-        {/* Class Leaderboard Tab */}
-        {activeTab === 'class' && (
-          <div ref={gridRef} className="max-w-4xl mx-auto space-y-4">
-            {classRankings.map((classData, index) => (
-              <div
-                key={classData.class_name}
-                className="bubble p-6 rounded-bubble-lg hover:shadow-bubble-hover transition-all"
-              >
-                <div className="flex items-center gap-6">
-                  <div className="w-16 h-16 bg-accent rounded-full flex items-center justify-center font-bold text-2xl text-ink">
-                    #{index + 1}
-                  </div>
-                  <div className="flex-1">
-                    <h3 className="text-2xl font-display font-bold text-ink mb-2">{formatClassName(classData.class_name)}</h3>
-                    <div className="grid grid-cols-2 gap-4 text-sm">
-                      <div>
-                        <p className="text-body">Avg SGPA</p>
-                        <p className="text-xl font-bold text-ink">{classData.avg_cgpa}</p>
-                      </div>
-                      <div>
-                        <p className="text-body">Avg Attendance</p>
-                        <p className="text-xl font-bold text-ink">{classData.avg_attendance}%</p>
-                      </div>
-                      <div>
-                        <p className="text-body">Students</p>
-                        <p className="text-xl font-bold text-ink">{classData.student_count}</p>
-                      </div>
-                      {classData.top_student && (
-                        <div>
-                          <p className="text-body">Top Student</p>
-                          <p className="text-base font-semibold text-ink">
-                            {classData.top_student.name}
-                          </p>
-                        </div>
-                      )}
+        {/* Content Area */}
+        {isLoading ? (
+          <div className="flex flex-col items-center justify-center py-20 gap-4">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-500"></div>
+            <p className="text-slate-500 animate-pulse text-sm">Loading rankings...</p>
+          </div>
+        ) : students.length === 0 ? (
+          <div className="text-center py-20 bg-slate-900/30 rounded-3xl border border-white/5">
+            <p className="text-slate-400">No students found for this criteria.</p>
+          </div>
+        ) : (
+          <div
+            ref={gridRef}
+            className="grid grid-cols-1 gap-3 pb-20"
+          >
+            {/* Header Row */}
+            <div className="hidden md:grid grid-cols-12 gap-4 px-6 py-3 text-xs font-bold text-slate-500 uppercase tracking-wider">
+              <div className="col-span-1 text-center">Rank</div>
+              <div className="col-span-5">Student</div>
+              <div className="col-span-3 text-right">
+                {activeMode === 'subject' ? 'Marks / 100' : activeMode === 'attendance' ? 'Attendance' : 'SGPI'}
+              </div>
+              <div className="col-span-3 text-right">Class</div>
+            </div>
+
+            {students.map((student, index) => {
+              // Determine what value to show on the right based on mode
+              let primaryValue = ''
+              let primaryLabel = ''
+              let accentColor = ''
+
+              if (activeMode === 'subject') {
+                primaryValue = student.marks?.total ?? 'N/A'
+                primaryLabel = 'Marks'
+                accentColor = 'text-amber-400'
+              } else if (activeMode === 'attendance') {
+                primaryValue = `${parseFloat(student.attendance || 0).toFixed(1)}%`
+                primaryLabel = 'Attendance'
+                accentColor = 'text-emerald-400'
+              } else {
+                primaryValue = parseFloat(student.cgpa || 0).toFixed(2)
+                primaryLabel = 'SGPI'
+                accentColor = 'text-indigo-400'
+              }
+
+              // Determine Rank
+              const rank = student.rank || (index + 1)
+              const isTop3 = rank <= 3
+
+              return (
+                <div
+                  key={student.student_id}
+                  onClick={() => setSelectedStudentRoll(student.roll_no)}
+                  className="group relative bg-slate-900/40 hover:bg-slate-800/60 border border-white/5 hover:border-white/10 rounded-xl p-4 md:px-6 md:py-4 transition-all cursor-pointer flex flex-col md:grid md:grid-cols-12 gap-3 items-start md:items-center"
+                >
+                  {/* Mobile Rank Badge */}
+                  <div className="absolute top-4 right-4 md:hidden">
+                    <div className={`
+                                        w-8 h-8 rounded-lg flex items-center justify-center font-bold text-sm
+                                        ${isTop3 ? 'bg-amber-500/10 text-amber-400 border border-amber-500/20' : 'bg-slate-800 text-slate-400 border border-slate-700'}
+                                     `}>
+                      #{rank}
                     </div>
                   </div>
+
+                  {/* Desktop Rank */}
+                  <div className="hidden md:flex col-span-1 justify-center">
+                    <div className={`
+                                        w-8 h-8 rounded-lg flex items-center justify-center font-bold text-sm
+                                        ${isTop3 ? 'bg-amber-500/10 text-amber-400 border border-amber-500/20' : 'bg-slate-800 text-slate-400 border border-slate-700'}
+                                    `}>
+                      {rank}
+                    </div>
+                  </div>
+
+                  {/* Student Info */}
+                  <div className="col-span-12 md:col-span-5 flex items-center gap-4">
+                    <div className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-slate-800 overflow-hidden border border-white/10 flex-shrink-0">
+                      <img
+                        src={`/student_faces/${student.roll_no}.png`}
+                        alt={student.name}
+                        className="w-full h-full object-cover"
+                        onError={(e) => { e.target.style.display = 'none'; e.target.nextSibling.style.display = 'flex'; }}
+                      />
+                      <div className="hidden w-full h-full flex items-center justify-center text-slate-600 bg-slate-900">
+                        <span className="text-xs">IMG</span>
+                      </div>
+                    </div>
+                    <div className="min-w-0">
+                      <h3 className="font-bold text-slate-200 truncate pr-8 md:pr-0">{student.name}</h3>
+                      <p className="text-xs text-slate-500 font-mono">{student.roll_no}</p>
+                    </div>
+                  </div>
+
+                  {/* Primary Stat (Value) */}
+                  <div className="col-span-6 md:col-span-3 flex md:justify-end items-center gap-2 md:gap-0">
+                    <span className="md:hidden text-xs text-slate-500 uppercase font-bold mr-2">{primaryLabel}:</span>
+                    <span className={`text-xl font-bold font-mono ${accentColor}`}>
+                      {primaryValue}
+                    </span>
+                  </div>
+
+                  {/* Class */}
+                  <div className="col-span-6 md:col-span-3 flex md:justify-end items-center">
+                    <span className="md:hidden text-xs text-slate-500 uppercase font-bold mr-2">Class:</span>
+                    <span className="text-slate-400 text-sm font-medium px-2 py-1 bg-white/5 rounded-md border border-white/5">
+                      {formatClassName(student.class)}
+                    </span>
+                  </div>
                 </div>
-              </div>
-            ))}
+              )
+            })}
           </div>
         )}
       </div>
 
-      {/* Student Modal */}
+      {/* Student Detail Modal */}
       {selectedStudentRoll && (
         <StudentModal
           rollNo={selectedStudentRoll}

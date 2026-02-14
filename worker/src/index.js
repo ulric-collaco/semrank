@@ -554,6 +554,7 @@ async function handleRequest(request, env) {
       }
 
       // Get students from pre-computed subject leaderboard
+      // MODIFIED: Fetch students for ALL subjects with the SAME NAME (handles split subject codes like Kannada)
       let query = `
         SELECT 
           s.student_id,
@@ -567,8 +568,9 @@ async function handleRequest(request, env) {
           m.mse, m.th_ise1, m.th_ise2, m.ese, m.pr_ise1, m.pr_ise2
         FROM STUDENT_SUBJECT_LEADERBOARD ssl
         JOIN STUDENT s ON ssl.student_id = s.student_id
+        JOIN SUBJECT sub ON ssl.subject_id = sub.subject_id
         LEFT JOIN MARKS_backup m ON ssl.ss_id = m.ss_id
-        WHERE ssl.subject_id = ?
+        WHERE sub.subject_name = (SELECT subject_name FROM SUBJECT WHERE subject_code = ?)
       `;
 
       if (classFilter !== 'all') {
@@ -576,25 +578,46 @@ async function handleRequest(request, env) {
       }
 
       const students = classFilter === 'all'
-        ? await db.prepare(query).bind(subject.subject_id).all()
-        : await db.prepare(query).bind(subject.subject_id, classFilter).all();
+        ? await db.prepare(query).bind(subjectCode).all()
+        : await db.prepare(query).bind(subjectCode, classFilter).all();
 
-      // Sort by appropriate rank
-      const rankKey = classFilter === 'all' ? 'rank_subject_college' : 'rank_subject_class';
-      const sorted = students.results
-        .sort((a, b) => a[rankKey] - b[rankKey])
-        .slice(0, limit);
+      // Sort by marks (descending) to re-calculate rank across merged subjects
+      // Use subject_total for sorting.
+      const sorted = students.results.sort((a, b) => b.subject_total - a.subject_total);
+
+      // slice AFTER sorting and ranking (actually we should rank first then slice? 
+      // Ideally we want global rank. If we limit to 10, we want top 10 global.
+      // So sort first, then map rank, then slice.
+
+      let currentRank = 0;
+      let lastMarks = -1;
+      let count = 0; // standard count for dense ranking or skip ranking? usually 1, 2, 2, 4.
+      // Let's use 1, 2, 2, 3 for simplicity or 1, 2, 2, 4. 
+      // The screenshot implies simple cardinal ranking 1, 1, 2, 2... but user complained.
+      // User wants 1 (92), 2 (92.1), 3 (90).
+      // Let's do standard competition ranking: 1, 2, 3... handling ties.
+
+      const rankedStudents = sorted.map((student, index) => {
+        if (student.subject_total !== lastMarks) {
+          currentRank = index + 1;
+          lastMarks = student.subject_total;
+        }
+        return {
+          ...student,
+          calculated_rank: currentRank
+        };
+      }).slice(0, limit);
 
       // Format response
-      const formattedStudents = sorted.map(student => ({
+      const formattedStudents = rankedStudents.map(student => ({
         student_id: student.student_id,
         roll_no: student.roll_no,
         enrollment_id: student.enrollment_id,
         name: student.name,
         class: student.class,
-        subject_code: subjectCode,
+        subject_code: subjectCode, // This might be one of many, but we return the requested one or generic
         subject_name: subject.subject_name,
-        rank: student[rankKey],
+        rank: student.calculated_rank, // Use our dynamic rank
         marks: {
           mse: student.mse,
           th_ise1: student.th_ise1,
@@ -642,17 +665,18 @@ async function handleRequest(request, env) {
         ? await db.prepare(query).all()
         : await db.prepare(query).bind(classFilter).all();
 
-      // Group by subject and get additional details
+      // Group by subject NAME to merge duplicate codes (e.g. Kannada for different branches)
       const subjectMap = {};
       results.results.forEach(row => {
-        if (!subjectMap[row.subject_id]) {
-          subjectMap[row.subject_id] = {
-            subject_code: row.subject_code,
+        const subName = row.subject_name;
+        if (!subjectMap[subName]) {
+          subjectMap[subName] = {
+            subject_code: row.subject_code, // Keep one code as reference
             subject_name: row.subject_name,
             classes: []
           };
         }
-        subjectMap[row.subject_id].classes.push({
+        subjectMap[subName].classes.push({
           class_name: row.class_name,
           avg_marks: parseFloat(row.avg_subject_marks.toFixed(2)),
           rank: row.rank_in_subject
@@ -662,7 +686,7 @@ async function handleRequest(request, env) {
       // For each subject, get enrollment count and top student
       const subjectStats = await Promise.all(
         Object.values(subjectMap).map(async (subject) => {
-          // Get enrollment count and top student
+          // Get enrollment count and top student using NAME
           let studentQuery = `
             SELECT 
               COUNT(*) as enrollment_count,
@@ -670,7 +694,7 @@ async function handleRequest(request, env) {
               MIN(ssl.subject_total) as min_marks
             FROM STUDENT_SUBJECT_LEADERBOARD ssl
             JOIN SUBJECT sub ON ssl.subject_id = sub.subject_id
-            WHERE sub.subject_code = ?
+            WHERE sub.subject_name = ?
           `;
 
           if (classFilter !== 'all') {
@@ -678,8 +702,8 @@ async function handleRequest(request, env) {
           }
 
           const stats = classFilter === 'all'
-            ? await db.prepare(studentQuery).bind(subject.subject_code).first()
-            : await db.prepare(studentQuery).bind(subject.subject_code, classFilter).first();
+            ? await db.prepare(studentQuery).bind(subject.subject_name).first()
+            : await db.prepare(studentQuery).bind(subject.subject_name, classFilter).first();
 
           // Get top student
           let topStudentQuery = `
@@ -687,7 +711,7 @@ async function handleRequest(request, env) {
             FROM STUDENT_SUBJECT_LEADERBOARD ssl
             JOIN STUDENT s ON ssl.student_id = s.student_id
             JOIN SUBJECT sub ON ssl.subject_id = sub.subject_id
-            WHERE sub.subject_code = ?
+            WHERE sub.subject_name = ?
           `;
 
           if (classFilter !== 'all') {
@@ -697,8 +721,8 @@ async function handleRequest(request, env) {
           topStudentQuery += ` ORDER BY ssl.rank_subject_college LIMIT 1`;
 
           const topStudent = classFilter === 'all'
-            ? await db.prepare(topStudentQuery).bind(subject.subject_code).first()
-            : await db.prepare(topStudentQuery).bind(subject.subject_code, classFilter).first();
+            ? await db.prepare(topStudentQuery).bind(subject.subject_name).first()
+            : await db.prepare(topStudentQuery).bind(subject.subject_name, classFilter).first();
 
           // Calculate average across all classes for this subject
           const avgMarks = subject.classes.reduce((sum, c) => sum + c.avg_marks, 0) / subject.classes.length;
