@@ -87,10 +87,10 @@ export default function HomePage() {
   }
 
   return (
-    <div className="min-h-screen px-6 pt-20 md:pt-24 pb-12">
+    <div className="min-h-screen px-6 pt-12 md:pt-16 pb-12">
       {/* Hero Section */}
       <div ref={heroRef} className="max-w-6xl mx-auto text-center mb-8 md:mb-12" style={{ opacity: 0 }}>
-        <h1 className="text-[48px] md:text-[72px] lg:text-[90px] font-display text-ink mb-4 md:mb-6 leading-none tracking-tight">
+        <h1 className="text-[48px] md:text-[72px] lg:text-[90px] font-display text-ink mb-8 md:mb-12 leading-none tracking-tight">
           SemRank
         </h1>
 
