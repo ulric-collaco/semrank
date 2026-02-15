@@ -49,10 +49,10 @@ export default function Hero4() {
 
             {/* CTA Buttons - lower z than search */}
             <div className="flex flex-col sm:flex-row gap-4 w-full max-w-md justify-center px-4 md:px-0 relative z-[1]">
-                <Link to="/4/leaderboard" className="w-full sm:w-auto text-center bg-[#ff69b4] text-black border-4 border-black px-6 py-3 text-lg font-black uppercase shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-x-0.5 hover:translate-y-0.5 transition-all active:shadow-none rotate-1">
+                <Link to="/leaderboard" className="w-full sm:w-auto text-center bg-[#ff69b4] text-black border-4 border-black px-6 py-3 text-lg font-black uppercase shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-x-0.5 hover:translate-y-0.5 transition-all active:shadow-none rotate-1">
                     Check Rank
                 </Link>
-                <Link to="/4/compare" className="w-full sm:w-auto text-center bg-white text-black border-4 border-black px-6 py-3 text-lg font-black uppercase shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-x-0.5 hover:translate-y-0.5 transition-all active:shadow-none rotate-[-1deg] text-nowrap">
+                <Link to="/compare" className="w-full sm:w-auto text-center bg-white text-black border-4 border-black px-6 py-3 text-lg font-black uppercase shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-x-0.5 hover:translate-y-0.5 transition-all active:shadow-none rotate-[-1deg] text-nowrap">
                     Fight Me
                 </Link>
             </div>

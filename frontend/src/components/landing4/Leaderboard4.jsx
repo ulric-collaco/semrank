@@ -20,7 +20,7 @@ export default function Leaderboard4({ data, sortBy = 'sgpa', setSortBy }) {
         <section className="bg-[#f0f0f0] py-24 px-6 border-b-4 border-black">
             <div className="max-w-6xl mx-auto">
                 <div className="flex flex-col items-center mb-12 relative z-10">
-                    <Link to="/4/leaderboard" className="inline-block group relative">
+                    <Link to="/leaderboard" className="inline-block group relative">
                         <div className="absolute inset-0 bg-black translate-x-3 translate-y-3 group-hover:translate-x-1 group-hover:translate-y-1 transition-transform"></div>
                         <div className="relative bg-[#ff69b4] border-4 border-black px-8 py-5 md:px-16 md:py-8 flex items-center justify-center gap-4 hover:-translate-y-1 transition-transform cursor-pointer">
                             <h2 className="text-3xl sm:text-5xl md:text-7xl font-black uppercase text-center m-0 leading-none text-black whitespace-nowrap">

@@ -174,12 +174,23 @@ function App() {
       <Suspense fallback={null}>
 
         <Routes>
-          <Route path="/2" element={<LandingPage2 />} />
+          {/* V4 Pages as Default Routes */}
+          <Route path="/" element={<LandingPage4 />} />
+          <Route path="/leaderboard" element={<LeaderboardPage4 />} />
+          <Route path="/compare" element={<ComparePage4 />} />
+          <Route path="/game" element={<GamePage4 />} />
+
+          {/* Legacy V4 Routes (for backward compatibility during dev) */}
           <Route path="/4" element={<LandingPage4 />} />
           <Route path="/4/leaderboard" element={<LeaderboardPage4 />} />
           <Route path="/4/compare" element={<ComparePage4 />} />
           <Route path="/4/game" element={<GamePage4 />} />
-          <Route path="/*" element={<MainApp />} />
+
+          {/* Legacy V2 Route */}
+          <Route path="/2" element={<LandingPage2 />} />
+
+          {/* Fallback to Home */}
+          <Route path="/*" element={<LandingPage4 />} />
         </Routes>
       </Suspense>
     </BrowserRouter>

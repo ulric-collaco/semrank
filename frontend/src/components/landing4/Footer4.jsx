@@ -1,4 +1,6 @@
 
+import { Link } from 'react-router-dom';
+
 export default function Footer4() {
     return (
         <footer className="bg-black text-white p-12 border-t-4 border-white font-mono">
@@ -9,7 +11,7 @@ export default function Footer4() {
 
                 <div className="grid grid-cols-2 gap-12 font-bold text-lg">
                     <div className="flex flex-col gap-4">
-                        <a href="#" className="hover:text-[#00ffff] hover:translate-x-2 transition-transform">{`->`} HOME</a>
+                        <Link to="/" className="hover:text-[#00ffff] hover:translate-x-2 transition-transform">{`->`} HOME</Link>
                         <a href="#" className="hover:text-[#00ffff] hover:translate-x-2 transition-transform">{`->`} ABOUT</a>
                         <a href="#" className="hover:text-[#00ffff] hover:translate-x-2 transition-transform">{`->`} LEGAL</a>
                     </div>
