@@ -63,7 +63,7 @@ export default function LandingPage4() {
                 // --- 3. GPA Booster (Static from DB - Highest Grade Pointer) ---
                 // Subject with highest GP (10.0): ESSENTIAL COMPUTING SKILLS...
                 setGpaBoosterData({
-                    value: 'ESSENTIAL SKILLS',
+                    value: 'CEP',
                     label: 'GP: 10.0',
                     subtext: 'EASIEST 10 POINTER'
                 });
@@ -85,7 +85,7 @@ export default function LandingPage4() {
     }, [sortBy]);
 
     return (
-        <div className="min-h-screen bg-white text-black font-sans box-border selection:bg-[#ffde00]">
+        <div className="min-h-screen bg-white text-black font-sans box-border selection:bg-[#ffde00] overflow-x-hidden">
             <Navbar4 />
             <div className="relative z-50">
                 <Hero4 />

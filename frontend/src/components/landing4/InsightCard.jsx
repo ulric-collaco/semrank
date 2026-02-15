@@ -177,7 +177,7 @@ function SingleProfileContent({ item, onClick }) {
                 <div className="absolute -bottom-2 -right-2 text-3xl z-20 transform rotate-12 group-hover:rotate-0 transition-transform">
                     {item.value}
                 </div>
-            </div>
+            </div>      
 
             <h4 className="font-black text-xl md:text-2xl uppercase text-center leading-tight mb-2 px-2 line-clamp-2">
                 {item.label}

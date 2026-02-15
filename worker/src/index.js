@@ -553,8 +553,10 @@ async function handleRequest(request, env) {
         return errorResponse('Subject not found', 404);
       }
 
+      const normalizedSubName = subject.subject_name.replace(/\s+/g, ' ').trim();
+
       // Get students from pre-computed subject leaderboard
-      // MODIFIED: Fetch students for ALL subjects with the SAME NAME (handles split subject codes like Kannada)
+      // MODIFIED: Fetch students for ALL subjects with the SAME NORMALIZED NAME (handles split subject codes & spacing issues)
       // Joined STUDENT_SUBJECT (ss) to get attendance_percentage
       let query = `
         SELECT 
@@ -573,7 +575,7 @@ async function handleRequest(request, env) {
         JOIN SUBJECT sub ON ssl.subject_id = sub.subject_id
         JOIN STUDENT_SUBJECT ss ON ssl.student_id = ss.student_id AND ssl.subject_id = ss.subject_id
         LEFT JOIN MARKS_backup m ON ssl.ss_id = m.ss_id
-        WHERE sub.subject_name = (SELECT subject_name FROM SUBJECT WHERE subject_code = ?)
+        WHERE REPLACE(sub.subject_name, '  ', ' ') = ?
       `;
 
       if (classFilter !== 'all') {
@@ -581,8 +583,8 @@ async function handleRequest(request, env) {
       }
 
       const students = classFilter === 'all'
-        ? await db.prepare(query).bind(subjectCode).all()
-        : await db.prepare(query).bind(subjectCode, classFilter).all();
+        ? await db.prepare(query).bind(normalizedSubName).all()
+        : await db.prepare(query).bind(normalizedSubName, classFilter).all();
 
       // Sort & Rank Logic
       const sortBy = url.searchParams.get('sortBy') || 'marks'; // 'marks' or 'attendance'
@@ -680,11 +682,13 @@ async function handleRequest(request, env) {
       // Group by subject NAME to merge duplicate codes (e.g. Kannada for different branches)
       const subjectMap = {};
       results.results.forEach(row => {
-        const subName = row.subject_name;
+        // NORMALIZE NAME: Replace multiple spaces with single space
+        const subName = row.subject_name.replace(/\s+/g, ' ').trim();
+
         if (!subjectMap[subName]) {
           subjectMap[subName] = {
             subject_code: row.subject_code, // Keep one code as reference
-            subject_name: row.subject_name,
+            subject_name: subName, // Use normalized name
             classes: []
           };
         }
@@ -698,7 +702,7 @@ async function handleRequest(request, env) {
       // For each subject, get enrollment count and top student
       const subjectStats = await Promise.all(
         Object.values(subjectMap).map(async (subject) => {
-          // Get enrollment count and top student using NAME
+          // Get enrollment count and top student using NORMALIZED NAME
           let studentQuery = `
             SELECT 
               COUNT(*) as enrollment_count,
@@ -706,7 +710,7 @@ async function handleRequest(request, env) {
               MIN(ssl.subject_total) as min_marks
             FROM STUDENT_SUBJECT_LEADERBOARD ssl
             JOIN SUBJECT sub ON ssl.subject_id = sub.subject_id
-            WHERE sub.subject_name = ?
+            WHERE REPLACE(sub.subject_name, '  ', ' ') = ?
           `;
 
           if (classFilter !== 'all') {
@@ -723,7 +727,7 @@ async function handleRequest(request, env) {
             FROM STUDENT_SUBJECT_LEADERBOARD ssl
             JOIN STUDENT s ON ssl.student_id = s.student_id
             JOIN SUBJECT sub ON ssl.subject_id = sub.subject_id
-            WHERE sub.subject_name = ?
+            WHERE REPLACE(sub.subject_name, '  ', ' ') = ?
           `;
 
           if (classFilter !== 'all') {

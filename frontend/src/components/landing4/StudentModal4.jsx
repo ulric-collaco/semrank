@@ -1,5 +1,6 @@
 
 import { useState, useEffect, useRef, useCallback } from 'react'
+import { createPortal } from 'react-dom'
 import { gsap } from 'gsap'
 import { studentAPI } from '../../utils/api'
 import StudentIDCard4 from './StudentIDCard4'
@@ -57,20 +58,28 @@ export default function StudentModal4({ rollNo, onClose }) {
         return () => document.removeEventListener('pointerdown', onPointerDown, { capture: true })
     }, [handleClose])
 
+    // Animation Effect - Runs once on mount
     useEffect(() => {
-        if (modalRef.current && contentRef.current) {
-            gsap.fromTo(
-                modalRef.current,
-                { opacity: 0 },
-                { opacity: 1, duration: 0.2 }
-            )
-            gsap.fromTo(
-                contentRef.current,
-                { scale: 0.8, opacity: 0, y: 100, rotation: 10 },
-                { scale: 1, opacity: 1, y: 0, rotation: 0, duration: 0.4, ease: 'back.out(1.7)' }
-            )
-        }
+        let ctx = gsap.context(() => {
+            if (modalRef.current && contentRef.current) {
+                gsap.fromTo(
+                    modalRef.current,
+                    { opacity: 0 },
+                    { opacity: 1, duration: 0.2 }
+                )
+                gsap.fromTo(
+                    contentRef.current,
+                    { scale: 0.8, opacity: 0, y: 100, rotation: 10 },
+                    { scale: 1, opacity: 1, y: 0, rotation: 0, duration: 0.4, ease: 'back.out(1.7)' }
+                )
+            }
+        }, modalRef) // Scope to modalRef
 
+        return () => ctx.revert() // Cleanup GSAP on unmount
+    }, [])
+
+    // Event Listeners Effect - Updates if handleClose changes
+    useEffect(() => {
         document.body.style.overflow = 'hidden'
 
         const handleEscape = (e) => {
@@ -102,7 +111,7 @@ export default function StudentModal4({ rollNo, onClose }) {
 
     if (!rollNo) return null
 
-    return (
+    return createPortal(
         <div
             ref={modalRef}
             className="fixed inset-0 z-[5000] flex items-center justify-center p-4 bg-[#ffde00]/90 backdrop-blur-sm"
@@ -120,6 +129,7 @@ export default function StudentModal4({ rollNo, onClose }) {
                     onClose={handleClose}
                 />
             </div>
-        </div>
+        </div>,
+        document.body
     )
 }

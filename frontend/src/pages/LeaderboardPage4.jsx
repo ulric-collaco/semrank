@@ -47,9 +47,11 @@ export default function LeaderboardPage4() {
     const classes = ['all', 'COMPS_A', 'COMPS_B', 'COMPS_C', 'MECH']
     const gridRef = useRef(null)
 
+    const [subjectCodeMap, setSubjectCodeMap] = useState({})
+
     useEffect(() => {
         fetchLeaderboardData()
-    }, [viewScope, metric, filterClass, selectedSubject])
+    }, [viewScope, metric, filterClass, selectedSubject, subjectCodeMap])
 
     useEffect(() => {
         if (viewScope === 'subject' && subjectList.length === 0) {
@@ -63,8 +65,29 @@ export default function LeaderboardPage4() {
             let data = []
             if (viewScope === 'subject') {
                 if (selectedSubject) {
-                    const response = await leaderboardAPI.getTopBySubject(selectedSubject, LIMIT, filterClass, metric)
-                    data = response.students || []
+                    // Get all codes associated with this subject (handling duplicates like "Community Engagement  Project" vs "Community Engagement Project")
+                    const codesToFetch = subjectCodeMap[selectedSubject] || [selectedSubject]
+
+                    // Fetch all variations in parallel
+                    const responses = await Promise.all(
+                        codesToFetch.map(code =>
+                            leaderboardAPI.getTopBySubject(code, LIMIT, filterClass, metric)
+                                .catch(err => {
+                                    console.warn(`Failed to fetch for code ${code}`, err)
+                                    return { students: [] }
+                                })
+                        )
+                    )
+
+                    // Merge results
+                    const allStudents = responses.flatMap(r => r.students || [])
+
+                    // Deduplicate by student_id
+                    const uniqueStudents = Array.from(
+                        new Map(allStudents.map(s => [s.student_id, s])).values()
+                    )
+
+                    data = uniqueStudents
                 }
             } else {
                 if (metric === 'attendance') {
@@ -85,10 +108,39 @@ export default function LeaderboardPage4() {
     const fetchSubjects = async () => {
         try {
             const response = await statsAPI.getSubjectStats('all')
-            const subs = response.subjects || []
-            setSubjectList(subs)
-            if (subs.length > 0 && !selectedSubject) {
-                setSelectedSubject(subs[0].subject_code)
+            const rawSubs = response.subjects || []
+
+            // Deduplicate and Map Codes
+            const uniqueMap = {}
+            const codeMapping = {}
+
+            rawSubs.forEach(sub => {
+                // Normalize name: trim and reduce multiple spaces to single space
+                const normalizedName = sub.subject_name.trim().replace(/\s+/g, ' ')
+
+                if (!uniqueMap[normalizedName]) {
+                    uniqueMap[normalizedName] = {
+                        ...sub,
+                        subject_name: normalizedName // Use clean name
+                    }
+                    // Initialize mapping with this code
+                    codeMapping[sub.subject_code] = [sub.subject_code]
+                } else {
+                    // Found a duplicate! Add this code to the existing entry's mapping
+                    const existingCode = uniqueMap[normalizedName].subject_code
+                    if (!codeMapping[existingCode].includes(sub.subject_code)) {
+                        codeMapping[existingCode].push(sub.subject_code)
+                    }
+                }
+            })
+
+            const dedupedSubs = Object.values(uniqueMap).sort((a, b) => a.subject_name.localeCompare(b.subject_name))
+
+            setSubjectList(dedupedSubs)
+            setSubjectCodeMap(codeMapping)
+
+            if (dedupedSubs.length > 0 && !selectedSubject) {
+                setSelectedSubject(dedupedSubs[0].subject_code)
             }
         } catch (error) {
             console.error('Failed to fetch subjects:', error)
