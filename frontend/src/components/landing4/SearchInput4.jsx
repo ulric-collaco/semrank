@@ -78,7 +78,7 @@ export default function SearchInput4() {
                 </div>
 
                 {showResults && (query.length >= 2) && (
-                    <div className="absolute left-4 right-4 top-[calc(100%+24px)] bg-white border-4 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] max-h-[60vh] overflow-y-auto z-50">
+                    <div className="absolute left-4 right-4 top-[calc(100%+24px)] bg-white border-4 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] max-h-[60vh] overflow-y-auto z-[100] transform -rotate-1 origin-top transition-transform duration-300 hover:rotate-0">
                         {loading ? (
                             <div className="p-4 md:p-6 text-center font-black animate-pulse bg-[#ffde00] text-lg md:text-xl border-b-4 border-black">
                                 SCANNING DATABASE...
