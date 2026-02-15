@@ -78,18 +78,40 @@ export default function StudentIDCard4({ student, loading, error, onClose }) {
             { name: 'P2', value: activeSubject.pr_ise2 || 0 },
         ];
 
+        // Ensure maxMarks is reasonable (at least 20 to avoid huge bars for small marks)
+        const safeMaxMarks = Math.max(maxMarks, 50);
+
         return (
-            <div style={{ width: '100%', height: 200, maxWidth: '100%' }}>
+            <div style={{ width: '100%', height: '100%', minHeight: '200px' }}>
                 <ResponsiveContainer width="100%" height="100%">
-                    <BarChart data={data} margin={{ top: 20, right: 0, left: -25, bottom: 0 }}>
+                    <BarChart data={data} margin={{ top: 25, right: 10, left: -20, bottom: 0 }}>
                         <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#000" strokeOpacity={0.1} />
-                        <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fill: '#000', fontSize: 12, fontWeight: 900, fontFamily: 'monospace' }} dy={10} />
-                        <YAxis axisLine={false} tickLine={false} tick={{ fill: '#000', fontSize: 12, fontWeight: 700, fontFamily: 'monospace' }} domain={[0, maxMarks]} />
-                        <Bar dataKey="value" fill="#000" stroke="#000" strokeWidth={2}>
+                        <XAxis
+                            dataKey="name"
+                            axisLine={false}
+                            tickLine={false}
+                            tick={{ fill: '#000', fontSize: 10, fontWeight: 900, fontFamily: 'monospace' }}
+                            dy={10}
+                        />
+                        <YAxis
+                            axisLine={false}
+                            tickLine={false}
+                            tick={{ fill: '#000', fontSize: 10, fontWeight: 700, fontFamily: 'monospace' }}
+                            domain={[0, safeMaxMarks]}
+                            allowDecimals={false}
+                        />
+                        <Bar dataKey="value" fill="#000" stroke="#000" strokeWidth={2} radius={[0, 0, 0, 0]}>
                             {data.map((entry, index) => (
                                 <Cell key={`cell-${index}`} fill={index % 2 === 0 ? '#ff69b4' : '#00ffff'} />
                             ))}
-                            <LabelList dataKey="value" position="top" fill="#000" fontSize={12} fontWeight={900} formatter={(val) => val > 0 ? val : ''} />
+                            <LabelList
+                                dataKey="value"
+                                position="top"
+                                fill="#000"
+                                fontSize={10}
+                                fontWeight={900}
+                                formatter={(val) => val > 0 ? val : ''}
+                            />
                         </Bar>
                     </BarChart>
                 </ResponsiveContainer>
@@ -161,7 +183,7 @@ export default function StudentIDCard4({ student, loading, error, onClose }) {
                             </div>
                             <div className="text-right">
                                 <div className="text-2xl font-black">{sub.total_marks}</div>
-                                <div className="text-xs font-bold">/{sub.maxMarks || 100}</div>
+                                <div className="text-xs font-bold">/{sub.maxMarks || 50}</div>
                             </div>
                         </div>
                     ))}
@@ -202,11 +224,11 @@ export default function StudentIDCard4({ student, loading, error, onClose }) {
                                 <div className="flex gap-4">
                                     <div className="text-right">
                                         <div className="text-xs font-bold text-gray-500 uppercase">Total Marks</div>
-                                        <div className="text-2xl font-black">{activeSubject.total_marks}<span className="text-sm text-gray-400">/{activeSubject.maxMarks || 100}</span></div>
+                                        <div className="text-2xl font-black">{activeSubject.total_marks}<span className="text-sm text-gray-400">/{activeSubject.maxMarks || 50}</span></div>
                                     </div>
                                     <div className="text-right pl-4 border-l-2 border-black">
                                         <div className="text-xs font-bold text-gray-500 uppercase">Subject Rank</div>
-                                        <div className="text-2xl font-black text-[#ff69b4]">#{activeSubject.rank || '-'}</div>
+                                        <div className={`text-2xl font-black ${activeSubject.rank <= 3 ? 'text-[#ffde00] drop-shadow-[2px_2px_0px_rgba(0,0,0,1)]' : 'text-[#ff69b4]'}`}>#{activeSubject.rank || '-'}</div>
                                     </div>
                                 </div>
                             </div>
@@ -214,7 +236,7 @@ export default function StudentIDCard4({ student, loading, error, onClose }) {
                             <div className="h-[250px] w-full">
                                 <ViewRechartsBarChart
                                     activeSubject={activeSubject}
-                                    maxMarks={100}
+                                    maxMarks={Math.max(activeSubject.ese || 0, activeSubject.mse || 0, activeSubject.th_ise1 || 0, 50)}
                                 />
                             </div>
                         </div>
@@ -225,45 +247,75 @@ export default function StudentIDCard4({ student, loading, error, onClose }) {
             {/* Analysis Overlay */}
             {showAnalysis && analysisData && (
                 <div className="absolute inset-0 z-[70] bg-[#ffde00] flex flex-col animate-in slide-in-from-bottom-full duration-300">
-                    <div className="border-b-4 border-black p-4 flex justify-between items-center bg-white">
-                        <h2 className="text-2xl font-black uppercase">SGPI BREAKDOWN</h2>
+                    <div className="border-b-4 border-black p-4 flex justify-between items-center bg-white sticky top-0 z-10 shadow-md">
+                        <div className="flex flex-col">
+                            <h2 className="text-xl md:text-2xl font-black uppercase">SGPI BREAKDOWN</h2>
+                            <a href="https://frcrce.ac.in/wp-content/uploads/2025/11/Academic_Rule_Book_FrCRCE_2024_25.pdf" target="_blank" rel="noopener noreferrer" className="text-xs md:text-sm font-bold underline hover:text-[#ff69b4]">
+                                Fr. CRCE Academic Rule Book 2024-25 ↗
+                            </a>
+                        </div>
                         <button onClick={() => setShowAnalysis(false)} className="border-2 border-black p-1 hover:bg-black hover:text-white transition-colors"><X size={24} /></button>
                     </div>
+
                     <div className="p-4 md:p-8 overflow-y-auto flex-1">
+                        {/* Double Minor Warning */}
+                        {analysisData.dropped && analysisData.dropped.length > 0 && (
+                            <div className="bg-orange-100 border-4 border-black p-4 mb-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+                                <p className="font-black text-orange-600 uppercase mb-2">⚠ Double Minor — Not Counted in SGPI</p>
+                                <div className="space-y-1">
+                                    {analysisData.dropped.map((d, idx) => (
+                                        <div key={idx} className="flex justify-between font-bold text-sm border-b border-black/10 pb-1 last:border-0">
+                                            <span>{d.subject}</span>
+                                            <span className="bg-orange-200 px-2 uppercase text-xs border border-black">Excluded</span>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
+
                         <div className="bg-white border-4 border-black p-6 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] mb-8 text-center">
                             <div className="text-sm font-bold uppercase mb-2">CALCULATED SGPI</div>
                             <div className="text-6xl md:text-8xl font-black text-[#ff69b4] drop-shadow-[4px_4px_0px_rgba(0,0,0,1)]">
                                 {analysisData.sgpi}
                             </div>
-                            <div className="flex justify-center gap-8 mt-4 border-t-4 border-black pt-4">
-                                <div>
-                                    <div className="text-xs font-bold text-gray-500">TOTAL POINTERS</div>
-                                    <div className="text-2xl font-black">{analysisData.totalWeightedPoints}</div>
+
+                            {/* Formula Visualization */}
+                            <div className="mt-6 pt-6 border-t-4 border-black">
+                                <p className="font-bold text-xs uppercase mb-4 text-gray-500">Applied Formula (Section 16.2)</p>
+                                <div className="flex flex-col md:flex-row items-center justify-center gap-4 text-xl md:text-2xl font-black">
+                                    <div className="flex flex-col items-center">
+                                        <span className="border-b-4 border-black px-2">{analysisData.totalWeightedPoints}</span>
+                                        <span className="px-2">{analysisData.totalCredits}</span>
+                                    </div>
+                                    <span className="text-4xl">=</span>
+                                    <span className="text-[#00ffff] bg-black px-2 drop-shadow-[4px_4px_0px_rgba(0,0,0,0.5)]">{analysisData.sgpi}</span>
                                 </div>
-                                <div>
-                                    <div className="text-xs font-bold text-gray-500">TOTAL CREDITS</div>
-                                    <div className="text-2xl font-black">{analysisData.totalCredits}</div>
+                                <div className="flex gap-4 justify-center mt-4 text-xs font-bold text-gray-500 uppercase">
+                                    <span>Σ (Credits × Grade Points)</span>
+                                    <span>÷</span>
+                                    <span>Σ Credits</span>
                                 </div>
                             </div>
                         </div>
 
-                        <div className="space-y-2">
+                        <div className="space-y-2 pb-12">
+                            <div className="flex justify-between items-center border-b-4 border-black pb-2 mb-4 bg-white p-2 sticky top-[80px] z-10">
+                                <span className="font-black text-sm uppercase w-[40%]">Subject</span>
+                                <div className="flex gap-2 text-right w-[60%] justify-end">
+                                    <span className="font-black text-xs uppercase w-12">Marks</span>
+                                    <span className="font-black text-xs uppercase w-12">GP</span>
+                                    <span className="font-black text-xs uppercase w-12">C</span>
+                                    <span className="font-black text-xs uppercase w-16">CxGP</span>
+                                </div>
+                            </div>
                             {analysisData.breakdown.map((row, idx) => (
-                                <div key={idx} className="flex justify-between items-center border-b-2 border-black pb-2 border-dashed">
-                                    <span className="font-bold text-sm uppercase truncate max-w-[200px]">{row.subject}</span>
-                                    <div className="flex gap-4 text-right">
-                                        <div className="w-16">
-                                            <div className="text-[10px] text-gray-500">MARKS</div>
-                                            <div className="font-bold">{row.marks}</div>
-                                        </div>
-                                        <div className="w-16">
-                                            <div className="text-[10px] text-gray-500">GP</div>
-                                            <div className={`font-bold ${row.gradePoint === 0 ? 'text-red-600' : ''}`}>{row.gradePoint}</div>
-                                        </div>
-                                        <div className="w-16">
-                                            <div className="text-[10px] text-gray-500">C x GP</div>
-                                            <div className="font-black">{row.weightedPoint}</div>
-                                        </div>
+                                <div key={idx} className="flex justify-between items-center border-b-2 border-black pb-2 border-dashed px-2 bg-white/50 hover:bg-white transition-colors">
+                                    <span className="font-bold text-xs md:text-sm uppercase truncate w-[40%]" title={row.subject}>{row.subject}</span>
+                                    <div className="flex gap-2 text-right w-[60%] justify-end">
+                                        <div className="w-12 font-mono font-bold">{row.marks}</div>
+                                        <div className={`w-12 font-mono font-bold ${row.gradePoint === 0 ? 'text-red-600 bg-red-100' : ''}`}>{row.gradePoint}</div>
+                                        <div className="w-12 font-mono font-bold">{row.credits}</div>
+                                        <div className="w-16 font-mono font-black bg-[#ffde00] border-2 border-black text-center">{row.weightedPoint}</div>
                                     </div>
                                 </div>
                             ))}

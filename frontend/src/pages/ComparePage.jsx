@@ -341,7 +341,7 @@ export default function ComparePage() {
                 className={`
                   px-4 py-2 rounded-lg text-sm font-semibold transition-all border
                   ${selectedClass === cls
-                    ? 'bg-accent text-ink border-accent shadow-bubble-hover'
+                    ? 'bg-accent text-black border-accent shadow-bubble-hover'
                     : 'bg-white/5 text-body border-white/10 hover:bg-white/10 hover:text-ink'
                   }
                 `}
@@ -383,7 +383,7 @@ export default function ComparePage() {
                         </div>
                       </div>
                       {isSelected && (
-                        <div className="bg-accent text-white rounded-full p-1">
+                        <div className="bg-accent text-black rounded-full p-1">
                           <Check className="w-3 h-3" />
                         </div>
                       )}
@@ -434,7 +434,7 @@ export default function ComparePage() {
                       dataKey="subject"
                       tick={<CustomPolarAngleAxisTick />}
                     />
-                    <PolarRadiusAxis angle={30} domain={[0, 100]} tick={false} axisLine={false} />
+                    <PolarRadiusAxis angle={30} domain={[0, 50]} tick={false} axisLine={false} />
                     {selectedStudents.map((student, idx) => (
                       <Radar
                         key={student.roll_no}
@@ -488,6 +488,8 @@ export default function ComparePage() {
                           tick={{ fill: '#64748b', fontSize: 11 }}
                           axisLine={false}
                           tickLine={false}
+                          domain={[0, 50]}
+                          allowDecimals={false}
                         />
                         <ChartTooltip
                           cursor={{ fill: 'rgba(255,255,255,0.05)' }}

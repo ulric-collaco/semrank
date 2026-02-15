@@ -345,7 +345,7 @@ export default function ComparePage4() {
                                     <RadarChart cx="50%" cy="50%" outerRadius="65%" data={radarData}>
                                         <PolarGrid stroke="#000" strokeWidth={2} />
                                         <PolarAngleAxis dataKey="subject" tick={<CustomPolarAngleAxisTick />} />
-                                        <PolarRadiusAxis angle={30} domain={[0, 100]} tick={false} axisLine={false} />
+                                        <PolarRadiusAxis angle={30} domain={[0, 50]} tick={false} axisLine={false} />
                                         {selectedStudents.map((student, idx) => (
                                             <Radar
                                                 key={student.roll_no}
@@ -381,7 +381,7 @@ export default function ComparePage4() {
                                             <BarChart data={data} margin={{ top: 20, right: 10, left: -20, bottom: 5 }}>
                                                 <CartesianGrid strokeDasharray="3 3" stroke="#000" strokeOpacity={0.1} vertical={false} />
                                                 <XAxis dataKey="exam" tick={{ fill: '#000', fontSize: 11, fontWeight: 700, fontFamily: 'monospace' }} axisLine={{ stroke: '#000', strokeWidth: 2 }} tickLine={false} />
-                                                <YAxis tick={{ fill: '#000', fontSize: 11, fontFamily: 'monospace' }} axisLine={{ stroke: '#000', strokeWidth: 2 }} tickLine={false} />
+                                                <YAxis tick={{ fill: '#000', fontSize: 11, fontFamily: 'monospace' }} axisLine={{ stroke: '#000', strokeWidth: 2 }} tickLine={false} domain={[0, 50]} allowDecimals={false} />
                                                 <ChartTooltip
                                                     cursor={{ fill: 'rgba(0,0,0,0.1)' }}
                                                     content={

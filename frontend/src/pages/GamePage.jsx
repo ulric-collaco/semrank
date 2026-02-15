@@ -151,7 +151,7 @@ export default function GamePage() {
             disabled={gameState === 'playing'}
             className={`px-6 py-3 rounded-bubble font-medium transition-all duration-300
               ${metric === 'cgpa'
-                ? 'bg-accent text-ink shadow-bubble-hover'
+                ? 'bg-accent text-black shadow-bubble-hover'
                 : 'bubble hover:scale-105'
               }
               ${gameState === 'playing' ? 'opacity-50 cursor-not-allowed' : ''}`}
@@ -163,7 +163,7 @@ export default function GamePage() {
             disabled={gameState === 'playing'}
             className={`px-6 py-3 rounded-bubble font-medium transition-all duration-300
               ${metric === 'attendance'
-                ? 'bg-accent text-ink shadow-bubble-hover'
+                ? 'bg-accent text-black shadow-bubble-hover'
                 : 'bubble hover:scale-105'
               }
               ${gameState === 'playing' ? 'opacity-50 cursor-not-allowed' : ''}`}
@@ -175,7 +175,7 @@ export default function GamePage() {
             disabled={gameState === 'playing'}
             className={`px-6 py-3 rounded-bubble font-medium transition-all duration-300
               ${metric === 'subject'
-                ? 'bg-accent text-ink shadow-bubble-hover'
+                ? 'bg-accent text-black shadow-bubble-hover'
                 : 'bubble hover:scale-105'
               }
               ${gameState === 'playing' ? 'opacity-50 cursor-not-allowed' : ''}`}
@@ -282,7 +282,7 @@ export default function GamePage() {
               <div className="flex gap-4">
                 <button
                   onClick={() => handleGuess('higher')}
-                  className="flex-1 px-6 py-4 bg-accent text-ink rounded-bubble font-semibold
+                  className="flex-1 px-6 py-4 bg-accent text-black rounded-bubble font-semibold
                            shadow-bubble hover:shadow-bubble-hover hover:scale-105
                            active:scale-95 transition-all duration-300"
                 >
@@ -290,7 +290,7 @@ export default function GamePage() {
                 </button>
                 <button
                   onClick={() => handleGuess('lower')}
-                  className="flex-1 px-6 py-4 bg-accent text-ink rounded-bubble font-semibold
+                  className="flex-1 px-6 py-4 bg-accent text-black rounded-bubble font-semibold
                            shadow-bubble hover:shadow-bubble-hover hover:scale-105
                            active:scale-95 transition-all duration-300"
                 >
@@ -316,7 +316,7 @@ export default function GamePage() {
               <p className="text-lg text-body">Final Score: {score}</p>
               <button
                 onClick={resetGame}
-                className="px-8 py-4 bg-accent text-ink rounded-bubble font-semibold
+                className="px-8 py-4 bg-accent text-black rounded-bubble font-semibold
                        shadow-bubble hover:shadow-bubble-hover hover:scale-105
                        active:scale-95 transition-all duration-300"
               >
@@ -329,7 +329,7 @@ export default function GamePage() {
 
       {/* Footer */}
       <footer className="mt-24 pb-12 text-center font-sans">
-        <div className="inline-block p-8 rounded-3xl bg-white/5 border border-white/10 backdrop-blur-md shadow-2xl hover:bg-white/10 transition-colors duration-300 max-w-lg w-full mx-auto">
+        <div className="inline-block p-8 rounded-3xl bg-black/40 border border-white/10 backdrop-blur-md shadow-2xl hover:bg-black/60 transition-colors duration-300 max-w-lg w-full mx-auto">
 
           <div className="mb-6">
             <p className="text-body text-sm uppercase tracking-widest font-bold mb-2 opacity-60">Created By</p>

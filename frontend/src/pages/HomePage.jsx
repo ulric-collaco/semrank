@@ -202,7 +202,7 @@ export default function HomePage() {
           {quickLeaderboard.map((student, index) => (
             <div
               key={student.student_id}
-              className="group relative bg-white/5 border border-white/10 hover:bg-white/10 hover:border-accent/30 p-3 rounded-2xl flex items-center gap-4 transition-all duration-300 cursor-pointer overflow-hidden shadow-lg hover:shadow-accent/10"
+              className="group relative bg-black/40 border border-white/10 hover:bg-black/60 hover:border-accent/30 p-3 rounded-2xl flex items-center gap-4 transition-all duration-300 cursor-pointer overflow-hidden shadow-lg hover:shadow-accent/10"
               onClick={() => setSelectedStudentRoll(student.roll_no)}
             >
               {/* Rank Badge - Integrated nicely */}
@@ -286,7 +286,7 @@ export default function HomePage() {
       <div className="max-w-6xl mx-auto flex flex-col sm:flex-row gap-4 justify-center">
         <a
           href="#leaderboard"
-          className="px-8 py-4 bg-violet-600/80 hover:bg-violet-500 border border-violet-400/30 backdrop-blur-sm text-white rounded-bubble font-semibold text-lg text-center
+          className="px-8 py-4 bg-violet-600/80 hover:bg-violet-700 border border-violet-400/30 backdrop-blur-sm text-white rounded-bubble font-semibold text-lg text-center
                    hover:scale-105 shadow-lg shadow-violet-500/20
                    active:scale-95 transition-all duration-300"
         >
@@ -294,7 +294,7 @@ export default function HomePage() {
         </a>
         <a
           href="#compare"
-          className="px-8 py-4 bg-blue-600/80 hover:bg-blue-500 border border-blue-400/30 backdrop-blur-sm text-white rounded-bubble font-semibold text-lg text-center
+          className="px-8 py-4 bg-blue-600/80 hover:bg-blue-700 border border-blue-400/30 backdrop-blur-sm text-white rounded-bubble font-semibold text-lg text-center
                    hover:scale-105 shadow-lg shadow-blue-500/20
                    active:scale-95 transition-all duration-300"
         >
@@ -302,7 +302,7 @@ export default function HomePage() {
         </a>
         <a
           href="#game"
-          className="px-8 py-4 bg-cyan-600/80 hover:bg-cyan-500 border border-cyan-400/30 backdrop-blur-sm text-white rounded-bubble font-semibold text-lg text-center
+          className="px-8 py-4 bg-cyan-600/80 hover:bg-cyan-700 border border-cyan-400/30 backdrop-blur-sm text-white rounded-bubble font-semibold text-lg text-center
                    hover:scale-105 shadow-lg shadow-cyan-500/20
                    active:scale-95 transition-all duration-300"
         >
@@ -315,7 +315,7 @@ export default function HomePage() {
 
       {/* Footer */}
       <footer className="mt-24 pb-12 text-center font-sans">
-        <div className="inline-block p-8 rounded-3xl bg-white/5 border border-white/10 backdrop-blur-md shadow-2xl hover:bg-white/10 transition-colors duration-300 max-w-lg w-full mx-auto">
+        <div className="inline-block p-8 rounded-3xl bg-black/40 border border-white/10 backdrop-blur-md shadow-2xl hover:bg-black/60 transition-colors duration-300 max-w-lg w-full mx-auto">
 
           <div className="mb-6">
             <p className="text-body text-sm uppercase tracking-widest font-bold mb-2 opacity-60">Created By</p>

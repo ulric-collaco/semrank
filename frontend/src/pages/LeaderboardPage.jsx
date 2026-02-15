@@ -186,7 +186,7 @@ export default function LeaderboardPage() {
               <div className="col-span-1 text-center">Rank</div>
               <div className="col-span-5">Student</div>
               <div className="col-span-3 text-right">
-                {metric === 'attendance' ? 'Attendance' : (viewScope === 'subject' ? 'Marks / 100' : 'SGPI')}
+                {metric === 'attendance' ? 'Attendance' : (viewScope === 'subject' ? 'Marks / 50' : 'SGPI')}
               </div>
               <div className="col-span-3 text-right">Class</div>
             </div>

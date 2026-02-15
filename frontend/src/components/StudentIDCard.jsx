@@ -60,9 +60,9 @@ export default function StudentIDCard({ student, loading, error, onClose }) {
     const activeSubject = selectedSubjectIndex !== null ? subjects[selectedSubjectIndex] : null;
 
     const getMaxMark = () => {
-        if (!activeSubject) return 25;
+        if (!activeSubject) return 50;
         const marks = [activeSubject.ese || 0, activeSubject.mse || 0, activeSubject.pr_ise1 || 0, activeSubject.pr_ise2 || 0, activeSubject.th_ise1 || 0, activeSubject.th_ise2 || 0];
-        return Math.max(...marks, 25);
+        return Math.max(...marks, 50);
     };
     const maxMark = getMaxMark();
 
