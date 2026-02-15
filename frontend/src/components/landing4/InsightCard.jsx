@@ -44,8 +44,10 @@ function RivalryContent({ data, onClick }) {
                 <div className="w-16 h-16 md:w-20 md:h-20 border-3 border-black rounded-full overflow-hidden bg-gray-200 mb-2 relative shadow-sm group-hover/p1:shadow-md transition-all">
                     <img src={`/student_faces/${p1.roll_no}.png`} className="w-full h-full object-cover" onError={(e) => e.target.style.display = 'none'} alt={p1.name} />
                 </div>
-                <div className="font-bold text-xs md:text-sm uppercase text-center leading-tight line-clamp-2 h-8 flex items-center">{p1.name}</div>
-                <div className="text-[10px] font-black bg-black text-white px-1.5 py-0.5 mt-1">{p1.class || 'N/A'}</div>
+                <div className="h-10 w-full flex items-center justify-center mb-1">
+                    <span className="font-bold text-[10px] md:text-sm uppercase text-center leading-tight line-clamp-2 w-full">{p1.name}</span>
+                </div>
+                <div className="text-[10px] font-black bg-black text-white px-1.5 py-0.5">{p1.class || 'N/A'}</div>
                 <div className="font-black text-lg md:text-xl mt-1">{p1.cgpa}</div>
             </div>
 
@@ -65,8 +67,10 @@ function RivalryContent({ data, onClick }) {
                 <div className="w-16 h-16 md:w-20 md:h-20 border-3 border-black rounded-full overflow-hidden bg-gray-200 mb-2 relative shadow-sm group-hover/p2:shadow-md transition-all">
                     <img src={`/student_faces/${p2.roll_no}.png`} className="w-full h-full object-cover" onError={(e) => e.target.style.display = 'none'} alt={p2.name} />
                 </div>
-                <div className="font-bold text-xs md:text-sm uppercase text-center leading-tight line-clamp-2 h-8 flex items-center">{p2.name}</div>
-                <div className="text-[10px] font-black bg-black text-white px-1.5 py-0.5 mt-1">{p2.class || 'N/A'}</div>
+                <div className="h-10 w-full flex items-center justify-center mb-1">
+                    <span className="font-bold text-[10px] md:text-sm uppercase text-center leading-tight line-clamp-2 w-full">{p2.name}</span>
+                </div>
+                <div className="text-[10px] font-black bg-black text-white px-1.5 py-0.5">{p2.class || 'N/A'}</div>
                 <div className="font-black text-lg md:text-xl mt-1">{p2.cgpa}</div>
             </div>
         </div>
@@ -177,7 +181,7 @@ function SingleProfileContent({ item, onClick }) {
                 <div className="absolute -bottom-2 -right-2 text-3xl z-20 transform rotate-12 group-hover:rotate-0 transition-transform">
                     {item.value}
                 </div>
-            </div>      
+            </div>
 
             <h4 className="font-black text-xl md:text-2xl uppercase text-center leading-tight mb-2 px-2 line-clamp-2">
                 {item.label}
