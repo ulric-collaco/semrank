@@ -1,9 +1,10 @@
 
 import React, { useState, useEffect, useMemo } from 'react';
 import {
-  BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend,
+  BarChart, Bar, XAxis, YAxis, CartesianGrid, Legend,
   RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar
 } from 'recharts';
+import { ChartContainer, ChartTooltip, ChartTooltipContent, ChartLegend, ChartLegendContent } from '@/components/ui/chart';
 import { ArrowLeft, Users, X, Search, Check } from 'lucide-react';
 import { studentAPI } from '../utils/api';
 import { formatClassName } from '../utils/format';
@@ -34,26 +35,7 @@ function getElectiveGroup(subjectName) {
   return null;
 }
 
-const CustomTooltip = ({ active, payload, label }) => {
-  if (active && payload && payload.length) {
-    return (
-      <div className="bg-[#1a1a2e]/95 p-3 rounded-lg border border-white/10 text-xs text-ink shadow-none">
-        <p className="font-bold mb-2 border-b border-white/10 pb-1">{label}</p>
-        {payload.map((entry, index) => (
-          <div key={index} className="flex items-center gap-2 mb-1">
-            <div
-              className="w-2 h-2 rounded-full"
-              style={{ backgroundColor: entry.color }}
-            />
-            <span className="font-medium text-body">{entry.name}:</span>
-            <span className="font-bold text-ink ml-auto">{entry.value}</span>
-          </div>
-        ))}
-      </div>
-    );
-  }
-  return null;
-};
+// CustomTooltip removed in favor of ChartTooltipContent
 
 const CustomPolarAngleAxisTick = ({ payload, x, y, cx, cy, ...rest }) => {
   // Use only the first non-trivial word or acronym for cleaner mobile view
@@ -139,7 +121,7 @@ export default function ComparePage() {
 
     if (isSelected) {
       setSelectedStudents(prev => prev.filter(s => s.roll_no !== student.roll_no));
-    } else if (selectedStudents.length < 4) {
+    } else if (selectedStudents.length < 2) {
       let studentDetail = student;
       if (!student.subjects) {
         try {
@@ -217,7 +199,7 @@ export default function ComparePage() {
           if (studentSubject) {
             marks = student.subjectsObj[studentSubject][examType] || 0;
           }
-          dataPoint[student.name] = marks;
+          dataPoint[`s_${student.roll_no}`] = marks;
         });
         return dataPoint;
       });
@@ -293,7 +275,7 @@ export default function ComparePage() {
         if (match) {
           total = student.subjectsObj[match]['Total'] || 0;
         }
-        dataPoint[student.name] = total;
+        dataPoint[`s_${student.roll_no}`] = total;
       });
 
       // valid if at least one student has this subject (even if marks are 0, checking if subject exists in curriculum)
@@ -304,6 +286,16 @@ export default function ComparePage() {
 
     return dataPoints;
 
+  }, [selectedStudents]);
+
+  const chartConfig = useMemo(() => {
+    return selectedStudents.reduce((acc, student, idx) => {
+      acc[`s_${student.roll_no}`] = {
+        label: student.name,
+        color: THEME_COLORS[idx % THEME_COLORS.length]
+      };
+      return acc;
+    }, {});
   }, [selectedStudents]);
 
   // Common container style - flat, no shadow, subtle border
@@ -321,7 +313,7 @@ export default function ComparePage() {
           <div className={`${containerClass} px-4 py-2 flex items-center gap-2 !p-2 !rounded-lg`}>
             <Users className="w-5 h-5 text-accent" />
             <span className="font-semibold text-ink">
-              {selectedStudents.length} / 4 Selected
+              {selectedStudents.length} / 2 Selected
             </span>
           </div>
         </div>
@@ -365,7 +357,7 @@ export default function ComparePage() {
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 max-h-[60vh] overflow-y-auto pr-2 custom-scrollbar mt-6">
               {filteredStudents.map((student) => {
                 const isSelected = selectedStudents.some(s => s.roll_no === student.roll_no);
-                const isDisabled = !isSelected && selectedStudents.length >= 4;
+                const isDisabled = !isSelected && selectedStudents.length >= 2;
 
                 return (
                   <button
@@ -435,7 +427,7 @@ export default function ComparePage() {
                 Overall Performance
               </h2>
               <div className="h-[350px] sm:h-[450px] w-full -ml-[10px] sm:ml-0">
-                <ResponsiveContainer width="100%" height="100%">
+                <ChartContainer config={chartConfig} className="h-full w-full aspect-auto">
                   <RadarChart cx="50%" cy="50%" outerRadius="75%" data={radarData}>
                     <PolarGrid stroke="#94a3b8" strokeOpacity={0.4} />
                     <PolarAngleAxis
@@ -447,16 +439,16 @@ export default function ComparePage() {
                       <Radar
                         key={student.roll_no}
                         name={student.name}
-                        dataKey={student.name}
-                        stroke={THEME_COLORS[idx % THEME_COLORS.length]}
-                        fill={THEME_COLORS[idx % THEME_COLORS.length]}
+                        dataKey={`s_${student.roll_no}`}
+                        stroke={`var(--color-s_${student.roll_no})`}
+                        fill={`var(--color-s_${student.roll_no})`}
                         fillOpacity={0.4}
                         strokeWidth={3}
                       />
                     ))}
-                    <Tooltip content={<CustomTooltip />} />
+                    <ChartTooltip content={<ChartTooltipContent />} />
                   </RadarChart>
-                </ResponsiveContainer>
+                </ChartContainer>
               </div>
 
               {/* Custom Legend to prevent overlap */}
@@ -474,41 +466,45 @@ export default function ComparePage() {
             </div>
 
             {/* Subject-wise Bar Charts */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <div className="grid grid-cols-1 gap-8">
               {comparisonData && Object.entries(comparisonData).map(([subject, data], chartIdx) => (
                 <div key={subject} className={`${containerClass} flex flex-col`}>
                   <h3 className="text-lg font-bold mb-4 text-center text-ink truncate relative" title={subject}>
                     {subject}
                     <div className="h-0.5 w-12 bg-white/10 mx-auto mt-2 rounded-full"></div>
                   </h3>
-                  <div className="h-[250px] w-full flex-grow">
-                    <ResponsiveContainer width="100%" height="100%">
-                      <BarChart data={data} margin={{ top: 20, right: 10, left: -20, bottom: 0 }}>
-                        <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#94a3b8" strokeOpacity={0.2} />
+                  <div className="h-[400px] w-full flex-grow">
+                    <ChartContainer config={chartConfig} className="h-full w-full aspect-auto">
+                      <BarChart data={data} margin={{ top: 20, right: 0, left: -20, bottom: 0 }} barGap={2}>
+                        <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#94a3b8" strokeOpacity={0.1} />
                         <XAxis
                           dataKey="exam"
-                          tick={{ fill: '#cbd5e1', fontSize: 12 }}
+                          tick={{ fill: '#94a3b8', fontSize: 11, fontWeight: 500 }}
                           axisLine={false}
                           tickLine={false}
+                          dy={10}
                         />
                         <YAxis
-                          tick={{ fill: '#cbd5e1', fontSize: 12 }}
+                          tick={{ fill: '#64748b', fontSize: 11 }}
                           axisLine={false}
                           tickLine={false}
                         />
-                        <Tooltip content={<CustomTooltip />} cursor={{ fill: 'rgba(255,255,255,0.02)' }} />
-                        <Legend iconType="circle" wrapperStyle={{ paddingTop: '10px' }} />
+                        <ChartTooltip
+                          cursor={{ fill: 'rgba(255,255,255,0.05)' }}
+                          content={<ChartTooltipContent />}
+                        />
+                        <ChartLegend content={<ChartLegendContent />} />
                         {selectedStudents.map((student, idx) => (
                           <Bar
                             key={student.roll_no}
-                            dataKey={student.name}
-                            fill={THEME_COLORS[idx % THEME_COLORS.length]}
-                            radius={[4, 4, 0, 0]} // Keep rounded top
-                            maxBarSize={50}
+                            dataKey={`s_${student.roll_no}`}
+                            fill={`var(--color-s_${student.roll_no})`}
+                            radius={[4, 4, 0, 0]}
+                            maxBarSize={60}
                           />
                         ))}
                       </BarChart>
-                    </ResponsiveContainer>
+                    </ChartContainer>
                   </div>
                 </div>
               ))}

@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import { User, Calculator, Info, ChevronRight, X } from 'lucide-react';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Cell, LabelList } from 'recharts';
+import { ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart';
 import { formatClassName } from '../utils/format';
 import { studentAPI } from '../utils/api';
 
@@ -76,6 +78,57 @@ export default function StudentIDCard({ student, loading, error, onClose }) {
             </div>
         </div>
     );
+
+
+
+    const ViewRechartsBarChart = ({ activeSubject, maxMarks }) => {
+        const data = [
+            { name: 'MSE', value: activeSubject.mse || 0, fill: '#6366f1' }, // Indigo 500
+            { name: 'ESE', value: activeSubject.ese || 0, fill: '#8b5cf6' }, // Violet 500
+            { name: 'T1', value: activeSubject.th_ise1 || 0, fill: '#ec4899' }, // Pink 500
+            { name: 'T2', value: activeSubject.th_ise2 || 0, fill: '#ec4899' },
+            { name: 'P1', value: activeSubject.pr_ise1 || 0, fill: '#14b8a6' }, // Teal 500
+            { name: 'P2', value: activeSubject.pr_ise2 || 0, fill: '#14b8a6' },
+        ];
+
+        const chartConfig = {
+            value: {
+                label: "Marks",
+                color: "hsl(var(--primary))",
+            },
+        };
+
+        return (
+            <ChartContainer config={chartConfig} className="h-full w-full aspect-auto">
+                <BarChart data={data} margin={{ top: 20, right: 0, left: -25, bottom: 0 }}>
+                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(255,255,255,0.1)" />
+                    <XAxis
+                        dataKey="name"
+                        axisLine={false}
+                        tickLine={false}
+                        tick={{ fill: '#94a3b8', fontSize: 10, fontWeight: 600 }}
+                        dy={10}
+                    />
+                    <YAxis
+                        axisLine={false}
+                        tickLine={false}
+                        tick={{ fill: '#64748b', fontSize: 10 }}
+                        domain={[0, maxMarks]}
+                    />
+                    <ChartTooltip
+                        cursor={{ fill: 'rgba(255,255,255,0.05)' }}
+                        content={<ChartTooltipContent hideLabel />}
+                    />
+                    <Bar dataKey="value" radius={[4, 4, 0, 0]}>
+                        {data.map((entry, index) => (
+                            <Cell key={`cell-${index}`} fill={entry.fill} fillOpacity={0.8} />
+                        ))}
+                        <LabelList dataKey="value" position="top" fill="#cbd5e1" fontSize={10} fontWeight={600} formatter={(val) => val > 0 ? val : ''} />
+                    </Bar>
+                </BarChart>
+            </ChartContainer>
+        );
+    };
 
     const shortName = (name) => {
         if (!name) return '';
@@ -320,10 +373,10 @@ export default function StudentIDCard({ student, loading, error, onClose }) {
                             ))}
                         </div>
 
-                        {/* Shared bar graph */}
+                        {/* Shared bar graph - Recharts Implementation */}
                         {activeSubject && (
                             <div key={activeSubject.subject_name} className="bg-white/[0.02] rounded-lg border border-white/5 p-3 md:p-4">
-                                <div className="flex justify-between items-center mb-4 md:mb-6">
+                                <div className="flex justify-between items-center mb-0 md:mb-2">
                                     <h4 className="text-lg font-bold text-slate-200">{activeSubject.subject_name}</h4>
                                     <div className="flex gap-3 md:gap-4">
                                         <div className="text-right">
@@ -341,13 +394,11 @@ export default function StudentIDCard({ student, loading, error, onClose }) {
                                         )}
                                     </div>
                                 </div>
-                                <div className="flex justify-between items-end gap-1.5 h-28 w-full">
-                                    <BarBox label="MSE" value={activeSubject.mse || 0} />
-                                    <BarBox label="ESE" value={activeSubject.ese || 0} />
-                                    <BarBox label="T1" value={activeSubject.th_ise1 || 0} />
-                                    <BarBox label="T2" value={activeSubject.th_ise2 || 0} />
-                                    <BarBox label="P1" value={activeSubject.pr_ise1 || 0} />
-                                    <BarBox label="P2" value={activeSubject.pr_ise2 || 0} />
+                                <div className="h-48 w-full">
+                                    <ViewRechartsBarChart
+                                        activeSubject={activeSubject}
+                                        maxMarks={maxMark}
+                                    />
                                 </div>
                             </div>
                         )}
