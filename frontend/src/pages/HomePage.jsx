@@ -198,48 +198,60 @@ export default function HomePage() {
           />
         </div>
 
-        <div className="space-y-3">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {quickLeaderboard.map((student, index) => (
             <div
               key={student.student_id}
-              className="bubble bubble-hover p-4 rounded-bubble flex items-center gap-4 transition-all cursor-pointer"
+              className="group relative bg-white/5 border border-white/10 hover:bg-white/10 hover:border-accent/30 p-3 rounded-2xl flex items-center gap-4 transition-all duration-300 cursor-pointer overflow-hidden shadow-lg hover:shadow-accent/10"
               onClick={() => setSelectedStudentRoll(student.roll_no)}
             >
-              <div className="relative flex items-center">
-                <div className="absolute -left-4 top-1/2 transform -translate-y-1/2 w-8 h-8 bg-accent rounded-full flex items-center justify-center font-bold text-ink">
-                  #{index + 1}
-                </div>
-                <div className="w-12 h-12 bg-bubbleSecondary rounded-full overflow-hidden flex items-center justify-center">
-                  {student.roll_no ? (
-                    <>
-                      <img
-                        src={`/student_faces/${student.roll_no}.png`}
-                        alt={student.name}
-                        width={48}
-                        height={48}
-                        loading="lazy"
-                        className="w-full h-full object-cover"
-                        onError={(e) => {
-                          e.target.style.display = 'none'
-                          e.target.nextSibling.style.display = 'flex'
-                        }}
-                      />
-                      <div className="hidden absolute inset-0 bg-bubbleSecondary flex items-center justify-center text-sm text-ink"></div>
-                    </>
-                  ) : (
-                    <div className="text-sm text-ink">?</div>
-                  )}
-                </div>
+              {/* Rank Badge - Integrated nicely */}
+              <div className="flex-shrink-0 flex items-center justify-center w-10 h-10 bg-accent/20 rounded-xl border border-accent/20 group-hover:bg-accent/40 transition-colors">
+                <span className="text-xl font-display font-black text-accent drop-shadow-sm">#{index + 1}</span>
               </div>
-              <div className="flex-1">
-                <h3 className="font-display font-bold text-ink">{student.name}</h3>
-                <p className="text-sm text-body">{formatClassName(student.class)}</p>
+
+              {/* Face - Rectangle shaped as requested */}
+              <div className="relative w-14 h-16 bg-bubbleSecondary rounded-lg overflow-hidden border border-white/10 shadow-inner flex-shrink-0">
+                {student.roll_no ? (
+                  <>
+                    <img
+                      src={`/student_faces/${student.roll_no}.png`}
+                      alt={student.name}
+                      width={56}
+                      height={64}
+                      loading="lazy"
+                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                      onError={(e) => {
+                        e.target.style.display = 'none'
+                        e.target.nextSibling.style.display = 'flex'
+                      }}
+                    />
+                    <div className="hidden absolute inset-0 bg-bubbleSecondary flex items-center justify-center text-xs text-ink">IMG</div>
+                  </>
+                ) : (
+                  <div className="flex items-center justify-center w-full h-full text-xs text-ink">?</div>
+                )}
               </div>
-              <div className="text-right">
-                <div className="text-2xl font-bold text-ink">
+
+              {/* Name & Details */}
+              <div className="flex-1 min-w-0 flex flex-col justify-center">
+                <h3 className="font-display font-bold text-ink text-lg leading-tight truncate pr-2 group-hover:text-accent transition-colors">
+                  {student.name}
+                </h3>
+                <p className="text-xs text-body font-medium flex items-center gap-1.5 mt-0.5">
+                  <span className="opacity-70">Class:</span>
+                  <span className="bg-white/10 px-1.5 py-0.5 rounded text-[10px] tracking-wide uppercase">{formatClassName(student.class)}</span>
+                </p>
+              </div>
+
+              {/* Score - Right Aligned */}
+              <div className="text-right pr-2">
+                <div className="text-2xl font-black text-white leading-none tracking-tight drop-shadow-md">
                   {sortMetric === 'cgpa' ? student.cgpa : `${student.attendance}%`}
                 </div>
-                <p className="text-xs text-body">{sortMetric === 'cgpa' ? 'SGPA' : 'Attendance'}</p>
+                <div className="text-[9px] font-bold text-accent uppercase tracking-wider mt-0.5 opacity-80">
+                  {sortMetric === 'cgpa' ? 'SGPA' : 'Attendance'}
+                </div>
               </div>
             </div>
           ))}
@@ -274,24 +286,24 @@ export default function HomePage() {
       <div className="max-w-6xl mx-auto flex flex-col sm:flex-row gap-4 justify-center">
         <a
           href="#leaderboard"
-          className="px-8 py-4 bg-white/5 border border-white/10 backdrop-blur-sm text-ink rounded-bubble font-semibold text-lg text-center
-                   hover:bg-white/10 hover:border-white/20 hover:scale-105
+          className="px-8 py-4 bg-violet-600/80 hover:bg-violet-500 border border-violet-400/30 backdrop-blur-sm text-white rounded-bubble font-semibold text-lg text-center
+                   hover:scale-105 shadow-lg shadow-violet-500/20
                    active:scale-95 transition-all duration-300"
         >
           View Full Leaderboard
         </a>
         <a
           href="#compare"
-          className="px-8 py-4 bg-white/5 border border-white/10 backdrop-blur-sm text-ink rounded-bubble font-semibold text-lg text-center
-                   hover:bg-white/10 hover:border-white/20 hover:scale-105
+          className="px-8 py-4 bg-blue-600/80 hover:bg-blue-500 border border-blue-400/30 backdrop-blur-sm text-white rounded-bubble font-semibold text-lg text-center
+                   hover:scale-105 shadow-lg shadow-blue-500/20
                    active:scale-95 transition-all duration-300"
         >
           Compare Students
         </a>
         <a
           href="#game"
-          className="px-8 py-4 bg-white/5 border border-white/10 backdrop-blur-sm text-ink rounded-bubble font-semibold text-lg text-center
-                   hover:bg-white/10 hover:border-white/20 hover:scale-105
+          className="px-8 py-4 bg-cyan-600/80 hover:bg-cyan-500 border border-cyan-400/30 backdrop-blur-sm text-white rounded-bubble font-semibold text-lg text-center
+                   hover:scale-105 shadow-lg shadow-cyan-500/20
                    active:scale-95 transition-all duration-300"
         >
           Play Higher/Lower
@@ -303,37 +315,55 @@ export default function HomePage() {
 
       {/* Footer */}
       <footer className="mt-24 pb-12 text-center font-sans">
-        <div className="inline-block p-6 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-sm hover:bg-white/10 transition-colors duration-300">
-          <p className="text-lg md:text-xl text-ink font-display font-bold mb-3">
-            Inspired by{' '}
+        <div className="inline-block p-8 rounded-3xl bg-white/5 border border-white/10 backdrop-blur-md shadow-2xl hover:bg-white/10 transition-colors duration-300 max-w-lg w-full mx-auto">
+
+          <div className="mb-6">
+            <p className="text-body text-sm uppercase tracking-widest font-bold mb-2 opacity-60">Created By</p>
             <a
-              href="https://whereyoustand.vercel.app"
+              href="https://ulriccollaco.me"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-accent hover:text-white transition-colors"
+              className="text-3xl md:text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-accent to-purple-400 hover:to-white transition-all duration-300 drop-shadow-sm block"
             >
-              Where You Stand
+              Ulric Collaco
             </a>
-          </p>
+          </div>
 
-          <div className="flex flex-col md:flex-row items-center justify-center gap-2 md:gap-4 text-sm text-body">
-            <span>
-              By{' '}
+          <div className="flex flex-col md:flex-row items-center justify-center gap-3 md:gap-6 text-sm text-body/70 border-t border-white/5 pt-6 mt-2">
+
+            <p className="flex items-center gap-1">
+              <span>Inspired by</span>
+              <a
+                href="https://whereyoustand.vercel.app"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-white hover:text-accent transition-colors font-semibold"
+              >
+                Where You Stand
+              </a>
+            </p>
+
+            <span className="hidden md:inline text-white/10">•</span>
+
+            <p className="flex items-center gap-1">
+              <span>By</span>
               <a
                 href="https://www.romeirofernandes.tech"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="font-bold text-accent hover:underline"
+                className="text-white hover:text-accent transition-colors font-semibold"
               >
                 Romeiro Fernandes
               </a>
-            </span>
-            <span className="hidden md:inline text-white/20">•</span>
+            </p>
+
+            <span className="hidden md:inline text-white/10">•</span>
+
             <a
               href="https://github.com/romeirofernandes/whereyoustand"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 hover:bg-white/10 hover:text-white transition-all group"
+              className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 hover:bg-white/10 hover:text-white transition-all group border border-white/5"
             >
               <svg
                 viewBox="0 0 24 24"
@@ -342,11 +372,11 @@ export default function HomePage() {
                 strokeWidth="2"
                 strokeLinecap="round"
                 strokeLinejoin="round"
-                className="w-4 h-4 text-yellow-400 group-hover:scale-110 transition-transform"
+                className="w-3.5 h-3.5 text-yellow-400 group-hover:scale-110 transition-transform fill-yellow-400/20"
               >
                 <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
               </svg>
-              <span>Star the Repo</span>
+              <span>Star Repo</span>
             </a>
           </div>
         </div>

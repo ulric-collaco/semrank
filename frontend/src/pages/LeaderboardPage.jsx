@@ -212,17 +212,25 @@ export default function LeaderboardPage() {
               const rank = student.rank || (index + 1)
               const isTop3 = rank <= 3
 
+              // Top 3 specific styling for better visibility
+              const cardBg = isTop3
+                ? 'bg-slate-800/90 border-white/20 shadow-lg'
+                : 'bg-slate-900/40 hover:bg-slate-800/60 border-white/5 hover:border-white/10'
+
               return (
                 <div
                   key={student.student_id}
                   onClick={() => setSelectedStudentRoll(student.roll_no)}
-                  className="group relative bg-slate-900/40 hover:bg-slate-800/60 border border-white/5 hover:border-white/10 rounded-xl p-4 md:px-6 md:py-4 transition-all cursor-pointer flex flex-col md:grid md:grid-cols-12 gap-3 items-start md:items-center"
+                  className={`group relative ${cardBg} border rounded-xl p-4 md:px-6 md:py-4 transition-all cursor-pointer flex flex-col md:grid md:grid-cols-12 gap-3 items-start md:items-center`}
                 >
                   {/* Rank Badge */}
                   <div className="absolute top-4 right-4 md:static md:col-span-1 md:flex md:justify-center">
                     <div className={`
-                      w-8 h-8 rounded-lg flex items-center justify-center font-bold text-sm
-                      ${isTop3 ? 'bg-amber-500/10 text-amber-400 border border-amber-500/20' : 'bg-slate-800 text-slate-400 border border-slate-700'}
+                      w-8 h-8 rounded-lg flex items-center justify-center font-bold text-sm shadow-sm
+                      ${rank === 1 ? 'bg-yellow-500 text-yellow-950 border border-yellow-400' :
+                        rank === 2 ? 'bg-slate-300 text-slate-800 border border-slate-200' :
+                          rank === 3 ? 'bg-orange-400 text-orange-950 border border-orange-300' :
+                            'bg-slate-800 text-slate-400 border border-slate-700'}
                     `}>
                       {rank}
                     </div>
@@ -230,7 +238,7 @@ export default function LeaderboardPage() {
 
                   {/* Student Details */}
                   <div className="col-span-12 md:col-span-5 flex items-center gap-4">
-                    <div className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-slate-800 overflow-hidden border border-white/10 flex-shrink-0">
+                    <div className={`w-10 h-10 md:w-12 md:h-12 rounded-full overflow-hidden border flex-shrink-0 ${isTop3 ? 'border-white/30' : 'border-white/10 bg-slate-800'}`}>
                       <img
                         src={`/student_faces/${student.roll_no}.png`}
                         alt={student.name}
@@ -242,8 +250,8 @@ export default function LeaderboardPage() {
                       </div>
                     </div>
                     <div className="min-w-0">
-                      <h3 className="font-bold text-slate-200 line-clamp-2 md:line-clamp-1 break-words leading-tight pr-8 md:pr-0">{student.name}</h3>
-                      <p className="text-xs text-slate-500 font-mono">{student.roll_no}</p>
+                      <h3 className={`font-bold line-clamp-2 md:line-clamp-1 break-words leading-tight pr-8 md:pr-0 ${isTop3 ? 'text-white text-lg' : 'text-slate-200'}`}>{student.name}</h3>
+                      <p className={`text-xs font-mono mt-0.5 ${isTop3 ? 'text-slate-300' : 'text-slate-500'}`}>{student.roll_no}</p>
                     </div>
                   </div>
 
@@ -252,7 +260,7 @@ export default function LeaderboardPage() {
                     <span className="md:hidden text-xs text-slate-500 uppercase font-bold mr-2">
                       {metric === 'attendance' ? 'Att:' : (viewScope === 'subject' ? 'Marks:' : 'SGPI:')}
                     </span>
-                    <span className={`text-xl font-bold font-mono ${accentColor}`}>
+                    <span className={`text-xl font-bold font-mono ${isTop3 ? 'text-white scale-110 origin-right' : accentColor}`}>
                       {displayValue}
                     </span>
                   </div>
@@ -260,7 +268,7 @@ export default function LeaderboardPage() {
                   {/* Class Badge */}
                   <div className="col-span-6 md:col-span-3 flex md:justify-end items-center">
                     <span className="md:hidden text-xs text-slate-500 uppercase font-bold mr-2">Class:</span>
-                    <span className="text-slate-400 text-sm font-medium px-2 py-1 bg-white/5 rounded-md border border-white/5">
+                    <span className={`text-sm font-medium px-2 py-1 rounded-md border ${isTop3 ? 'bg-white/10 text-white border-white/20' : 'bg-white/5 text-slate-400 border-white/5'}`}>
                       {formatClassName(student.class)}
                     </span>
                   </div>

@@ -10,7 +10,7 @@ export default {
         // SemRank Dark Universe Theme
         background: '#0a0a0f',
         ink: '#ffffff',
-        body: '#b4b8c5',
+        body: '#e2e8f0',
         bubble: '#1a1a2e',
         bubbleSecondary: '#16213e',
         accent: '#f582ae',

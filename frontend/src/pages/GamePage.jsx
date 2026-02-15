@@ -326,6 +326,75 @@ export default function GamePage() {
           )
         }
       </div >
+
+      {/* Footer */}
+      <footer className="mt-24 pb-12 text-center font-sans">
+        <div className="inline-block p-8 rounded-3xl bg-white/5 border border-white/10 backdrop-blur-md shadow-2xl hover:bg-white/10 transition-colors duration-300 max-w-lg w-full mx-auto">
+
+          <div className="mb-6">
+            <p className="text-body text-sm uppercase tracking-widest font-bold mb-2 opacity-60">Created By</p>
+            <a
+              href="https://ulriccollaco.me"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-3xl md:text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-accent to-purple-400 hover:to-white transition-all duration-300 drop-shadow-sm block"
+            >
+              Ulric Collaco
+            </a>
+          </div>
+
+          <div className="flex flex-col md:flex-row items-center justify-center gap-3 md:gap-6 text-sm text-body/70 border-t border-white/5 pt-6 mt-2">
+
+            <p className="flex items-center gap-1">
+              <span>Inspired by</span>
+              <a
+                href="https://whereyoustand.vercel.app"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-white hover:text-accent transition-colors font-semibold"
+              >
+                Where You Stand
+              </a>
+            </p>
+
+            <span className="hidden md:inline text-white/10">•</span>
+
+            <p className="flex items-center gap-1">
+              <span>By</span>
+              <a
+                href="https://www.romeirofernandes.tech"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-white hover:text-accent transition-colors font-semibold"
+              >
+                Romeiro Fernandes
+              </a>
+            </p>
+
+            <span className="hidden md:inline text-white/10">•</span>
+
+            <a
+              href="https://github.com/romeirofernandes/whereyoustand"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 hover:bg-white/10 hover:text-white transition-all group border border-white/5"
+            >
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="w-3.5 h-3.5 text-yellow-400 group-hover:scale-110 transition-transform fill-yellow-400/20"
+              >
+                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+              </svg>
+              <span>Star Repo</span>
+            </a>
+          </div>
+        </div>
+      </footer>
     </div >
   )
 }
