@@ -1,0 +1,79 @@
+
+import { useState } from 'react';
+import { Link } from 'react-router-dom';
+import { Menu, X } from 'lucide-react';
+
+export default function Navbar4() {
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+    const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
+    const closeMenu = () => setIsMenuOpen(false);
+
+    return (
+        <nav className="border-b-4 border-black bg-[#ffde00] text-black py-3 md:py-4 px-4 md:px-6 flex justify-between items-center font-mono sticky top-0 z-[100] w-full max-w-full">
+            <Link to="/4" className="text-xl md:text-2xl font-black uppercase tracking-tighter hover:skew-x-6 transition-transform cursor-pointer relative z-[101]">
+                SemRank®
+            </Link>
+
+            {/* Desktop Menu */}
+            <div className="hidden md:flex gap-8 font-bold text-sm">
+                <Link to="/4/leaderboard" className="hover:underline decoration-4 decoration-black underline-offset-4 uppercase">Leaderboard</Link>
+                <Link to="/4/compare" className="hover:underline decoration-4 decoration-black underline-offset-4 uppercase">Compare</Link>
+                <Link to="/4/game" className="hover:underline decoration-4 decoration-black underline-offset-4 uppercase">Game</Link>
+            </div>
+
+            {/* Desktop CTA */}
+            <div className="hidden md:block">
+                <Link to="/4/game" className="bg-white border-2 border-black px-6 py-2 font-bold shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:translate-x-[4px] active:translate-y-[4px] active:shadow-none transition-all flex items-center gap-2">
+                    <span>PLAY</span>
+                    <span className="bg-black text-white px-1 text-xs">NEW</span>
+                </Link>
+            </div>
+
+            {/* Mobile Menu Toggle */}
+            <button
+                onClick={toggleMenu}
+                className="md:hidden z-[101] p-1 border-2 border-black bg-white active:translate-y-1 transition-transform"
+                aria-label="Toggle Menu"
+            >
+                {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
+            </button>
+
+            {/* Mobile Overlay */}
+            {isMenuOpen && (
+                <div className="fixed inset-0 bg-[#ffde00] z-[100] flex flex-col justify-center items-center gap-8 md:hidden animate-in fade-in zoom-in-95 duration-200 p-6">
+                    <Link
+                        to="/4/leaderboard"
+                        onClick={closeMenu}
+                        className="text-3xl font-black uppercase hover:underline decoration-4 decoration-black underline-offset-8 text-center"
+                    >
+                        Leaderboard
+                    </Link>
+                    <Link
+                        to="/4/compare"
+                        onClick={closeMenu}
+                        className="text-3xl font-black uppercase hover:underline decoration-4 decoration-black underline-offset-8 text-center"
+                    >
+                        Compare
+                    </Link>
+                    <Link
+                        to="/4/game"
+                        onClick={closeMenu}
+                        className="text-3xl font-black uppercase hover:underline decoration-4 decoration-black underline-offset-8 text-center"
+                    >
+                        Game
+                    </Link>
+
+                    <Link
+                        to="/4/game"
+                        onClick={closeMenu}
+                        className="bg-white border-4 border-black px-8 py-4 font-black text-xl shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] hover:translate-x-1 hover:translate-y-1 hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] active:translate-x-2 active:translate-y-2 active:shadow-none transition-all mt-8 flex items-center gap-2"
+                    >
+                        <span>PLAY GAME</span>
+                        <span className="bg-black text-white px-1 text-sm">NEW</span>
+                    </Link>
+                </div>
+            )}
+        </nav>
+    );
+}

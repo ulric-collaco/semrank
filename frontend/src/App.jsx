@@ -1,14 +1,22 @@
+
 import { useState, useEffect, Suspense, lazy } from 'react'
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import LoadingScreen from './components/LoadingScreen'
+import Grainient from './components/Grainient'
 
 const BubbleMenu = lazy(() => import('./components/BubbleMenu'))
 const PageTransition = lazy(() => import('./components/PageTransition'))
 const HomePage = lazy(() => import('./pages/HomePage'))
 const LeaderboardPage = lazy(() => import('./pages/LeaderboardPage'))
-import Grainient from './components/Grainient'
 const ComparePage = lazy(() => import('./pages/ComparePage'))
 const GamePage = lazy(() => import('./pages/GamePage'))
 
+const LandingPage2 = lazy(() => import('./pages/LandingPage2'))
+
+const LandingPage4 = lazy(() => import('./pages/LandingPage4'))
+const LeaderboardPage4 = lazy(() => import('./pages/LeaderboardPage4'))
+const ComparePage4 = lazy(() => import('./pages/ComparePage4'))
+const GamePage4 = lazy(() => import('./pages/GamePage4'))
 
 const menuItems = [
   {
@@ -46,7 +54,7 @@ function getPageFromHash() {
   return raw.split('?')[0] || 'home';
 }
 
-function App() {
+function MainApp() {
   const [currentPage, setCurrentPage] = useState(getPageFromHash)
 
   // Initialize loading state based on session - play only once per session
@@ -158,6 +166,24 @@ function App() {
       </div>
     </div>
   )
+}
+
+function App() {
+  return (
+    <BrowserRouter>
+      <Suspense fallback={null}>
+
+        <Routes>
+          <Route path="/2" element={<LandingPage2 />} />
+          <Route path="/4" element={<LandingPage4 />} />
+          <Route path="/4/leaderboard" element={<LeaderboardPage4 />} />
+          <Route path="/4/compare" element={<ComparePage4 />} />
+          <Route path="/4/game" element={<GamePage4 />} />
+          <Route path="/*" element={<MainApp />} />
+        </Routes>
+      </Suspense>
+    </BrowserRouter>
+  );
 }
 
 export default App
