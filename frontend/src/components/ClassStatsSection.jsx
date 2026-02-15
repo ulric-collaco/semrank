@@ -78,7 +78,9 @@ export default function ClassStatsSection() {
     <div className="space-y-6">
       {/* Section Header */}
       <div className="text-center">
-        <h2 className="text-3xl font-display font-bold text-ink mb-2">Fun Insights</h2>
+        <h2 className="text-3xl font-display font-black text-ink mb-6 drop-shadow-sm">
+          Fun Insights
+        </h2>
       </div>
 
       {/* Stats Grid */}
@@ -86,18 +88,22 @@ export default function ClassStatsSection() {
         {statCards.map((card, index) => (
           <div
             key={index}
-            className="bubble p-6 rounded-bubble-lg border border-white/10 hover:border-accent/40
-                       hover:scale-105 transition-transform duration-300 bg-bubble"
+            className="bubble p-6 rounded-bubble-lg hover:border-accent/40
+                       hover:scale-105 transition-transform duration-300"
           >
-            <div className="text-center space-y-3">
-              <div className="text-5xl">{card.emoji}</div>
+            <div className={`text-center space-y-3 ${index === 0 ? 'text-accent' : 'text-ink'}`}>
+              <div className="text-5xl drop-shadow-md">{card.emoji}</div>
               <div>
-                <p className="text-sm text-body font-semibold uppercase tracking-wide mb-1">
+                <p className="text-xs md:text-sm text-body font-bold uppercase tracking-widest mb-2 opacity-80">
                   {card.label}
                 </p>
-                <p className="text-2xl font-bold text-ink">{card.value}</p>
+                <p className="text-3xl font-display font-black leading-none text-ink drop-shadow-md">
+                  {card.value}
+                </p>
                 {card.detail && (
-                  <p className="text-sm text-body mt-1">{card.detail}</p>
+                  <p className="text-sm font-medium text-body/80 mt-2 bg-white/5 inline-block px-3 py-1 rounded-full border border-white/5">
+                    {card.detail}
+                  </p>
                 )}
               </div>
             </div>

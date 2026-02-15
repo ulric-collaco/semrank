@@ -310,12 +310,12 @@ export default function ComparePage() {
   const containerClass = "bg-[#1a1a2e]/50 border border-white/5 p-6 rounded-xl backdrop-blur-sm";
 
   return (
-    <div className="min-h-screen bg-background text-ink px-4 py-6 pt-32 md:p-8 md:pt-32 font-sans overflow-x-hidden">
-      <div className="max-w-7xl mx-auto">
+    <div className="min-h-screen text-ink px-4 py-6 pt-32 md:p-8 md:pt-32 font-sans overflow-x-hidden">
+      <div className="max-w-6xl mx-auto">
         <div className="flex items-center justify-between mb-8">
           <div>
             <h1 className="text-4xl font-display font-bold mb-2">Compare Students</h1>
-            
+
           </div>
 
           <div className={`${containerClass} px-4 py-2 flex items-center gap-2 !p-2 !rounded-lg`}>
@@ -328,6 +328,7 @@ export default function ComparePage() {
 
         {/* Search & Selection Area */}
         <div className={containerClass}>
+          {/* ... existing search ... */}
           <div className="relative">
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-body/50" />
             <input
@@ -405,7 +406,7 @@ export default function ComparePage() {
         {/* Selected Students Chips */}
         {/* Selected Students Chips - Grid 2x2 on mobile, flex row on desktop */}
         {selectedStudents.length > 0 && (
-          <div className="grid grid-cols-2 lg:flex lg:flex-wrap gap-3 animate-in fade-in slide-in-from-top-4 duration-300 mb-12">
+          <div className="grid grid-cols-2 lg:flex lg:flex-wrap gap-3 animate-in fade-in slide-in-from-top-4 duration-300 mb-12 mt-6">
             {selectedStudents.map((student, idx) => (
               <div
                 key={student.roll_no}

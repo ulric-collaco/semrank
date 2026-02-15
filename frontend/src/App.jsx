@@ -3,9 +3,9 @@ import LoadingScreen from './components/LoadingScreen'
 
 const BubbleMenu = lazy(() => import('./components/BubbleMenu'))
 const PageTransition = lazy(() => import('./components/PageTransition'))
-const PixelSnow = lazy(() => import('./components/PixelSnow'))
 const HomePage = lazy(() => import('./pages/HomePage'))
 const LeaderboardPage = lazy(() => import('./pages/LeaderboardPage'))
+import Grainient from './components/Grainient'
 const ComparePage = lazy(() => import('./pages/ComparePage'))
 const GamePage = lazy(() => import('./pages/GamePage'))
 
@@ -105,28 +105,28 @@ function App() {
         />
       )}
 
-      <div style={contentStyle} className="relative z-0 min-h-screen transition-all duration-1000">
-        <div className="fixed inset-0 z-0" style={{ pointerEvents: 'none' }}>
-          {/* Only render complex snow effect on desktop to prevent mobile lag */}
-          <Suspense fallback={null}>
-            {typeof window !== 'undefined' && window.innerWidth > 768 && (
-              <PixelSnow
-                color="#ffffff"
-                flakeSize={0.01}
-                minFlakeSize={1.25}
-                pixelResolution={200}
-                speed={1.25}
-                density={0.3}
-                direction={125}
-                brightness={1}
-                depthFade={8}
-                farPlane={20}
-                gamma={0.4545}
-                variant="square"
-                style={{ width: '100%', height: '100vh' }}
-              />
-            )}
-          </Suspense>
+      <div style={contentStyle} className="relative z-0 min-h-screen transition-all duration-1000 pointer-events-none">
+        <div className="fixed inset-0 z-0 bg-black pointer-events-auto">
+          <Grainient
+            color1="#f582ae"
+            color2="#03033f"
+            color3="#56005c"
+            blendSoftness={0.21}
+            warpAmplitude={80}
+            warpStrength={4}
+            colorBalance={0.09}
+            timeSpeed={1.85}
+            warpSpeed={1.1}
+            warpFrequency={3.7}
+            grainAmount={0.1}
+            grainScale={2}
+            contrast={1.5}
+            gamma={1}
+            saturation={1}
+            centerX={0}
+            centerY={0}
+            zoom={0.9}
+          />
         </div>
 
         <div>

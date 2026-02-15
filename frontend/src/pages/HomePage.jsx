@@ -37,17 +37,13 @@ export default function HomePage() {
     if (!hasAnimated.current && topStudents.length > 0) {
       hasAnimated.current = true
       const tl = gsap.timeline()
+
+      // Animate Quick Leaderboard
       tl.fromTo(
-        top3Ref.current?.children || [],
-        { scale: 0, opacity: 0 },
-        { scale: 1, opacity: 1, duration: 0.5, stagger: 0.1, ease: 'back.out(1.5)' }
+        quickLeaderRef.current,
+        { y: 20, opacity: 0 },
+        { y: 0, opacity: 1, duration: 0.6, ease: 'power2.out' }
       )
-        .fromTo(
-          quickLeaderRef.current,
-          { y: 20, opacity: 0 },
-          { y: 0, opacity: 1, duration: 0.6, ease: 'power2.out' },
-          '-=0.2'
-        )
     }
   }, [topStudents])
 
@@ -90,7 +86,7 @@ export default function HomePage() {
     <div className="min-h-screen px-6 pt-12 md:pt-16 pb-12">
       {/* Hero Section */}
       <div ref={heroRef} className="max-w-6xl mx-auto text-center mb-8 md:mb-12" style={{ opacity: 0 }}>
-        <h1 className="text-[48px] md:text-[72px] lg:text-[90px] font-display text-ink mb-8 md:mb-12 leading-none tracking-tight">
+        <h1 className="text-[48px] md:text-[72px] lg:text-[90px] font-display text-ink mb-8 md:mb-12 leading-none tracking-tight drop-shadow-xl">
           SemRank
         </h1>
 
@@ -127,10 +123,10 @@ export default function HomePage() {
 
                   // Border colors based on rank
                   const borderClass = origIdx === 0
-                    ? 'ring-2 md:ring-4 ring-yellow-400/80' // gold for #1
+                    ? 'ring-2 md:ring-4 ring-yellow-400/80 shadow-[0_0_30px_-5px_rgba(250,204,21,0.3)]' // gold for #1
                     : origIdx === 1
-                      ? 'ring-2 md:ring-4 ring-slate-300/60' // silver
-                      : 'ring-2 md:ring-4 ring-amber-600/40' // bronze
+                      ? 'ring-2 md:ring-4 ring-slate-300/60 shadow-[0_0_20px_-5px_rgba(203,213,225,0.2)]' // silver
+                      : 'ring-2 md:ring-4 ring-orange-400/60 shadow-[0_0_20px_-5px_rgba(251,146,60,0.2)]' // bronze
 
                   return (
                     <div
@@ -184,11 +180,11 @@ export default function HomePage() {
       </div>
 
       {/* Quick Leaderboard */}
-      <div ref={quickLeaderRef} className="max-w-4xl mx-auto mb-16" style={{ opacity: 0 }}>
+      <div ref={quickLeaderRef} className="max-w-6xl mx-auto mb-16" style={{ opacity: 0 }}>
         <div className="flex justify-between items-center mb-6">
           <button
             onClick={() => window.location.hash = '#leaderboard'}
-            className="text-[22px] md:text-[36px] font-display text-ink hover:text-accent transition-colors duration-300 bg-transparent border-none cursor-pointer focus:outline-none p-0"
+            className="text-[28px] md:text-[36px] font-display font-black text-ink hover:text-accent transition-colors duration-300 bg-transparent border-none cursor-pointer focus:outline-none p-0 drop-shadow-sm"
           >
             Leaderboard
           </button>
@@ -252,7 +248,7 @@ export default function HomePage() {
 
       {/* Birthday Spotlight */}
       {birthdays.length > 0 && (
-        <div className="max-w-4xl mx-auto mb-16">
+        <div className="max-w-6xl mx-auto mb-16">
           <h2 className="text-3xl font-display font-bold text-ink mb-6">Today's Birthdays</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {birthdays.map((student) => (
@@ -270,32 +266,32 @@ export default function HomePage() {
       )}
 
       {/* Class Fun Stats */}
-      <div className="max-w-5xl mx-auto mb-12">
+      <div className="max-w-6xl mx-auto mb-12">
         <ClassStatsSection />
       </div>
 
       {/* Quick Access Buttons */}
-      <div className="max-w-4xl mx-auto flex flex-col sm:flex-row gap-4 justify-center">
+      <div className="max-w-6xl mx-auto flex flex-col sm:flex-row gap-4 justify-center">
         <a
           href="#leaderboard"
-          className="px-8 py-4 bg-accent text-ink rounded-bubble font-semibold text-lg text-center
-                   hover:scale-105
+          className="px-8 py-4 bg-white/5 border border-white/10 backdrop-blur-sm text-ink rounded-bubble font-semibold text-lg text-center
+                   hover:bg-white/10 hover:border-white/20 hover:scale-105
                    active:scale-95 transition-all duration-300"
         >
           View Full Leaderboard
         </a>
         <a
           href="#compare"
-          className="px-8 py-4 bubble bubble-hover text-ink rounded-bubble font-semibold text-lg text-center
-                   hover:scale-105
+          className="px-8 py-4 bg-white/5 border border-white/10 backdrop-blur-sm text-ink rounded-bubble font-semibold text-lg text-center
+                   hover:bg-white/10 hover:border-white/20 hover:scale-105
                    active:scale-95 transition-all duration-300"
         >
           Compare Students
         </a>
         <a
           href="#game"
-          className="px-8 py-4 bubble bubble-hover text-ink rounded-bubble font-semibold text-lg text-center
-                   hover:scale-105
+          className="px-8 py-4 bg-white/5 border border-white/10 backdrop-blur-sm text-ink rounded-bubble font-semibold text-lg text-center
+                   hover:bg-white/10 hover:border-white/20 hover:scale-105
                    active:scale-95 transition-all duration-300"
         >
           Play Higher/Lower
@@ -303,6 +299,58 @@ export default function HomePage() {
       </div>
 
 
+
+
+      {/* Footer */}
+      <footer className="mt-24 pb-12 text-center font-sans">
+        <div className="inline-block p-6 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-sm hover:bg-white/10 transition-colors duration-300">
+          <p className="text-lg md:text-xl text-ink font-display font-bold mb-3">
+            Inspired by{' '}
+            <a
+              href="https://whereyoustand.vercel.app"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-accent hover:text-white transition-colors"
+            >
+              Where You Stand
+            </a>
+          </p>
+
+          <div className="flex flex-col md:flex-row items-center justify-center gap-2 md:gap-4 text-sm text-body">
+            <span>
+              By{' '}
+              <a
+                href="https://www.romeirofernandes.tech"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-bold text-accent hover:underline"
+              >
+                Romeiro Fernandes
+              </a>
+            </span>
+            <span className="hidden md:inline text-white/20">•</span>
+            <a
+              href="https://github.com/romeirofernandes/whereyoustand"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 hover:bg-white/10 hover:text-white transition-all group"
+            >
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="w-4 h-4 text-yellow-400 group-hover:scale-110 transition-transform"
+              >
+                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+              </svg>
+              <span>Star the Repo</span>
+            </a>
+          </div>
+        </div>
+      </footer>
 
       {/* Student Modal */}
       {selectedStudentRoll && (
