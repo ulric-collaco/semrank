@@ -16,7 +16,7 @@ export default function Hero4() {
             </div>
 
             {/* Main Heading - Responsive Typography */}
-            <h1 className="text-5xl sm:text-6xl md:text-8xl lg:text-9xl font-black uppercase leading-[0.9] tracking-tighter mb-8 md:mb-12 w-full break-words hyphens-auto">
+            <h1 className="text-5xl sm:text-6xl md:text-8xl lg:text-9xl font-black uppercase leading-[0.9] tracking-tighter mb-8 md:mb-12 w-full break-words hyphens-auto text-black">
                 SEM <span className="text-[#00ffff] inline-block transform skew-x-[-10deg]" style={{ textShadow: '4px 4px 0px #000' }}>3</span><br />
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#ffde00] to-[#ff69b4] stroke-black text-stroke-1 md:text-stroke-2 lg:text-stroke-3 block mt-2" style={{ WebkitTextStroke: '1px black' }}>
                     UNLEASHED

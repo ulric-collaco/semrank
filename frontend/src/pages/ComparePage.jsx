@@ -38,9 +38,7 @@ function getElectiveGroup(subjectName) {
 // CustomTooltip removed in favor of ChartTooltipContent
 
 const CustomPolarAngleAxisTick = ({ payload, x, y, cx, cy, ...rest }) => {
-  // Use only the first non-trivial word or acronym for cleaner mobile view
-  // E.g. "Software Architecture" -> "Software", "Cloud Computing" -> "Cloud"
-  // Or just take the first word always.
+  if (!payload || !payload.value) return null;
   let label = payload.value;
   // Simple heuristic: if contain ' - ', split and take first part. Then take first word.
   label = label.split(' - ')[0].trim();

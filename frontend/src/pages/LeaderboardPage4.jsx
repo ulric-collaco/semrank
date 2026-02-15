@@ -112,7 +112,7 @@ export default function LeaderboardPage4() {
 
                 {/* Header */}
                 <div className="text-center mb-8 md:mb-12">
-                    <h1 className="text-5xl sm:text-6xl md:text-8xl font-black uppercase tracking-tighter mb-4 shadow-black drop-shadow-lg leading-none break-words hyphens-auto">
+                    <h1 className="text-5xl sm:text-6xl md:text-8xl font-black uppercase tracking-tighter mb-4 shadow-black drop-shadow-lg leading-none break-words hyphens-auto text-black">
                         HALL OF <span className="text-[#00ffff] inline-block transform -skew-x-6" style={{ textShadow: '4px 4px 0px #000', WebkitTextStroke: '2px black' }}>FAME</span>
                     </h1>
                     <p className="bg-[#ffde00] inline-block border-2 border-black px-2 md:px-4 py-1 font-bold transform -rotate-2 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] md:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] text-xs md:text-base max-w-[90vw] truncate">
@@ -220,7 +220,7 @@ export default function LeaderboardPage4() {
                                     <div className="col-span-2 md:col-span-1 flex justify-center">
                                         <div className={`
                                             w-8 h-8 md:w-10 md:h-10 flex items-center justify-center font-black text-sm md:text-lg border-2 border-black
-                                            ${rank === 1 ? 'bg-[#ff69b4] text-white' : rank === 2 ? 'bg-gray-300' : rank === 3 ? 'bg-orange-400' : 'bg-white'}
+                                            ${rank === 1 ? 'bg-[#ff69b4] text-black' : rank === 2 ? 'bg-gray-300' : rank === 3 ? 'bg-orange-400' : 'bg-white'}
                                          `}>
                                             {rank === 1 ? <Crown className="w-4 h-4 md:w-6 md:h-6" /> : rank}
                                         </div>

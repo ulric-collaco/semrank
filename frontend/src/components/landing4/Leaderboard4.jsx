@@ -23,7 +23,7 @@ export default function Leaderboard4({ data }) {
                     <Link to="/4/leaderboard" className="inline-block group relative">
                         <div className="absolute inset-0 bg-black translate-x-3 translate-y-3 group-hover:translate-x-1 group-hover:translate-y-1 transition-transform"></div>
                         <div className="relative bg-[#ff69b4] border-4 border-black px-8 py-4 md:px-12 md:py-6 flex items-center justify-center gap-4 hover:-translate-y-1 transition-transform cursor-pointer">
-                            <h2 className="text-4xl md:text-6xl font-black uppercase text-center m-0 leading-none">
+                            <h2 className="text-4xl md:text-6xl font-black uppercase text-center m-0 leading-none text-black">
                                 The Leaderboard
                             </h2>
                             <span className="hidden md:block bg-black text-[#ffde00] text-xl px-4 py-2 font-mono font-bold transform rotate-6 group-hover:rotate-12 transition-transform border-2 border-white">
@@ -53,7 +53,7 @@ export default function Leaderboard4({ data }) {
                                 />
                             </div>
 
-                            <h3 className="text-2xl font-black uppercase leading-tight mb-2">{student.name}</h3>
+                            <h3 className="text-2xl font-black uppercase leading-tight mb-2 text-black">{student.name}</h3>
                             <div className="bg-black text-white px-3 py-1 font-mono text-sm font-bold mb-4 rotate-[-2deg]">
                                 {formatClassName(student.class)}
                             </div>

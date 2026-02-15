@@ -36,6 +36,7 @@ function getElectiveGroup(subjectName) {
 }
 
 const CustomPolarAngleAxisTick = ({ payload, x, y, cx, cy, ...rest }) => {
+    if (!payload || !payload.value) return null;
     let label = payload.value.split(' - ')[0].trim();
     const words = label.split(/\s+/);
     const shortLabel = words[0].length > 4 ? words[0] : (words.slice(0, 2).join(' '));
@@ -173,11 +174,16 @@ export default function ComparePage4() {
     const comparisonData = useMemo(() => {
         if (selectedStudents.length === 0) return null;
         const allSubjects = new Set();
+        const electiveGroupsUsed = new Set();
 
         selectedStudents.forEach(student => {
             Object.keys(student.subjectsObj || {}).forEach(subject => {
                 const group = getElectiveGroup(subject);
-                if (!group) allSubjects.add(subject);
+                if (group) {
+                    electiveGroupsUsed.add(group);
+                } else {
+                    allSubjects.add(subject);
+                }
             });
         });
 
@@ -213,6 +219,26 @@ export default function ComparePage4() {
             if (data) subjectComparisons[subject] = data;
         });
 
+        electiveGroupsUsed.forEach(groupName => {
+            const actualSubjectsInGroup = new Set();
+            selectedStudents.forEach(student => {
+                Object.keys(student.subjectsObj || {}).forEach(sub => {
+                    if (getElectiveGroup(sub) === groupName) actualSubjectsInGroup.add(sub);
+                });
+            });
+
+            const data = processChartData(Array.from(actualSubjectsInGroup));
+            const label = selectedStudents
+                .map(s => {
+                    const subj = Object.keys(s.subjectsObj || {}).find(k => getElectiveGroup(k) === groupName);
+                    return subj ? subj.split(' - ')[0] : '';
+                })
+                .filter(Boolean)
+                .join(' / ');
+
+            if (data) subjectComparisons[label || groupName] = data;
+        });
+
         return subjectComparisons;
     }, [selectedStudents]);
 
@@ -233,7 +259,7 @@ export default function ComparePage4() {
             <div className="w-full max-w-7xl mx-auto px-4 py-8 md:py-12 md:px-6">
                 <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-8 border-b-4 border-black pb-6 gap-4">
                     <div>
-                        <h1 className="text-4xl md:text-6xl font-black uppercase tracking-tighter mb-2 break-words hyphens-auto">
+                        <h1 className="text-4xl md:text-6xl font-black uppercase tracking-tighter mb-2 break-words hyphens-auto text-black">
                             Fight Club
                         </h1>
                         <p className="bg-black text-white inline-block px-2 py-1 font-bold text-xs md:text-base">
@@ -341,7 +367,7 @@ export default function ComparePage4() {
                                 Power Level Analysis
                             </h2>
                             <div className="h-[300px] md:h-[400px] w-full -ml-2 md:ml-0 relative">
-                                <ResponsiveContainer width="100%" height="100%">
+                                <ChartContainer config={chartConfig} className="h-full w-full aspect-auto">
                                     <RadarChart cx="50%" cy="50%" outerRadius="65%" data={radarData}>
                                         <PolarGrid stroke="#000" strokeWidth={2} />
                                         <PolarAngleAxis dataKey="subject" tick={<CustomPolarAngleAxisTick />} />
@@ -357,15 +383,9 @@ export default function ComparePage4() {
                                                 fillOpacity={0.5}
                                             />
                                         ))}
-                                        <ChartTooltip
-                                            content={
-                                                <div className="bg-white border-2 border-black p-2 font-mono font-bold shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
-                                                    <ChartTooltipContent />
-                                                </div>
-                                            }
-                                        />
+                                        <ChartTooltip content={<ChartTooltipContent />} />
                                     </RadarChart>
-                                </ResponsiveContainer>
+                                </ChartContainer>
                             </div>
                         </div>
 
@@ -377,20 +397,13 @@ export default function ComparePage4() {
                                         {subject}
                                     </h3>
                                     <div className="h-[250px] md:h-[300px] w-full">
-                                        <ResponsiveContainer width="100%" height="100%">
+                                        <ChartContainer config={chartConfig} className="h-full w-full aspect-auto">
                                             <BarChart data={data} margin={{ top: 20, right: 10, left: -20, bottom: 5 }}>
                                                 <CartesianGrid strokeDasharray="3 3" stroke="#000" strokeOpacity={0.1} vertical={false} />
                                                 <XAxis dataKey="exam" tick={{ fill: '#000', fontSize: 11, fontWeight: 700, fontFamily: 'monospace' }} axisLine={{ stroke: '#000', strokeWidth: 2 }} tickLine={false} />
                                                 <YAxis tick={{ fill: '#000', fontSize: 11, fontFamily: 'monospace' }} axisLine={{ stroke: '#000', strokeWidth: 2 }} tickLine={false} domain={[0, 50]} allowDecimals={false} />
-                                                <ChartTooltip
-                                                    cursor={{ fill: 'rgba(0,0,0,0.1)' }}
-                                                    content={
-                                                        <div className="bg-white border-2 border-black p-2 font-mono font-bold shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
-                                                            <ChartTooltipContent />
-                                                        </div>
-                                                    }
-                                                />
-                                                <Legend wrapperStyle={{ fontSize: '10px' }} />
+                                                <ChartTooltip content={<ChartTooltipContent />} />
+                                                <ChartLegend content={<ChartLegendContent />} />
                                                 {selectedStudents.map((student, idx) => (
                                                     <Bar
                                                         key={student.roll_no}
@@ -402,7 +415,7 @@ export default function ComparePage4() {
                                                     />
                                                 ))}
                                             </BarChart>
-                                        </ResponsiveContainer>
+                                        </ChartContainer>
                                     </div>
                                 </div>
                             ))}
