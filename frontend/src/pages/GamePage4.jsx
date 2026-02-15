@@ -130,7 +130,7 @@ export default function GamePage4() {
                             onClick={() => setMetric(m)}
                             disabled={gameState === 'playing' && m !== metric}
                             className={`
-                        px-4 py-2 md:px-6 md:py-3 border-4 border-black font-black uppercase transition-all text-xs md:text-base
+                        px-4 py-3 min-h-[44px] md:px-6 md:py-3 border-4 border-black font-black uppercase transition-all text-xs md:text-base flex items-center justify-center
                         ${metric === m
                                     ? 'bg-black text-[#ffde00] shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]'
                                     : 'bg-white hover:bg-gray-100'
@@ -152,7 +152,7 @@ export default function GamePage4() {
 
                     {/* Mobile VS Badge */}
                     <div className="md:hidden flex justify-center -my-6 z-10 relative">
-                        <div className="w-12 h-12 bg-[#ffde00] border-4 border-black rounded-full flex items-center justify-center font-black text-lg shadow-[2px_2px_0px_0px_#000]">
+                        <div className="w-14 h-14 bg-[#ffde00] border-4 border-black rounded-full flex items-center justify-center font-black text-xl shadow-[2px_2px_0px_0px_#000]">
                             VS
                         </div>
                     </div>
@@ -186,16 +186,16 @@ export default function GamePage4() {
 
                             <div className="mt-auto w-full border-t-4 border-black pt-4 md:pt-6 min-h-[100px] md:min-h-[120px] flex flex-col justify-end">
                                 {gameState === 'playing' ? (
-                                    <div className="grid grid-cols-2 gap-2 md:gap-4 w-full">
+                                    <div className="grid grid-cols-2 gap-3 md:gap-4 w-full">
                                         <button
                                             onClick={() => handleGuess('higher')}
-                                            className="bg-[#00ffff] border-4 border-black py-3 md:py-4 font-black uppercase hover:shadow-[4px_4px_0px_0px_#000] active:translate-y-1 transition-all text-sm md:text-base"
+                                            className="bg-[#00ffff] border-4 border-black py-4 md:py-4 font-black uppercase hover:shadow-[4px_4px_0px_0px_#000] active:translate-y-1 transition-all text-base md:text-base min-h-[60px]"
                                         >
                                             Higher ▲
                                         </button>
                                         <button
                                             onClick={() => handleGuess('lower')}
-                                            className="bg-[#ff69b4] border-4 border-black py-3 md:py-4 font-black uppercase hover:shadow-[4px_4px_0px_0px_#000] active:translate-y-1 transition-all text-sm md:text-base"
+                                            className="bg-[#ff69b4] border-4 border-black py-4 md:py-4 font-black uppercase hover:shadow-[4px_4px_0px_0px_#000] active:translate-y-1 transition-all text-base md:text-base min-h-[60px]"
                                         >
                                             Lower ▼
                                         </button>

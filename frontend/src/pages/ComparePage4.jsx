@@ -289,7 +289,7 @@ export default function ComparePage4() {
                                         onClick={() => toggleStudent(student)}
                                         disabled={isDisabled || fetchingDetails}
                                         className={`
-                                    relative p-3 border-2 border-black text-left transition-all
+                                    relative p-3 border-2 border-black text-left transition-all min-h-[48px]
                                     ${isSelected
                                                 ? 'bg-[#00ffff] shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] -translate-y-1'
                                                 : 'bg-white hover:bg-gray-100'
@@ -297,12 +297,12 @@ export default function ComparePage4() {
                                     ${isDisabled ? 'opacity-50 cursor-not-allowed bg-gray-200' : ''}
                                 `}
                                     >
-                                        <div className="flex justify-between items-start">
-                                            <div className="overflow-hidden min-w-0">
+                                        <div className="flex justify-between items-center h-full">
+                                            <div className="overflow-hidden min-w-0 flex-1">
                                                 <div className="font-bold truncate uppercase text-sm md:text-base">{student.name}</div>
-                                                <div className="text-[10px] md:text-xs font-mono bg-black text-white inline-block px-1 mt-1">{student.roll_no}</div>
+                                                <div className="text-xs font-mono bg-black text-white inline-block px-1 mt-1">{student.roll_no}</div>
                                             </div>
-                                            {isSelected && <Check className="w-4 h-4 md:w-5 md:h-5 stroke-[3]" />}
+                                            {isSelected && <Check className="w-5 h-5 md:w-6 md:h-6 stroke-[3] ml-2 flex-shrink-0" />}
                                         </div>
                                     </button>
                                 );
@@ -380,8 +380,8 @@ export default function ComparePage4() {
                                         <ResponsiveContainer width="100%" height="100%">
                                             <BarChart data={data} margin={{ top: 20, right: 10, left: -20, bottom: 5 }}>
                                                 <CartesianGrid strokeDasharray="3 3" stroke="#000" strokeOpacity={0.1} vertical={false} />
-                                                <XAxis dataKey="exam" tick={{ fill: '#000', fontSize: 10, fontWeight: 700, fontFamily: 'monospace' }} axisLine={{ stroke: '#000', strokeWidth: 2 }} tickLine={false} />
-                                                <YAxis tick={{ fill: '#000', fontSize: 10, fontFamily: 'monospace' }} axisLine={{ stroke: '#000', strokeWidth: 2 }} tickLine={false} />
+                                                <XAxis dataKey="exam" tick={{ fill: '#000', fontSize: 11, fontWeight: 700, fontFamily: 'monospace' }} axisLine={{ stroke: '#000', strokeWidth: 2 }} tickLine={false} />
+                                                <YAxis tick={{ fill: '#000', fontSize: 11, fontFamily: 'monospace' }} axisLine={{ stroke: '#000', strokeWidth: 2 }} tickLine={false} />
                                                 <ChartTooltip
                                                     cursor={{ fill: 'rgba(0,0,0,0.1)' }}
                                                     content={

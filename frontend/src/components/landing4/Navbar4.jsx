@@ -33,33 +33,33 @@ export default function Navbar4() {
             {/* Mobile Menu Toggle */}
             <button
                 onClick={toggleMenu}
-                className="md:hidden z-[101] p-1 border-2 border-black bg-white active:translate-y-1 transition-transform"
+                className="md:hidden z-[101] p-3 min-w-[48px] min-h-[48px] flex items-center justify-center border-2 border-black bg-white active:translate-y-1 transition-transform"
                 aria-label="Toggle Menu"
             >
-                {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
+                {isMenuOpen ? <X size={28} /> : <Menu size={28} />}
             </button>
 
             {/* Mobile Overlay */}
             {isMenuOpen && (
-                <div className="fixed inset-0 bg-[#ffde00] z-[100] flex flex-col justify-center items-center gap-8 md:hidden animate-in fade-in zoom-in-95 duration-200 p-6">
+                <div className="fixed inset-0 bg-[#ffde00] z-[100] flex flex-col justify-center items-center gap-6 md:hidden animate-in fade-in zoom-in-95 duration-200 p-6 overflow-y-auto">
                     <Link
                         to="/4/leaderboard"
                         onClick={closeMenu}
-                        className="text-3xl font-black uppercase hover:underline decoration-4 decoration-black underline-offset-8 text-center"
+                        className="w-full py-4 text-3xl font-black uppercase hover:underline decoration-4 decoration-black underline-offset-8 text-center active:bg-black/5"
                     >
                         Leaderboard
                     </Link>
                     <Link
                         to="/4/compare"
                         onClick={closeMenu}
-                        className="text-3xl font-black uppercase hover:underline decoration-4 decoration-black underline-offset-8 text-center"
+                        className="w-full py-4 text-3xl font-black uppercase hover:underline decoration-4 decoration-black underline-offset-8 text-center active:bg-black/5"
                     >
                         Compare
                     </Link>
                     <Link
                         to="/4/game"
                         onClick={closeMenu}
-                        className="text-3xl font-black uppercase hover:underline decoration-4 decoration-black underline-offset-8 text-center"
+                        className="w-full py-4 text-3xl font-black uppercase hover:underline decoration-4 decoration-black underline-offset-8 text-center active:bg-black/5"
                     >
                         Game
                     </Link>
@@ -67,10 +67,10 @@ export default function Navbar4() {
                     <Link
                         to="/4/game"
                         onClick={closeMenu}
-                        className="bg-white border-4 border-black px-8 py-4 font-black text-xl shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] hover:translate-x-1 hover:translate-y-1 hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] active:translate-x-2 active:translate-y-2 active:shadow-none transition-all mt-8 flex items-center gap-2"
+                        className="w-full max-w-xs justify-center bg-white border-4 border-black px-8 py-5 font-black text-xl shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] hover:translate-x-1 hover:translate-y-1 hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] active:translate-x-2 active:translate-y-2 active:shadow-none transition-all mt-8 flex items-center gap-3"
                     >
                         <span>PLAY GAME</span>
-                        <span className="bg-black text-white px-1 text-sm">NEW</span>
+                        <span className="bg-black text-white px-2 py-0.5 text-sm">NEW</span>
                     </Link>
                 </div>
             )}

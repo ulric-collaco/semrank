@@ -17,7 +17,7 @@ const ToggleButton = ({ options, active, onChange }) => {
                     key={opt.value}
                     onClick={() => onChange(opt.value)}
                     className={`
-                        flex-1 md:flex-none px-2 md:px-6 py-2 font-bold uppercase font-mono transition-colors text-[10px] sm:text-xs md:text-base truncate
+                        flex-1 md:flex-none px-2 md:px-6 py-3 min-h-[44px] font-bold uppercase font-mono transition-colors text-xs md:text-base truncate flex items-center justify-center
                         ${active === opt.value
                             ? 'bg-black text-[#ffde00]'
                             : 'bg-white text-black hover:bg-gray-100'
@@ -145,7 +145,7 @@ export default function LeaderboardPage4() {
                                 <button
                                     key={c}
                                     onClick={() => setFilterClass(c)}
-                                    className={`flex-1 md:flex-none px-2 md:px-3 py-2 text-[10px] sm:text-xs md:text-sm font-bold uppercase transition-colors whitespace-nowrap
+                                    className={`flex-1 md:flex-none px-3 md:px-4 py-3 min-h-[44px] text-xs md:text-sm font-bold uppercase transition-colors whitespace-nowrap flex items-center justify-center
                                         ${filterClass === c ? 'bg-black text-white' : 'hover:bg-gray-200'}
                                     `}
                                 >
@@ -160,7 +160,7 @@ export default function LeaderboardPage4() {
                                 <select
                                     value={selectedSubject}
                                     onChange={(e) => setSelectedSubject(e.target.value)}
-                                    className="w-full h-full p-2 bg-transparent font-bold uppercase appearance-none cursor-pointer focus:outline-none text-xs md:text-base truncate pr-8"
+                                    className="w-full h-full p-3 min-h-[44px] bg-transparent font-bold uppercase appearance-none cursor-pointer focus:outline-none text-xs md:text-base truncate pr-10"
                                 >
                                     {subjectList.map(s => (
                                         <option key={s.subject_code} value={s.subject_code} className="font-mono">
@@ -168,7 +168,7 @@ export default function LeaderboardPage4() {
                                         </option>
                                     ))}
                                 </select>
-                                <ChevronDown className="absolute right-2 top-1/2 -translate-y-1/2 w-4 h-4 md:w-5 md:h-5 pointer-events-none border-2 border-black bg-[#ffde00] rounded-full p-0.5" />
+                                <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 pointer-events-none border-2 border-black bg-[#ffde00] rounded-full p-0.5" />
                             </div>
                         )}
                     </div>
