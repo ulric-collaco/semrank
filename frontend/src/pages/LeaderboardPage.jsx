@@ -3,6 +3,7 @@ import { gsap } from 'gsap'
 import { leaderboardAPI, statsAPI } from '../utils/api'
 import { formatClassName } from '../utils/format'
 import StudentModal from '../components/StudentModal'
+import ToggleSwitch from '../components/ToggleSwitch'
 import { ChevronDown, BookOpen, Trophy, Users, GraduationCap, LayoutGrid } from 'lucide-react'
 
 export default function LeaderboardPage() {
@@ -112,72 +113,41 @@ export default function LeaderboardPage() {
         <div className="flex flex-col items-center gap-6 mb-10">
 
           {/* 1. Scope Toggle */}
-          <div className="bg-slate-900/80 p-1.5 rounded-full border border-white/10 flex gap-1 backdrop-blur-md shadow-xl">
-            <button
-              onClick={() => setViewScope('overall')}
-              className={`px-5 py-2.5 rounded-full text-sm font-bold transition-all flex items-center gap-2 ${viewScope === 'overall'
-                ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-500/20'
-                : 'text-slate-400 hover:text-white hover:bg-white/5'
-                }`}
-            >
-              <GraduationCap className="w-4 h-4" />
-              Overall
-            </button>
-            <button
-              onClick={() => setViewScope('subject')}
-              className={`px-5 py-2.5 rounded-full text-sm font-bold transition-all flex items-center gap-2 ${viewScope === 'subject'
-                ? 'bg-amber-600 text-white shadow-lg shadow-amber-500/20'
-                : 'text-slate-400 hover:text-white hover:bg-white/5'
-                }`}
-            >
-              <BookOpen className="w-4 h-4" />
-              Subject
-            </button>
+          <div className="mb-2">
+            <ToggleSwitch
+              options={[
+                { label: 'Overall', value: 'overall' },
+                { label: 'Subject', value: 'subject' },
+              ]}
+              activeValue={viewScope}
+              onChange={setViewScope}
+            />
           </div>
 
           {/* 2. Metric Toggle */}
-          <div className="bg-slate-900/50 p-1 rounded-lg border border-white/5 flex gap-1">
-            <button
-              onClick={() => setMetric('marks')}
-              className={`px-4 py-1.5 rounded-md text-xs font-bold transition-all flex items-center gap-2 ${metric === 'marks'
-                ? (viewScope === 'overall' ? 'bg-indigo-500/20 text-indigo-300' : 'bg-amber-500/20 text-amber-300')
-                : 'text-slate-500 hover:text-slate-300'
-                }`}
-            >
-              <Trophy className="w-3.5 h-3.5" />
-              {viewScope === 'overall' ? 'SGPA' : 'Marks'}
-            </button>
-            <div className="w-px bg-white/10 my-1"></div>
-            <button
-              onClick={() => setMetric('attendance')}
-              className={`px-4 py-1.5 rounded-md text-xs font-bold transition-all flex items-center gap-2 ${metric === 'attendance'
-                ? 'bg-emerald-500/20 text-emerald-300'
-                : 'text-slate-500 hover:text-slate-300'
-                }`}
-            >
-              <Users className="w-3.5 h-3.5" />
-              Attendance
-            </button>
+          <div className="mb-2">
+            <ToggleSwitch
+              options={[
+                { label: viewScope === 'overall' ? 'SGPA' : 'Marks', value: 'marks' },
+                { label: 'Attendance', value: 'attendance' },
+              ]}
+              activeValue={metric}
+              onChange={setMetric}
+            />
           </div>
 
           {/* 3. Filters (Class & Subject) */}
-          <div className="flex flex-wrap justify-center gap-3 w-full max-w-2xl mt-2">
+          <div className="flex flex-wrap justify-center gap-3 w-full max-w-2xl mt-2 z-10">
 
             {/* Class Filter */}
-            <div className="bg-slate-900/50 p-1.5 rounded-xl border border-white/10 flex flex-wrap justify-center gap-1 backdrop-blur-md">
-              {classes.map(c => (
-                <button
-                  key={c}
-                  onClick={() => setFilterClass(c)}
-                  className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all uppercase tracking-wider ${filterClass === c
-                    ? 'bg-slate-700 text-white shadow-md'
-                    : 'text-slate-400 hover:text-white hover:bg-white/5'
-                    }`}
-                >
-                  {c === 'all' ? 'All Classes' : formatClassName(c)}
-                </button>
-              ))}
-            </div>
+            <ToggleSwitch
+              options={classes.map(c => ({
+                label: c === 'all' ? 'All' : formatClassName(c),
+                value: c
+              }))}
+              activeValue={filterClass}
+              onChange={setFilterClass}
+            />
 
             {/* Subject Selector */}
             {viewScope === 'subject' && (
@@ -185,7 +155,7 @@ export default function LeaderboardPage() {
                 <select
                   value={selectedSubject}
                   onChange={(e) => setSelectedSubject(e.target.value)}
-                  className="appearance-none bg-slate-800/80 border border-white/10 text-amber-100 pl-4 pr-10 py-2.5 rounded-xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-amber-500/50 hover:bg-slate-800 transition-colors w-full cursor-pointer"
+                  className="appearance-none bg-slate-800/80 border border-white/10 text-amber-100 pl-4 pr-10 py-2.5 rounded-xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-amber-500/50 hover:bg-slate-800 transition-colors w-full cursor-pointer h-[42px]"
                 >
                   {subjectList.map(sub => (
                     <option key={sub.subject_code} value={sub.subject_code}>
@@ -272,7 +242,7 @@ export default function LeaderboardPage() {
                       </div>
                     </div>
                     <div className="min-w-0">
-                      <h3 className="font-bold text-slate-200 truncate pr-8 md:pr-0">{student.name}</h3>
+                      <h3 className="font-bold text-slate-200 line-clamp-2 md:line-clamp-1 break-words leading-tight pr-8 md:pr-0">{student.name}</h3>
                       <p className="text-xs text-slate-500 font-mono">{student.roll_no}</p>
                     </div>
                   </div>

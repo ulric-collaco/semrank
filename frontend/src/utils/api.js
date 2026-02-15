@@ -62,8 +62,8 @@ export const leaderboardAPI = {
     return fetchWithRetry(`/leaderboard/attendance?${params}`)
   },
   getClassRankings: () => fetchWithRetry('/leaderboard/classes'),
-  getTopBySubject: (subjectCode, limit = 10, classFilter = 'all') => {
-    const params = new URLSearchParams({ limit, class: classFilter })
+  getTopBySubject: (subjectCode, limit = 10, classFilter = 'all', sortBy = 'marks') => {
+    const params = new URLSearchParams({ limit, class: classFilter, sortBy })
     return fetchWithRetry(`/leaderboard/subject/${subjectCode}?${params}`)
   },
 }
