@@ -7,9 +7,48 @@ import { formatClassName } from '../../utils/format';
 import { studentAPI } from '../../utils/api';
 
 export default function StudentIDCard4({ student, loading, error, onClose }) {
+    // Move hooks to top level, before any conditional returns
+    const [selectedSubjectIndex, setSelectedSubjectIndex] = useState(0);
     const [analysisData, setAnalysisData] = useState(null);
     const [showAnalysis, setShowAnalysis] = useState(false);
     const [isAnalyzing, setIsAnalyzing] = useState(false);
+
+    // Initial Loading State
+    if (loading) {
+        return (
+            <div className="w-full max-w-[900px] mx-auto bg-white border-4 border-black p-8 flex flex-col items-center justify-center min-h-[400px] gap-4 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] z-[60] relative">
+                <div className="animate-spin h-12 w-12 border-4 border-black border-t-[#ff69b4] rounded-full"></div>
+                <div className="font-black text-xl uppercase animate-pulse">LOADING DATA...</div>
+            </div>
+        );
+    }
+
+    // Error State
+    if (error || !student) {
+        return (
+            <div className="w-full max-w-[900px] mx-auto bg-white border-4 border-black p-8 text-center min-h-[300px] flex flex-col items-center justify-center gap-6 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] z-[60] relative">
+                <p className="font-bold text-xl uppercase">{error || "Student details not available."}</p>
+                <button onClick={onClose} className="px-6 py-3 bg-black text-white hover:bg-[#ff0000] font-black uppercase border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all active:translate-x-1 active:translate-y-1 active:shadow-none">Close</button>
+            </div>
+        );
+    }
+
+    const formatFloat = (num, decimals) => {
+        if (num === null || num === undefined) return 'N/A';
+        const val = parseFloat(num);
+        return isNaN(val) ? 'N/A' : val.toFixed(decimals);
+    };
+
+    // Calculate derived values safely
+    const subjects = student && student.subjects ? student.subjects : [];
+    const activeSubject = subjects[selectedSubjectIndex] || (subjects.length > 0 ? subjects[0] : null);
+
+    const topSubjects = student && student.subjects
+        ? [...student.subjects]
+            .filter(a => !['Sensor', 'Constitution', 'Environmental'].some(term => a.subject_name.includes(term)))
+            .sort((a, b) => (a.rank || 999) - (b.rank || 999))
+            .slice(0, 4)
+        : [];
 
     const handleAnalyze = async () => {
         if (analysisData) {
@@ -29,41 +68,6 @@ export default function StudentIDCard4({ student, loading, error, onClose }) {
         }
     };
 
-    if (loading) {
-        return (
-            <div className="w-full max-w-[900px] bg-white border-4 border-black p-8 flex flex-col items-center justify-center min-h-[400px] gap-4 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]">
-                <div className="animate-spin h-12 w-12 border-4 border-black border-t-[#ff69b4] rounded-full"></div>
-                <div className="font-black text-xl uppercase animate-pulse">LOADING DATA...</div>
-            </div>
-        );
-    }
-
-    if (error || !student) {
-        return (
-            <div className="w-full max-w-[900px] bg-white border-4 border-black p-8 text-center min-h-[300px] flex flex-col items-center justify-center gap-6 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]">
-                <p className="font-bold text-xl uppercase">{error || "Student details not available."}</p>
-                <button onClick={onClose} className="px-6 py-3 bg-black text-white hover:bg-[#ff0000] font-black uppercase border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all active:translate-x-1 active:translate-y-1 active:shadow-none">Close</button>
-            </div>
-        );
-    }
-
-    const formatFloat = (num, decimals) => {
-        if (num === null || num === undefined) return 'N/A';
-        const val = parseFloat(num);
-        return isNaN(val) ? 'N/A' : val.toFixed(decimals);
-    };
-
-    const topSubjects = student.subjects
-        ? [...student.subjects]
-            .filter(a => !['Sensor', 'Constitution', 'Environmental'].some(term => a.subject_name.includes(term)))
-            .sort((a, b) => (a.rank || 999) - (b.rank || 999))
-            .slice(0, 4)
-        : [];
-
-    const [selectedSubjectIndex, setSelectedSubjectIndex] = useState(0);
-    const subjects = student.subjects || [];
-    const activeSubject = subjects[selectedSubjectIndex] || (subjects.length > 0 ? subjects[0] : null);
-
     const ViewRechartsBarChart = ({ activeSubject, maxMarks }) => {
         const data = [
             { name: 'MSE', value: activeSubject.mse || 0 },
@@ -75,24 +79,26 @@ export default function StudentIDCard4({ student, loading, error, onClose }) {
         ];
 
         return (
-            <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={data} margin={{ top: 20, right: 0, left: -25, bottom: 0 }}>
-                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#000" strokeOpacity={0.1} />
-                    <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fill: '#000', fontSize: 12, fontWeight: 900, fontFamily: 'monospace' }} dy={10} />
-                    <YAxis axisLine={false} tickLine={false} tick={{ fill: '#000', fontSize: 12, fontWeight: 700, fontFamily: 'monospace' }} domain={[0, maxMarks]} />
-                    <Bar dataKey="value" fill="#000" stroke="#000" strokeWidth={2}>
-                        {data.map((entry, index) => (
-                            <Cell key={`cell-${index}`} fill={index % 2 === 0 ? '#ff69b4' : '#00ffff'} />
-                        ))}
-                        <LabelList dataKey="value" position="top" fill="#000" fontSize={12} fontWeight={900} formatter={(val) => val > 0 ? val : ''} />
-                    </Bar>
-                </BarChart>
-            </ResponsiveContainer>
+            <div style={{ width: '100%', height: 200, maxWidth: '100%' }}>
+                <ResponsiveContainer width="100%" height="100%">
+                    <BarChart data={data} margin={{ top: 20, right: 0, left: -25, bottom: 0 }}>
+                        <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#000" strokeOpacity={0.1} />
+                        <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fill: '#000', fontSize: 12, fontWeight: 900, fontFamily: 'monospace' }} dy={10} />
+                        <YAxis axisLine={false} tickLine={false} tick={{ fill: '#000', fontSize: 12, fontWeight: 700, fontFamily: 'monospace' }} domain={[0, maxMarks]} />
+                        <Bar dataKey="value" fill="#000" stroke="#000" strokeWidth={2}>
+                            {data.map((entry, index) => (
+                                <Cell key={`cell-${index}`} fill={index % 2 === 0 ? '#ff69b4' : '#00ffff'} />
+                            ))}
+                            <LabelList dataKey="value" position="top" fill="#000" fontSize={12} fontWeight={900} formatter={(val) => val > 0 ? val : ''} />
+                        </Bar>
+                    </BarChart>
+                </ResponsiveContainer>
+            </div>
         );
     };
 
     return (
-        <div className="w-full max-w-[1000px] mx-auto bg-white border-4 border-black shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] font-mono text-black relative z-[60] overflow-hidden">
+        <div className="w-full max-w-[1000px] mx-auto bg-white border-4 border-black shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] font-mono text-black relative z-[60] max-h-[85vh] overflow-y-auto md:max-h-[90vh]">
 
             {/* Header Section */}
             <div className="bg-[#ffde00] border-b-4 border-black p-4 md:p-6 flex justify-between items-start">
