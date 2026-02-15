@@ -51,11 +51,13 @@ export default function SearchInput4() {
 
     return (
         <>
-            <div ref={containerRef} className="relative w-full max-w-2xl mx-auto font-mono z-40">
-                <div className="relative group">
-                    <div className="absolute inset-0 bg-black translate-x-2 translate-y-2 group-focus-within:translate-x-3 group-focus-within:translate-y-3 transition-transform"></div>
-                    <div className="relative flex items-center bg-white border-4 border-black">
-                        <Search className="w-5 h-5 md:w-6 md:h-6 ml-3 md:ml-4 text-black stroke-[3]" />
+            <div ref={containerRef} className="relative w-full max-w-3xl mx-auto font-mono z-40 px-4">
+                <div className="relative group transform rotate-[-1deg] hover:rotate-0 transition-transform duration-300">
+                    <div className="absolute inset-0 bg-black translate-x-2 translate-y-2 group-focus-within:translate-x-4 group-focus-within:translate-y-4 group-hover:translate-x-3 group-hover:translate-y-3 transition-transform"></div>
+                    <div className="relative flex items-stretch bg-white border-4 border-black">
+                        <div className="flex items-center pl-4 md:pl-6">
+                            <Search className="w-6 h-6 md:w-8 md:h-8 text-black stroke-[4]" />
+                        </div>
                         <input
                             type="text"
                             value={query}
@@ -64,27 +66,35 @@ export default function SearchInput4() {
                                 setShowResults(true);
                             }}
                             onFocus={() => setShowResults(true)}
-                            placeholder="SEARCH NAME OR ROLL..."
-                            className="w-full px-3 py-3 md:px-4 md:py-4 font-bold text-sm md:text-lg uppercase bg-transparent outline-none placeholder:text-gray-400"
+                            placeholder="SEARCH ROLL NO..."
+                            className="w-full h-14 md:h-20 px-4 md:px-6 font-black text-xl md:text-3xl uppercase bg-transparent outline-none placeholder:text-gray-300 text-black leading-none"
                         />
+                        <button className="hidden md:flex items-center px-8 bg-[#ffde00] border-l-4 border-black font-black text-xl hover:bg-[#ff69b4] transition-colors" onClick={() => {
+                            // Focus logic or search trigger if needed
+                        }}>
+                            SEARCH
+                        </button>
                     </div>
                 </div>
 
                 {showResults && (query.length >= 2) && (
-                    <div className="absolute left-0 right-0 top-[calc(100%+12px)] bg-white border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] md:shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] max-h-[300px] md:max-h-[400px] overflow-y-auto z-50">
+                    <div className="absolute left-4 right-4 top-[calc(100%+24px)] bg-white border-4 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] max-h-[60vh] overflow-y-auto z-50">
                         {loading ? (
-                            <div className="p-4 md:p-6 text-center font-black animate-pulse bg-[#ffde00] text-sm md:text-base">
-                                SEARCHING DATABASE...
+                            <div className="p-4 md:p-6 text-center font-black animate-pulse bg-[#ffde00] text-lg md:text-xl border-b-4 border-black">
+                                SCANNING DATABASE...
                             </div>
                         ) : results.length > 0 ? (
                             results.map((student) => (
                                 <div
                                     key={student.roll_no}
                                     onClick={() => handleSelect(student.roll_no)}
-                                    className="p-3 md:p-4 border-b-4 border-black last:border-b-0 hover:bg-[#00ffff] cursor-pointer transition-colors flex justify-between items-center group"
+                                    className="p-4 md:p-6 border-b-4 border-black last:border-b-0 hover:bg-[#00ffff] cursor-pointer transition-colors flex justify-between items-center group relative overflow-hidden"
                                 >
-                                    <div className="flex items-center gap-3 md:gap-4 overflow-hidden">
-                                        <div className="w-8 h-8 md:w-10 md:h-10 border-2 border-black bg-gray-200 flex-shrink-0 overflow-hidden">
+                                    {/* Hover Effect Background */}
+                                    <div className="absolute inset-0 bg-[#ff69b4] translate-x-[-100%] group-hover:translate-x-0 transition-transform duration-300 z-0"></div>
+
+                                    <div className="relative z-10 flex items-center gap-4 md:gap-6 overflow-hidden w-full">
+                                        <div className="w-12 h-12 md:w-16 md:h-16 border-4 border-black bg-white flex-shrink-0 overflow-hidden shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
                                             <img
                                                 src={`/student_faces/${student.roll_no}.png`}
                                                 alt=""
@@ -92,17 +102,20 @@ export default function SearchInput4() {
                                                 onError={(e) => { e.target.style.display = 'none'; }}
                                             />
                                         </div>
-                                        <div className="min-w-0">
-                                            <div className="font-black uppercase text-sm md:text-lg leading-none truncate">{student.name}</div>
-                                            <div className="text-[10px] md:text-xs font-bold bg-black text-white px-1 inline-block mt-1">{student.roll_no}</div>
+                                        <div className="min-w-0 flex-1">
+                                            <div className="font-black uppercase text-lg md:text-2xl leading-none truncate mb-1">{student.name}</div>
+                                            <div className="flex items-center gap-2">
+                                                <span className="text-xs md:text-sm font-bold bg-black text-white px-2 py-0.5">{student.roll_no}</span>
+                                                <span className="text-xs md:text-sm font-bold border-2 border-black px-2 py-0.5">{student.class}</span>
+                                            </div>
                                         </div>
+                                        <div className="font-black text-2xl md:text-4xl pl-4">{student.cgpa || '?'}</div>
                                     </div>
-                                    <div className="font-black text-lg md:text-xl pl-2">{student.cgpa || '?'}</div>
                                 </div>
                             ))
                         ) : (
-                            <div className="p-4 md:p-6 text-center font-black text-gray-500 text-sm md:text-base">
-                                NO RECORDS FOUND
+                            <div className="p-8 text-center font-black text-gray-500 text-lg md:text-xl uppercase">
+                                NO FIGHTERS FOUND
                             </div>
                         )}
                     </div>

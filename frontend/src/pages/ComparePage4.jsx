@@ -1,11 +1,11 @@
 
 import React, { useState, useEffect, useMemo } from 'react';
 import {
-    BarChart, Bar, XAxis, YAxis, CartesianGrid, Legend,
+    BarChart, Bar, XAxis, YAxis, CartesianGrid, Legend, Tooltip,
     RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar, ResponsiveContainer
 } from 'recharts';
 import { ChartContainer, ChartTooltip, ChartTooltipContent, ChartLegend, ChartLegendContent } from '@/components/ui/chart';
-import { Users, X, Search, Check, ArrowLeft } from 'lucide-react';
+import { Users, X, Search, Check, ArrowLeft, Trash2 } from 'lucide-react';
 import { studentAPI } from '../utils/api';
 import { formatClassName } from '../utils/format';
 import Navbar4 from '../components/landing4/Navbar4';
@@ -55,12 +55,28 @@ const CustomPolarAngleAxisTick = ({ payload, x, y, cx, cy, ...rest }) => {
     );
 };
 
+// Custom Tooltip for brutalist theme (fixes black-on-black issue from ChartTooltipContent)
+const BrutalTooltip = ({ active, payload, label }) => {
+    if (!active || !payload?.length) return null;
+    return (
+        <div className="bg-white border-3 border-black p-3 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] font-mono">
+            <p className="font-black text-sm text-black uppercase mb-1">{label}</p>
+            {payload.map((entry, idx) => (
+                <div key={idx} className="flex items-center gap-2 text-xs">
+                    <div className="w-3 h-3 border-2 border-black" style={{ backgroundColor: entry.color || entry.fill }} />
+                    <span className="text-gray-700 font-bold">{entry.name}:</span>
+                    <span className="font-black text-black">{entry.value}</span>
+                </div>
+            ))}
+        </div>
+    );
+};
+
 export default function ComparePage4() {
     const [students, setStudents] = useState([]);
     const [selectedStudents, setSelectedStudents] = useState([]);
     const [searchQuery, setSearchQuery] = useState('');
     const [loading, setLoading] = useState(true);
-    const [fetchingDetails, setFetchingDetails] = useState(false);
     const [selectedClass, setSelectedClass] = useState('All');
 
     useEffect(() => {
@@ -96,42 +112,57 @@ export default function ComparePage4() {
         return filtered;
     }, [students, searchQuery, selectedClass]);
 
-    const toggleStudent = async (student) => {
+    const buildSubjectsObj = (subjects) => {
+        const obj = {};
+        if (subjects && Array.isArray(subjects)) {
+            subjects.forEach(sub => {
+                obj[sub.subject_name] = {
+                    'MSE': sub.mse,
+                    'ESE': sub.ese,
+                    'TH-ISE1': sub.th_ise1,
+                    'TH-ISE2': sub.th_ise2,
+                    'PR-ISE1': sub.pr_ise1,
+                    'PR-ISE2': sub.pr_ise2,
+                    'Total': sub.total_marks
+                };
+            });
+        }
+        return obj;
+    };
+
+    const toggleStudent = (student) => {
         const isSelected = selectedStudents.find(s => s.roll_no === student.roll_no);
 
         if (isSelected) {
             setSelectedStudents(prev => prev.filter(s => s.roll_no !== student.roll_no));
-        } else if (selectedStudents.length < 2) {
-            let studentDetail = student;
-            if (!student.subjects) {
-                try {
-                    setFetchingDetails(true);
-                    studentDetail = await studentAPI.getStudentByRoll(student.roll_no);
-                } catch (err) {
-                    console.error("Failed to fetch details", err);
-                    return;
-                } finally {
-                    setFetchingDetails(false);
-                }
-            }
-
-            const subjectsObj = {};
-            if (studentDetail.subjects && Array.isArray(studentDetail.subjects)) {
-                studentDetail.subjects.forEach(sub => {
-                    subjectsObj[sub.subject_name] = {
-                        'MSE': sub.mse,
-                        'ESE': sub.ese,
-                        'TH-ISE1': sub.th_ise1,
-                        'TH-ISE2': sub.th_ise2,
-                        'PR-ISE1': sub.pr_ise1,
-                        'PR-ISE2': sub.pr_ise2,
-                        'Total': sub.total_marks
-                    };
-                });
-            }
-
-            setSelectedStudents([...selectedStudents, { ...studentDetail, subjectsObj }]);
+            return;
         }
+
+        if (selectedStudents.length >= 2) return;
+
+        // If we already have full details, add immediately
+        if (student.subjects) {
+            setSelectedStudents(prev => [...prev, { ...student, subjectsObj: buildSubjectsObj(student.subjects) }]);
+            return;
+        }
+
+        // Optimistic: add student immediately with basic info + loading flag
+        const placeholder = { ...student, subjectsObj: {}, _loading: true };
+        setSelectedStudents(prev => [...prev, placeholder]);
+
+        // Fetch details in background, then update in-place
+        studentAPI.getStudentByRoll(student.roll_no)
+            .then(detail => {
+                const subjectsObj = buildSubjectsObj(detail.subjects);
+                setSelectedStudents(prev =>
+                    prev.map(s => s.roll_no === student.roll_no ? { ...detail, subjectsObj } : s)
+                );
+            })
+            .catch(err => {
+                console.error("Failed to fetch details", err);
+                // Remove the placeholder on failure
+                setSelectedStudents(prev => prev.filter(s => s.roll_no !== student.roll_no));
+            });
     };
 
     const radarData = useMemo(() => {
@@ -267,9 +298,20 @@ export default function ComparePage4() {
                         </p>
                     </div>
 
-                    <div className="bg-[#ffde00] border-4 border-black px-4 py-2 font-bold shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] flex items-center gap-2 w-full md:w-auto justify-center">
-                        <Users className="w-5 h-5" />
-                        <span>{selectedStudents.length} / 2 FIGHTERS READY</span>
+                    <div className="flex items-center gap-3 w-full md:w-auto">
+                        {selectedStudents.length > 0 && (
+                            <button
+                                onClick={() => setSelectedStudents([])}
+                                className="bg-white border-4 border-black px-3 py-2 font-bold shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] flex items-center gap-2 hover:bg-red-100 hover:border-red-600 hover:shadow-[4px_4px_0px_0px_rgba(220,38,38,1)] transition-all active:translate-x-1 active:translate-y-1 active:shadow-none"
+                            >
+                                <Trash2 className="w-4 h-4" />
+                                <span className="text-xs md:text-sm">CLEAR</span>
+                            </button>
+                        )}
+                        <div className="bg-[#ffde00] border-4 border-black px-4 py-2 font-bold shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] flex items-center gap-2 flex-1 md:flex-none justify-center">
+                            <Users className="w-5 h-5" />
+                            <span>{selectedStudents.length} / 2 FIGHTERS READY</span>
+                        </div>
                     </div>
                 </div>
 
@@ -304,7 +346,7 @@ export default function ComparePage4() {
                     {loading ? (
                         <div className="text-center py-8 font-bold animate-pulse">LOADING ROSTER...</div>
                     ) : (
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 md:gap-4 max-h-[300px] md:max-h-[400px] overflow-y-auto pr-2 custom-scrollbar border-2 border-black/10 p-2">
+                        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 md:gap-3 max-h-[320px] md:max-h-[400px] overflow-y-auto pr-1 custom-scrollbar border-2 border-black/10 p-2">
                             {filteredStudents.map((student) => {
                                 const isSelected = selectedStudents.some(s => s.roll_no === student.roll_no);
                                 const isDisabled = !isSelected && selectedStudents.length >= 2;
@@ -313,22 +355,49 @@ export default function ComparePage4() {
                                     <button
                                         key={student.roll_no}
                                         onClick={() => toggleStudent(student)}
-                                        disabled={isDisabled || fetchingDetails}
+                                        disabled={isDisabled}
                                         className={`
-                                    relative p-3 border-2 border-black text-left transition-all min-h-[48px]
-                                    ${isSelected
-                                                ? 'bg-[#00ffff] shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] -translate-y-1'
-                                                : 'bg-white hover:bg-gray-100'
+                                            relative p-2 border-2 border-black text-left transition-all
+                                            ${isSelected
+                                                ? 'bg-[#00ffff] shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] -translate-y-0.5'
+                                                : 'bg-white hover:bg-gray-50 hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]'
                                             }
-                                    ${isDisabled ? 'opacity-50 cursor-not-allowed bg-gray-200' : ''}
-                                `}
+                                            ${isDisabled ? 'opacity-40 cursor-not-allowed bg-gray-200' : ''}
+                                        `}
                                     >
-                                        <div className="flex justify-between items-center h-full">
-                                            <div className="overflow-hidden min-w-0 flex-1">
-                                                <div className="font-bold truncate uppercase text-sm md:text-base">{student.name}</div>
-                                                <div className="text-xs font-mono bg-black text-white inline-block px-1 mt-1">{student.roll_no}</div>
+                                        <div className="flex items-center gap-2">
+                                            {/* Student Photo */}
+                                            <div className="w-9 h-9 md:w-10 md:h-10 border-2 border-black bg-gray-100 flex-shrink-0 overflow-hidden">
+                                                {student.roll_no ? (
+                                                    <img
+                                                        src={`/student_faces/${student.roll_no}.png`}
+                                                        alt={student.name}
+                                                        className="w-full h-full object-cover"
+                                                        loading="lazy"
+                                                        onError={(e) => {
+                                                            e.target.style.display = 'none';
+                                                            e.target.nextSibling.style.display = 'flex';
+                                                        }}
+                                                    />
+                                                ) : null}
+                                                <div className={`${student.roll_no ? 'hidden' : 'flex'} w-full h-full items-center justify-center text-xs font-black text-gray-400`}>
+                                                    {student.name?.charAt(0)}
+                                                </div>
                                             </div>
-                                            {isSelected && <Check className="w-5 h-5 md:w-6 md:h-6 stroke-[3] ml-2 flex-shrink-0" />}
+                                            {/* Info */}
+                                            <div className="overflow-hidden min-w-0 flex-1">
+                                                <div className="font-bold truncate uppercase text-[11px] md:text-xs leading-tight">{student.name}</div>
+                                                <div className="flex items-center gap-1 mt-0.5">
+                                                    <span className="text-[10px] font-mono bg-black text-white px-1 leading-relaxed">{student.roll_no}</span>
+                                                    {student.class && (
+                                                        <span className="text-[9px] font-bold text-gray-500 uppercase hidden md:inline">{formatClassName(student.class)}</span>
+                                                    )}
+                                                </div>
+                                            </div>
+                                            {/* Check */}
+                                            {isSelected && (
+                                                <Check className="w-4 h-4 stroke-[3] flex-shrink-0" />
+                                            )}
                                         </div>
                                     </button>
                                 );
@@ -338,23 +407,50 @@ export default function ComparePage4() {
                 </div>
 
                 {/* Comparison Viz */}
-                {selectedStudents.length > 0 && (
+                {selectedStudents.length > 0 ? (
                     <div className="space-y-8 md:space-y-12">
                         {/* Active Fighters Bar */}
                         <div className="flex flex-wrap gap-4 md:gap-6 justify-center">
                             {selectedStudents.map((student, idx) => (
                                 <div
                                     key={student.roll_no}
-                                    className="flex items-center gap-4 bg-white border-4 border-black p-3 md:p-4 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] w-full md:w-auto md:min-w-[200px]"
+                                    className="flex items-center gap-3 bg-white border-4 border-black p-3 md:p-4 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] w-full md:w-auto md:min-w-[240px]"
                                     style={{ borderLeftWidth: '12px', borderLeftColor: THEME_COLORS[idx % THEME_COLORS.length] }}
                                 >
+                                    {/* Fighter Photo */}
+                                    <div className="w-12 h-12 border-3 border-black bg-gray-100 flex-shrink-0 overflow-hidden">
+                                        {student.roll_no ? (
+                                            <img
+                                                src={`/student_faces/${student.roll_no}.png`}
+                                                alt={student.name}
+                                                className="w-full h-full object-cover"
+                                                loading="lazy"
+                                                onError={(e) => {
+                                                    e.target.style.display = 'none';
+                                                    e.target.nextSibling.style.display = 'flex';
+                                                }}
+                                            />
+                                        ) : null}
+                                        <div className={`${student.roll_no ? 'hidden' : 'flex'} w-full h-full items-center justify-center font-black text-gray-400`}>
+                                            {student.name?.charAt(0)}
+                                        </div>
+                                    </div>
                                     <div className="flex-1 min-w-0">
                                         <div className="font-black uppercase text-base md:text-lg truncate">{student.name}</div>
+                                        <div className="flex items-center gap-2 mt-0.5">
+                                            <span className="text-[10px] font-mono bg-black text-white px-1">{student.roll_no}</span>
+                                            {student.class && (
+                                                <span className="text-[10px] font-bold text-gray-500">{formatClassName(student.class)}</span>
+                                            )}
+                                            {student._loading && (
+                                                <span className="text-[10px] font-bold text-orange-500 animate-pulse">LOADING...</span>
+                                            )}
+                                        </div>
                                         <button
                                             onClick={() => toggleStudent(student)}
-                                            className="text-xs font-bold underline hover:text-red-600 mt-1"
+                                            className="text-[10px] font-bold underline hover:text-red-600 mt-1 uppercase"
                                         >
-                                            REMOVE FIGHTER
+                                            Remove
                                         </button>
                                     </div>
                                 </div>
@@ -383,9 +479,18 @@ export default function ComparePage4() {
                                                 fillOpacity={0.5}
                                             />
                                         ))}
-                                        <ChartTooltip content={<ChartTooltipContent />} />
+                                        <Tooltip content={<BrutalTooltip />} />
                                     </RadarChart>
                                 </ChartContainer>
+                            </div>
+                            {/* Legend */}
+                            <div className="flex flex-wrap justify-center gap-4 md:gap-6 mt-4 pt-4 border-t-2 border-black/10">
+                                {selectedStudents.map((student, idx) => (
+                                    <div key={student.roll_no} className="flex items-center gap-2">
+                                        <div className="w-4 h-4 border-2 border-black" style={{ backgroundColor: THEME_COLORS[idx % THEME_COLORS.length] }} />
+                                        <span className="font-bold text-sm uppercase">{student.name}</span>
+                                    </div>
+                                ))}
                             </div>
                         </div>
 
@@ -402,7 +507,7 @@ export default function ComparePage4() {
                                                 <CartesianGrid strokeDasharray="3 3" stroke="#000" strokeOpacity={0.1} vertical={false} />
                                                 <XAxis dataKey="exam" tick={{ fill: '#000', fontSize: 11, fontWeight: 700, fontFamily: 'monospace' }} axisLine={{ stroke: '#000', strokeWidth: 2 }} tickLine={false} />
                                                 <YAxis tick={{ fill: '#000', fontSize: 11, fontFamily: 'monospace' }} axisLine={{ stroke: '#000', strokeWidth: 2 }} tickLine={false} domain={[0, 50]} allowDecimals={false} />
-                                                <ChartTooltip content={<ChartTooltipContent />} />
+                                                <Tooltip content={<BrutalTooltip />} />
                                                 <ChartLegend content={<ChartLegendContent />} />
                                                 {selectedStudents.map((student, idx) => (
                                                     <Bar
@@ -421,6 +526,19 @@ export default function ComparePage4() {
                             ))}
                         </div>
                     </div>
+                ) : (
+                    /* Empty State */
+                    !loading && (
+                        <div className="bg-[#f0f0f0] border-4 border-dashed border-black p-12 md:p-16 text-center shadow-[4px_4px_0px_0px_rgba(0,0,0,0.2)]">
+                            <div className="bg-white border-4 border-black w-20 h-20 mx-auto flex items-center justify-center mb-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] rotate-3">
+                                <Users className="w-10 h-10" />
+                            </div>
+                            <h3 className="text-2xl md:text-3xl font-black uppercase mb-3">No Fighters Selected</h3>
+                            <p className="text-gray-500 font-bold max-w-md mx-auto">
+                                SEARCH AND SELECT 2 FIGHTERS FROM THE ROSTER ABOVE TO BEGIN THE COMPARISON.
+                            </p>
+                        </div>
+                    )
                 )}
             </div>
             <Footer4 />

@@ -28,6 +28,15 @@ export default {
         'bubble-hover': '0 12px 32px rgba(245, 130, 174, 0.25)',
         'bubble-active': '0 4px 12px rgba(245, 130, 174, 0.1)',
       },
+      keyframes: {
+        marquee: {
+          '0%': { transform: 'translateX(-100%)' },
+          '100%': { transform: 'translateX(0%)' },
+        }
+      },
+      animation: {
+        marquee: 'marquee 10s linear infinite',
+      },
     },
   },
   plugins: [],

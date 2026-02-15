@@ -4,7 +4,7 @@ import { Crown } from 'lucide-react';
 import { formatClassName } from '../../utils/format';
 import StudentModal4 from './StudentModal4';
 
-export default function Leaderboard4({ data }) {
+export default function Leaderboard4({ data, sortBy = 'sgpa', setSortBy }) {
     const [selectedStudentRoll, setSelectedStudentRoll] = useState(null);
 
     if (!data || data.length === 0) return null;
@@ -19,18 +19,36 @@ export default function Leaderboard4({ data }) {
     return (
         <section className="bg-[#f0f0f0] py-24 px-6 border-b-4 border-black">
             <div className="max-w-6xl mx-auto">
-                <div className="text-center mb-20">
+                <div className="flex flex-col items-center mb-12 relative z-10">
                     <Link to="/4/leaderboard" className="inline-block group relative">
                         <div className="absolute inset-0 bg-black translate-x-3 translate-y-3 group-hover:translate-x-1 group-hover:translate-y-1 transition-transform"></div>
-                        <div className="relative bg-[#ff69b4] border-4 border-black px-8 py-4 md:px-12 md:py-6 flex items-center justify-center gap-4 hover:-translate-y-1 transition-transform cursor-pointer">
-                            <h2 className="text-4xl md:text-6xl font-black uppercase text-center m-0 leading-none text-black">
+                        <div className="relative bg-[#ff69b4] border-4 border-black px-8 py-5 md:px-16 md:py-8 flex items-center justify-center gap-4 hover:-translate-y-1 transition-transform cursor-pointer">
+                            <h2 className="text-3xl sm:text-5xl md:text-7xl font-black uppercase text-center m-0 leading-none text-black whitespace-nowrap">
                                 The Leaderboard
                             </h2>
-                            <span className="hidden md:block bg-black text-[#ffde00] text-xl px-4 py-2 font-mono font-bold transform rotate-6 group-hover:rotate-12 transition-transform border-2 border-white">
+                            {/* Sticker Badge */}
+                            <span className="absolute -top-4 -right-2 md:-top-5 md:-right-6 bg-black text-[#ffde00] text-xs md:text-lg px-3 py-1 md:px-5 md:py-2 font-mono font-bold transform rotate-12 border-2 border-white shadow-[2px_2px_0px_0px_rgba(0,0,0,0.5)] z-20">
                                 VIEW ALL
                             </span>
                         </div>
                     </Link>
+
+                    {/* Tiny Flick Toggle - Bigger & Spaced */}
+                    <div className="flex border-3 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] bg-white text-sm md:text-base font-black mt-10 md:mt-12 cursor-pointer transform rotate-[-2deg] hover:rotate-0 transition-transform">
+                        <button
+                            onClick={() => setSortBy && setSortBy('sgpa')}
+                            className={`px-8 py-3 transition-colors ${sortBy === 'sgpa' ? 'bg-black text-[#ff69b4]' : 'bg-white text-gray-400 hover:text-black'}`}
+                        >
+                            SGPA
+                        </button>
+                        <div className="w-1 bg-black"></div>
+                        <button
+                            onClick={() => setSortBy && setSortBy('attendance')}
+                            className={`px-8 py-3 transition-colors ${sortBy === 'attendance' ? 'bg-black text-[#00ffff]' : 'bg-white text-gray-400 hover:text-black'}`}
+                        >
+                            ATTENDANCE
+                        </button>
+                    </div>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-y-16 gap-x-8 pt-6">
@@ -60,8 +78,13 @@ export default function Leaderboard4({ data }) {
 
                             <div className="w-full border-t-4 border-black pt-4 mt-auto">
                                 <div className="flex justify-between items-center px-4">
-                                    <span className="font-bold text-gray-500 uppercase">Score</span>
-                                    <span className="text-4xl font-black">{student.cgpa}</span>
+                                    <span className="font-bold text-gray-500 uppercase">{sortBy === 'attendance' ? 'Attendance' : 'SGPA'}</span>
+                                    <span className="text-4xl font-black">
+                                        {sortBy === 'attendance'
+                                            ? `${parseFloat(student.attendance || 0).toFixed(1)}%`
+                                            : student.cgpa || student.sgpa
+                                        }
+                                    </span>
                                 </div>
                             </div>
                         </div>
