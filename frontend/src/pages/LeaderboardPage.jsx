@@ -1,10 +1,9 @@
 import { useState, useEffect, useRef } from 'react'
 import { gsap } from 'gsap'
-import StudentBubble from '../components/StudentBubble'
 import { leaderboardAPI, statsAPI } from '../utils/api'
 import { formatClassName } from '../utils/format'
 import StudentModal from '../components/StudentModal'
-import { Filter, ChevronDown, BookOpen, Trophy, Users, Calculator } from 'lucide-react'
+import { ChevronDown, BookOpen, Trophy, Users, GraduationCap, LayoutGrid } from 'lucide-react'
 
 export default function LeaderboardPage() {
   const [students, setStudents] = useState([])
@@ -12,50 +11,54 @@ export default function LeaderboardPage() {
   const [isLoading, setIsLoading] = useState(true)
   const [selectedStudentRoll, setSelectedStudentRoll] = useState(null)
 
-  // Primary Mode: 'cgpa', 'attendance', 'subject'
-  const [activeMode, setActiveMode] = useState('cgpa')
+  // New State Model
+  const [viewScope, setViewScope] = useState('overall') // 'overall' | 'subject'
+  const [metric, setMetric] = useState('marks')         // 'marks' | 'attendance'
 
   // Filters
   const [filterClass, setFilterClass] = useState('all')
   const [selectedSubject, setSelectedSubject] = useState('')
 
   // Constants
-  const LIMIT = 1000 // Always fetch all (or a high limit)
+  const LIMIT = 1000
   const classes = ['all', 'COMPS_A', 'COMPS_B', 'COMPS_C', 'MECH']
 
   const gridRef = useRef(null)
 
-  // Initial Data Fetch & Mode Changes
+  // Fetch Data on Change
   useEffect(() => {
     fetchLeaderboardData()
-  }, [activeMode, filterClass, selectedSubject])
+  }, [viewScope, metric, filterClass, selectedSubject])
 
-  // Fetch Subject List when entering Subject mode
+  // Fetch Subject List when entering Subject scope
   useEffect(() => {
-    if (activeMode === 'subject' && subjectList.length === 0) {
+    if (viewScope === 'subject' && subjectList.length === 0) {
       fetchSubjects()
     }
-  }, [activeMode])
+  }, [viewScope])
 
   const fetchLeaderboardData = async () => {
     setIsLoading(true)
     try {
       let data = []
 
-      if (activeMode === 'subject') {
+      if (viewScope === 'subject') {
         if (selectedSubject) {
-          // Fetch Subject Leaderboard
-          const response = await leaderboardAPI.getTopBySubject(selectedSubject, LIMIT, filterClass)
+          // Fetch Subject Leaderboard (Marks or Attendance)
+          // metric 'marks' -> sortBy='marks', 'attendance' -> sortBy='attendance'
+          const response = await leaderboardAPI.getTopBySubject(selectedSubject, LIMIT, filterClass, metric)
           data = response.students || []
         } else {
-          // Waiting for subject selection
-          data = []
+          data = [] // Waiting for subject
         }
-      } else if (activeMode === 'attendance') {
-        data = await leaderboardAPI.getTopByAttendance(LIMIT, filterClass)
       } else {
-        // Default: SGPA
-        data = await leaderboardAPI.getTopBySGPA(LIMIT, filterClass)
+        // Overall Scope
+        if (metric === 'attendance') {
+          data = await leaderboardAPI.getTopByAttendance(LIMIT, filterClass)
+        } else {
+          // Default: SGPA (Marks)
+          data = await leaderboardAPI.getTopBySGPA(LIMIT, filterClass)
+        }
       }
 
       setStudents(data)
@@ -72,7 +75,7 @@ export default function LeaderboardPage() {
       const response = await statsAPI.getSubjectStats('all')
       const subs = response.subjects || []
       setSubjectList(subs)
-      // Select first subject by default if none selected
+      // Select first subject by default
       if (subs.length > 0 && !selectedSubject) {
         setSelectedSubject(subs[0].subject_code)
       }
@@ -81,64 +84,49 @@ export default function LeaderboardPage() {
     }
   }
 
-  // Animation when data changes
+  // Animation
   useEffect(() => {
     if (!gridRef.current || isLoading) return
-
     gsap.fromTo(
       gridRef.current.children,
-      { scale: 0.9, opacity: 0 },
-      { scale: 1, opacity: 1, duration: 0.4, stagger: 0.03, ease: 'back.out(1.2)' }
+      { scale: 0.95, opacity: 0 },
+      { scale: 1, opacity: 1, duration: 0.4, stagger: 0.02, ease: 'power2.out' }
     )
   }, [students, isLoading])
-
-  // Get current active subject name
-  const getActiveSubjectName = () => {
-    const sub = subjectList.find(s => s.subject_code === selectedSubject)
-    return sub ? sub.subject_name : 'Subject'
-  }
 
   return (
     <div className="min-h-screen px-4 md:px-6 py-20 pb-32">
       <div className="max-w-5xl mx-auto">
 
         {/* Header */}
-        <div className="text-center mb-10">
+        <div className="text-center mb-8">
           <h1 className="text-4xl md:text-6xl font-display font-black text-ink mb-2 tracking-tight md:tracking-normal uppercase">
             Leaderboard
           </h1>
-        
+          <p className="text-slate-500 font-medium">
+            {viewScope === 'overall' ? 'Semester Rankings' : 'Subject-wise Performance'}
+          </p>
         </div>
 
         {/* Controls Container */}
-        <div className="flex flex-col items-center gap-6 mb-12">
+        <div className="flex flex-col items-center gap-6 mb-10">
 
-          {/* 1. Main Mode Toggles */}
-          <div className="bg-slate-900/50 p-1.5 rounded-full border border-white/10 flex flex-wrap justify-center gap-1 backdrop-blur-md">
+          {/* 1. Scope Toggle */}
+          <div className="bg-slate-900/80 p-1.5 rounded-full border border-white/10 flex gap-1 backdrop-blur-md shadow-xl">
             <button
-              onClick={() => setActiveMode('cgpa')}
-              className={`px-4 py-2 rounded-full text-sm font-bold transition-all flex items-center gap-2 ${activeMode === 'cgpa'
-                ? 'bg-indigo-500 text-white shadow-lg'
+              onClick={() => setViewScope('overall')}
+              className={`px-5 py-2.5 rounded-full text-sm font-bold transition-all flex items-center gap-2 ${viewScope === 'overall'
+                ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-500/20'
                 : 'text-slate-400 hover:text-white hover:bg-white/5'
                 }`}
             >
-              <Trophy className="w-4 h-4" />
-              SGPA
+              <GraduationCap className="w-4 h-4" />
+              Overall
             </button>
             <button
-              onClick={() => setActiveMode('attendance')}
-              className={`px-4 py-2 rounded-full text-sm font-bold transition-all flex items-center gap-2 ${activeMode === 'attendance'
-                ? 'bg-emerald-500 text-white shadow-lg'
-                : 'text-slate-400 hover:text-white hover:bg-white/5'
-                }`}
-            >
-              <Users className="w-4 h-4" />
-              Attendance
-            </button>
-            <button
-              onClick={() => setActiveMode('subject')}
-              className={`px-4 py-2 rounded-full text-sm font-bold transition-all flex items-center gap-2 ${activeMode === 'subject'
-                ? 'bg-amber-500 text-white shadow-lg'
+              onClick={() => setViewScope('subject')}
+              className={`px-5 py-2.5 rounded-full text-sm font-bold transition-all flex items-center gap-2 ${viewScope === 'subject'
+                ? 'bg-amber-600 text-white shadow-lg shadow-amber-500/20'
                 : 'text-slate-400 hover:text-white hover:bg-white/5'
                 }`}
             >
@@ -147,18 +135,43 @@ export default function LeaderboardPage() {
             </button>
           </div>
 
-          {/* 2. Secondary Filters (Class & Subject Selector) */}
-          <div className="flex flex-wrap justify-center gap-3 w-full max-w-2xl">
+          {/* 2. Metric Toggle */}
+          <div className="bg-slate-900/50 p-1 rounded-lg border border-white/5 flex gap-1">
+            <button
+              onClick={() => setMetric('marks')}
+              className={`px-4 py-1.5 rounded-md text-xs font-bold transition-all flex items-center gap-2 ${metric === 'marks'
+                ? (viewScope === 'overall' ? 'bg-indigo-500/20 text-indigo-300' : 'bg-amber-500/20 text-amber-300')
+                : 'text-slate-500 hover:text-slate-300'
+                }`}
+            >
+              <Trophy className="w-3.5 h-3.5" />
+              {viewScope === 'overall' ? 'SGPA' : 'Marks'}
+            </button>
+            <div className="w-px bg-white/10 my-1"></div>
+            <button
+              onClick={() => setMetric('attendance')}
+              className={`px-4 py-1.5 rounded-md text-xs font-bold transition-all flex items-center gap-2 ${metric === 'attendance'
+                ? 'bg-emerald-500/20 text-emerald-300'
+                : 'text-slate-500 hover:text-slate-300'
+                }`}
+            >
+              <Users className="w-3.5 h-3.5" />
+              Attendance
+            </button>
+          </div>
 
-            {/* Class Filter Toggle Group */}
+          {/* 3. Filters (Class & Subject) */}
+          <div className="flex flex-wrap justify-center gap-3 w-full max-w-2xl mt-2">
+
+            {/* Class Filter */}
             <div className="bg-slate-900/50 p-1.5 rounded-xl border border-white/10 flex flex-wrap justify-center gap-1 backdrop-blur-md">
               {classes.map(c => (
                 <button
                   key={c}
                   onClick={() => setFilterClass(c)}
                   className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all uppercase tracking-wider ${filterClass === c
-                      ? 'bg-slate-700 text-white shadow-md'
-                      : 'text-slate-400 hover:text-white hover:bg-white/5'
+                    ? 'bg-slate-700 text-white shadow-md'
+                    : 'text-slate-400 hover:text-white hover:bg-white/5'
                     }`}
                 >
                   {c === 'all' ? 'All Classes' : formatClassName(c)}
@@ -166,13 +179,13 @@ export default function LeaderboardPage() {
               ))}
             </div>
 
-            {/* Subject Selector (Only in Subject Mode) */}
-            {activeMode === 'subject' && (
-              <div className="relative group flex-grow md:flex-grow-0">
+            {/* Subject Selector */}
+            {viewScope === 'subject' && (
+              <div className="relative group flex-grow md:flex-grow-0 min-w-[200px]">
                 <select
                   value={selectedSubject}
                   onChange={(e) => setSelectedSubject(e.target.value)}
-                  className="appearance-none bg-slate-800/80 border border-white/10 text-amber-200 pl-4 pr-10 py-2.5 rounded-xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-amber-500/50 hover:bg-slate-800 transition-colors w-full md:min-w-[240px] max-w-full truncate"
+                  className="appearance-none bg-slate-800/80 border border-white/10 text-amber-100 pl-4 pr-10 py-2.5 rounded-xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-amber-500/50 hover:bg-slate-800 transition-colors w-full cursor-pointer"
                 >
                   {subjectList.map(sub => (
                     <option key={sub.subject_code} value={sub.subject_code}>
@@ -186,7 +199,7 @@ export default function LeaderboardPage() {
           </div>
         </div>
 
-        {/* Content Area */}
+        {/* Data List */}
         {isLoading ? (
           <div className="flex flex-col items-center justify-center py-20 gap-4">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-500"></div>
@@ -194,44 +207,38 @@ export default function LeaderboardPage() {
           </div>
         ) : students.length === 0 ? (
           <div className="text-center py-20 bg-slate-900/30 rounded-3xl border border-white/5">
-            <p className="text-slate-400">No students found for this criteria.</p>
+            <p className="text-slate-400">No students found.</p>
           </div>
         ) : (
-          <div
-            ref={gridRef}
-            className="grid grid-cols-1 gap-3 pb-20"
-          >
-            {/* Header Row */}
+          <div ref={gridRef} className="grid grid-cols-1 gap-3 pb-20">
+            {/* Table Header */}
             <div className="hidden md:grid grid-cols-12 gap-4 px-6 py-3 text-xs font-bold text-slate-500 uppercase tracking-wider">
               <div className="col-span-1 text-center">Rank</div>
               <div className="col-span-5">Student</div>
               <div className="col-span-3 text-right">
-                {activeMode === 'subject' ? 'Marks / 100' : activeMode === 'attendance' ? 'Attendance' : 'SGPI'}
+                {metric === 'attendance' ? 'Attendance' : (viewScope === 'subject' ? 'Marks / 100' : 'SGPI')}
               </div>
               <div className="col-span-3 text-right">Class</div>
             </div>
 
+            {/* Rows */}
             {students.map((student, index) => {
-              // Determine what value to show on the right based on mode
-              let primaryValue = ''
-              let primaryLabel = ''
+              // Determine Display Value
+              let displayValue = ''
               let accentColor = ''
 
-              if (activeMode === 'subject') {
-                primaryValue = student.marks?.total ?? 'N/A'
-                primaryLabel = 'Marks'
-                accentColor = 'text-amber-400'
-              } else if (activeMode === 'attendance') {
-                primaryValue = `${parseFloat(student.attendance || 0).toFixed(1)}%`
-                primaryLabel = 'Attendance'
+              if (metric === 'attendance') {
+                const att = viewScope === 'subject' ? student.attendance_percentage : student.attendance
+                displayValue = `${parseFloat(att || 0).toFixed(1)}%`
                 accentColor = 'text-emerald-400'
+              } else if (viewScope === 'subject') {
+                displayValue = parseFloat(student.marks?.total ?? 0).toFixed(2)
+                accentColor = 'text-amber-400'
               } else {
-                primaryValue = parseFloat(student.cgpa || 0).toFixed(2)
-                primaryLabel = 'SGPI'
+                displayValue = parseFloat(student.cgpa || 0).toFixed(2)
                 accentColor = 'text-indigo-400'
               }
 
-              // Determine Rank
               const rank = student.rank || (index + 1)
               const isTop3 = rank <= 3
 
@@ -241,27 +248,17 @@ export default function LeaderboardPage() {
                   onClick={() => setSelectedStudentRoll(student.roll_no)}
                   className="group relative bg-slate-900/40 hover:bg-slate-800/60 border border-white/5 hover:border-white/10 rounded-xl p-4 md:px-6 md:py-4 transition-all cursor-pointer flex flex-col md:grid md:grid-cols-12 gap-3 items-start md:items-center"
                 >
-                  {/* Mobile Rank Badge */}
-                  <div className="absolute top-4 right-4 md:hidden">
+                  {/* Rank Badge */}
+                  <div className="absolute top-4 right-4 md:static md:col-span-1 md:flex md:justify-center">
                     <div className={`
-                                        w-8 h-8 rounded-lg flex items-center justify-center font-bold text-sm
-                                        ${isTop3 ? 'bg-amber-500/10 text-amber-400 border border-amber-500/20' : 'bg-slate-800 text-slate-400 border border-slate-700'}
-                                     `}>
-                      #{rank}
-                    </div>
-                  </div>
-
-                  {/* Desktop Rank */}
-                  <div className="hidden md:flex col-span-1 justify-center">
-                    <div className={`
-                                        w-8 h-8 rounded-lg flex items-center justify-center font-bold text-sm
-                                        ${isTop3 ? 'bg-amber-500/10 text-amber-400 border border-amber-500/20' : 'bg-slate-800 text-slate-400 border border-slate-700'}
-                                    `}>
+                      w-8 h-8 rounded-lg flex items-center justify-center font-bold text-sm
+                      ${isTop3 ? 'bg-amber-500/10 text-amber-400 border border-amber-500/20' : 'bg-slate-800 text-slate-400 border border-slate-700'}
+                    `}>
                       {rank}
                     </div>
                   </div>
 
-                  {/* Student Info */}
+                  {/* Student Details */}
                   <div className="col-span-12 md:col-span-5 flex items-center gap-4">
                     <div className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-slate-800 overflow-hidden border border-white/10 flex-shrink-0">
                       <img
@@ -280,15 +277,17 @@ export default function LeaderboardPage() {
                     </div>
                   </div>
 
-                  {/* Primary Stat (Value) */}
+                  {/* Statistic */}
                   <div className="col-span-6 md:col-span-3 flex md:justify-end items-center gap-2 md:gap-0">
-                    <span className="md:hidden text-xs text-slate-500 uppercase font-bold mr-2">{primaryLabel}:</span>
+                    <span className="md:hidden text-xs text-slate-500 uppercase font-bold mr-2">
+                      {metric === 'attendance' ? 'Att:' : (viewScope === 'subject' ? 'Marks:' : 'SGPI:')}
+                    </span>
                     <span className={`text-xl font-bold font-mono ${accentColor}`}>
-                      {primaryValue}
+                      {displayValue}
                     </span>
                   </div>
 
-                  {/* Class */}
+                  {/* Class Badge */}
                   <div className="col-span-6 md:col-span-3 flex md:justify-end items-center">
                     <span className="md:hidden text-xs text-slate-500 uppercase font-bold mr-2">Class:</span>
                     <span className="text-slate-400 text-sm font-medium px-2 py-1 bg-white/5 rounded-md border border-white/5">
@@ -302,7 +301,6 @@ export default function LeaderboardPage() {
         )}
       </div>
 
-      {/* Student Detail Modal */}
       {selectedStudentRoll && (
         <StudentModal
           rollNo={selectedStudentRoll}

@@ -555,6 +555,7 @@ async function handleRequest(request, env) {
 
       // Get students from pre-computed subject leaderboard
       // MODIFIED: Fetch students for ALL subjects with the SAME NAME (handles split subject codes like Kannada)
+      // Joined STUDENT_SUBJECT (ss) to get attendance_percentage
       let query = `
         SELECT 
           s.student_id,
@@ -565,10 +566,12 @@ async function handleRequest(request, env) {
           ssl.subject_total,
           ssl.rank_subject_college,
           ssl.rank_subject_class,
+          ss.attendance_percentage,
           m.mse, m.th_ise1, m.th_ise2, m.ese, m.pr_ise1, m.pr_ise2
         FROM STUDENT_SUBJECT_LEADERBOARD ssl
         JOIN STUDENT s ON ssl.student_id = s.student_id
         JOIN SUBJECT sub ON ssl.subject_id = sub.subject_id
+        JOIN STUDENT_SUBJECT ss ON ssl.student_id = ss.student_id AND ssl.subject_id = ss.subject_id
         LEFT JOIN MARKS_backup m ON ssl.ss_id = m.ss_id
         WHERE sub.subject_name = (SELECT subject_name FROM SUBJECT WHERE subject_code = ?)
       `;
@@ -581,26 +584,34 @@ async function handleRequest(request, env) {
         ? await db.prepare(query).bind(subjectCode).all()
         : await db.prepare(query).bind(subjectCode, classFilter).all();
 
-      // Sort by marks (descending) to re-calculate rank across merged subjects
-      // Use subject_total for sorting.
-      const sorted = students.results.sort((a, b) => b.subject_total - a.subject_total);
+      // Sort & Rank Logic
+      const sortBy = url.searchParams.get('sortBy') || 'marks'; // 'marks' or 'attendance'
 
-      // slice AFTER sorting and ranking (actually we should rank first then slice? 
-      // Ideally we want global rank. If we limit to 10, we want top 10 global.
-      // So sort first, then map rank, then slice.
+      let sorted;
+      if (sortBy === 'attendance') {
+        // Sort by attendance_percentage DESC, then subject_total DESC
+        sorted = students.results.sort((a, b) => {
+          const attA = parseFloat(a.attendance_percentage || 0);
+          const attB = parseFloat(b.attendance_percentage || 0);
+          if (attA !== attB) return attB - attA;
+          return b.subject_total - a.subject_total;
+        });
+      } else {
+        // Sort by marks (descending)
+        sorted = students.results.sort((a, b) => b.subject_total - a.subject_total);
+      }
 
+      // slice AFTER sorting and ranking
       let currentRank = 0;
-      let lastMarks = -1;
-      let count = 0; // standard count for dense ranking or skip ranking? usually 1, 2, 2, 4.
-      // Let's use 1, 2, 2, 3 for simplicity or 1, 2, 2, 4. 
-      // The screenshot implies simple cardinal ranking 1, 1, 2, 2... but user complained.
-      // User wants 1 (92), 2 (92.1), 3 (90).
-      // Let's do standard competition ranking: 1, 2, 3... handling ties.
+      let lastValue = -1; // Value tracking for ranking (marks or attendance)
 
       const rankedStudents = sorted.map((student, index) => {
-        if (student.subject_total !== lastMarks) {
+        // Determine value to rank by
+        const value = sortBy === 'attendance' ? parseFloat(student.attendance_percentage || 0) : student.subject_total;
+
+        if (value !== lastValue) {
           currentRank = index + 1;
-          lastMarks = student.subject_total;
+          lastValue = value;
         }
         return {
           ...student,
@@ -615,9 +626,10 @@ async function handleRequest(request, env) {
         enrollment_id: student.enrollment_id,
         name: student.name,
         class: student.class,
-        subject_code: subjectCode, // This might be one of many, but we return the requested one or generic
+        subject_code: subjectCode,
         subject_name: subject.subject_name,
-        rank: student.calculated_rank, // Use our dynamic rank
+        rank: student.calculated_rank,
+        attendance_percentage: student.attendance_percentage, // Return attendance
         marks: {
           mse: student.mse,
           th_ise1: student.th_ise1,
