@@ -1,29 +1,61 @@
-
 import { Link } from 'react-router-dom';
+import { Github, ExternalLink, Star } from 'lucide-react';
 
 export default function Footer() {
     return (
-        <footer className="bg-black text-white p-12 border-t-4 border-white font-mono">
-            <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between gap-12">
-                <div className="flex-1">
-                    <h2 className="text-6xl font-black uppercase mb-6 text-[#ffde00]">SemRank</h2>
+        <footer className="bg-black text-white p-8 md:p-12 border-t-4 border-white font-mono">
+            <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-start md:items-center gap-8">
+
+                {/* Brand */}
+                <div>
+                    <h2 className="text-4xl md:text-6xl font-black uppercase mb-2 text-[#ffde00] leading-none">
+                        SemRank
+                    </h2>
+                    <a
+                        href="https://ulriccollaco.me"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-sm font-bold text-gray-400 hover:text-white transition-colors flex items-center gap-1 uppercase"
+                    >
+                        Created by Ulric Collaco <ExternalLink size={12} />
+                    </a>
                 </div>
 
-                <div className="grid grid-cols-2 gap-12 font-bold text-lg">
-                    <div className="flex flex-col gap-4">
-                        <Link to="/" className="hover:text-[#00ffff] hover:translate-x-2 transition-transform">{`->`} HOME</Link>
-                        <a href="#" className="hover:text-[#00ffff] hover:translate-x-2 transition-transform">{`->`} ABOUT</a>
-                        <a href="#" className="hover:text-[#00ffff] hover:translate-x-2 transition-transform">{`->`} LEGAL</a>
+                {/* Credits & Links */}
+                <div className="flex flex-col gap-4 items-start md:items-end">
+
+                    {/* Inspiration Credit */}
+                    <div className="text-right flex flex-col items-start md:items-end">
+                        <span className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-1">Inspired By</span>
+                        <a
+                            href="https://www.romeirofernandes.tech"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="font-bold text-lg hover:text-[#00ffff] hover:underline decoration-4 underline-offset-4 transition-all uppercase flex items-center gap-2"
+                        >
+                            Romeiro Fernandes
+                        </a>
                     </div>
-                    <div className="flex flex-col gap-4">
-                        <a href="https://ulriccollaco.me" className="hover:text-[#ffde00] hover:translate-x-2 transition-transform">{`->`} CREATOR</a>
-                        <a href="#" className="hover:text-[#ffde00] hover:translate-x-2 transition-transform">{`->`} GITHUB</a>
-                        <a href="#" className="hover:text-[#ffde00] hover:translate-x-2 transition-transform">{`->`} TWITTER</a>
-                    </div>
+
+                    {/* Repo Star Button */}
+                    <a
+                        href="https://github.com/romeirofernandes/whereyoustand"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="group bg-white text-black border-2 border-transparent hover:border-[#ffde00] px-4 py-2 flex items-center gap-3 font-black uppercase tracking-wider hover:-translate-y-1 hover:shadow-[4px_4px_0_0_#ffde00] transition-all"
+                    >
+                        <Github size={20} />
+                        <span>Star 'WhereYouStand'</span>
+                        <Star size={16} className="fill-black group-hover:fill-[#ffde00] transition-colors" />
+                    </a>
+
                 </div>
             </div>
-            <div className="mt-12 pt-12 border-t-4 border-[#333] text-center text-[#666] uppercase text-sm font-bold">
-                (C) 2026 SEMRANK. NO RIGHTS RESERVED. JUST KIDDING.
+
+            {/* Copyright */}
+            <div className="mt-12 pt-8 border-t-2 border-[#333] flex flex-col md:flex-row justify-between items-center gap-4 text-[#666] text-xs font-bold uppercase">
+                <span>(C) 2026 SEMRANK.</span>
+                <span className="opacity-50">Because numbers don't lie, but students do.</span>
             </div>
         </footer>
     );
