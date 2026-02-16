@@ -17,12 +17,15 @@ export default function Hero() {
             </div>
 
             {/* Main Heading - Slightly smaller but punchy */}
+            {/* Main Heading - Slightly smaller but punchy */}
             <h1 className="text-6xl sm:text-7xl md:text-8xl lg:text-9xl font-black uppercase leading-[0.85] tracking-tighter mb-6 w-full break-words hyphens-auto text-black relative z-[1] flex flex-col items-center">
-                <div className="flex items-center justify-center gap-2">
-                    <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#ffde00] to-[#ff69b4] stroke-black text-stroke-2 md:text-stroke-2" style={{ WebkitTextStroke: '2px black' }}>SEM</span>
-                    <span className="text-[#00ffff] inline-block transform skew-x-[-10deg] rotate-2" style={{ textShadow: '4px 4px 0px #000' }}>3</span>
+                <div className="flex items-center justify-center gap-4">
+                    <span className="bg-[#ffde00] text-black border-4 border-black px-4 py-0 transform -skew-x-12 shadow-[6px_6px_0_0_#000] hover:-translate-y-1 hover:shadow-[10px_10px_0_0_#000] transition-all">
+                        SEM
+                    </span>
+                    <span className="text-[#00ffff] inline-block transform skew-x-[-10deg] rotate-2 drop-shadow-[4px_4px_0_#000]" style={{ textShadow: '4px 4px 0px #000' }}>3</span>
                 </div>
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#ffde00] to-[#ff69b4] stroke-black text-stroke-2 md:text-stroke-2 block mt-1 rotate-[-1deg]" style={{ WebkitTextStroke: '2px black' }}>
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#ffde00] to-[#ff69b4] stroke-black text-stroke-2 md:text-stroke-2 block mt-2 rotate-[-1deg]" style={{ WebkitTextStroke: '2px black' }}>
                     UNLEASHED
                 </span>
             </h1>

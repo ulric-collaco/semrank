@@ -5,7 +5,7 @@ import Leaderboard from '../components/Leaderboard';
 import Footer from '../components/Footer';
 import InsightCard from '../components/InsightCard';
 import StudentModal from '../components/StudentModal';
-import { leaderboardAPI, studentAPI, birthdayAPI } from '../utils/api';
+import { leaderboardAPI, studentAPI, birthdayAPI, statsAPI } from '../utils/api';
 import { Swords, BarChart3, TrendingUp, AlertTriangle, Cake } from 'lucide-react';
 
 export default function LandingPage() {
@@ -32,11 +32,12 @@ export default function LandingPage() {
         async function fetchData() {
             try {
                 // Parallel Fetching for speed
-                const [leaderboardData, subjectStats, classRankings, birthdayData] = await Promise.all([
+                const [leaderboardData, subjectStats, classRankings, birthdayData, distributionData] = await Promise.all([
                     sortBy === 'sgpa' ? leaderboardAPI.getTopBySGPA(50, 'all') : leaderboardAPI.getTopByAttendance(50, 'all'),
-                    studentAPI.getSubjectStats ? studentAPI.getSubjectStats() : Promise.resolve([]),
-                    leaderboardAPI.getClassRankings ? leaderboardAPI.getClassRankings() : Promise.resolve([]),
-                    birthdayAPI.getTodaysBirthdays ? birthdayAPI.getTodaysBirthdays().catch(() => []) : Promise.resolve([])
+                    statsAPI.getSubjectStats('all'), // Correct API call
+                    leaderboardAPI.getClassRankings(),
+                    birthdayAPI.getTodaysBirthdays ? birthdayAPI.getTodaysBirthdays().catch(() => []) : Promise.resolve([]),
+                    statsAPI.getBatchDistribution().catch(() => []) /* New Distribution Endpoint */
                 ]);
 
                 setTopStudents(leaderboardData.slice(0, 6)); // Keep top 6 for main board
@@ -52,46 +53,36 @@ export default function LandingPage() {
                 }
 
                 // --- 2. Rank Distribution (Real DB Data) ---
-                if (leaderboardData.length > 0) {
-                    const buckets = {
-                        '9.5+': 0, '9.0-9.5': 0, '8.5-9.0': 0, '8.0-8.5': 0,
-                        '7.5-8.0': 0, '7.0-7.5': 0, '6.0-7.0': 0, '<6.0': 0
-                    };
-                    leaderboardData.forEach(s => {
-                        const v = s.cgpa;
-                        if (v >= 9.5) buckets['9.5+']++;
-                        else if (v >= 9.0) buckets['9.0-9.5']++;
-                        else if (v >= 8.5) buckets['8.5-9.0']++;
-                        else if (v >= 8.0) buckets['8.0-8.5']++;
-                        else if (v >= 7.5) buckets['7.5-8.0']++;
-                        else if (v >= 7.0) buckets['7.0-7.5']++;
-                        else if (v >= 6.0) buckets['6.0-7.0']++;
-                        else buckets['<6.0']++;
-                    });
+                if (distributionData && distributionData.length > 0) {
                     setRankDistData({
-                        simple: Object.entries(buckets).map(([name, value]) => ({ name, value })),
-                        detailed: Object.entries(buckets).map(([name, value]) => ({ name, value }))
+                        simple: distributionData,
+                        detailed: distributionData
                     });
                 }
 
-                // --- 3. GPA Booster & Nightmare (Derived from Subject Stats) ---
+                // --- 3. GPA Booster (Best Subject) ---
                 if (subjectStats && subjectStats.subjects?.length > 0) {
-                    const sortedSubjects = [...subjectStats.subjects].sort((a, b) => b.avg_marks - a.avg_marks);
+                    const sortedSubjects = [...subjectStats.subjects].sort((a, b) => (b.avg_gp || 0) - (a.avg_gp || 0));
                     const easiest = sortedSubjects[0];
-                    const hardest = sortedSubjects[sortedSubjects.length - 1];
 
                     setGpaBoosterData({
                         value: easiest.subject_name.split(' ')[0], // Short name
-                        label: `AVG: ${easiest.avg_marks.toFixed(1)}`,
+                        label: `AVG GP: ${easiest.avg_gp?.toFixed(2) || 'N/A'}`,
                         subtext: 'EASIEST 10 POINTER'
                     });
+                }
+
+                // --- 4. Bunk Lords (Worst Attendance Class) ---
+                if (classRankings && classRankings.length > 0) {
+                    const bunkLordClass = [...classRankings].sort((a, b) => a.avg_attendance - b.avg_attendance)[0];
 
                     setBunkStatsData({
-                        value: hardest.subject_name.split(' ')[0], // Short name
-                        label: `AVG: ${hardest.avg_marks.toFixed(1)}`,
-                        subtext: 'HIGHEST FAIL RATE'
+                        value: bunkLordClass.class_name,
+                        label: `${bunkLordClass.avg_attendance}%`,
+                        subtext: 'LOWEST ATTENDANCE'
                     });
                 }
+
 
             } catch (e) {
                 console.error(e);
@@ -164,6 +155,7 @@ export default function LandingPage() {
                             data={rankDistData ? (isMobile ? rankDistData.simple : rankDistData.detailed) : null}
                             icon={BarChart3}
                             accentColor="#00ffff"
+                            showXAxis={!isMobile}
                         />
                     </div>
 

@@ -86,9 +86,15 @@ export default function HomePage() {
     <div className="min-h-screen px-6 pt-12 md:pt-16 pb-12">
       {/* Hero Section */}
       <div ref={heroRef} className="max-w-6xl mx-auto text-center mb-8 md:mb-12" style={{ opacity: 0 }}>
-        <h1 className="text-[48px] md:text-[72px] lg:text-[90px] font-display text-ink mb-8 md:mb-12 leading-none tracking-tight drop-shadow-xl">
-          <span className="text-[#ffde00] inline-block transform -rotate-6 px-2 bg-black border-4 border-white shadow-[4px_4px_0_0_rgba(255,255,255,0.5)] mr-4">SEM 3</span>
-          UNLEASHED
+        <h1 className="text-[48px] md:text-[72px] lg:text-[90px] font-display text-ink mb-8 md:mb-12 leading-none tracking-tight drop-shadow-xl flex flex-wrap justify-center items-center gap-2 md:gap-4">
+          <div className="flex gap-1 md:gap-2 text-[40px] md:text-[60px] lg:text-[80px] font-mono font-bold leading-none">
+            <span className="bg-black text-[#00ffff] px-2 py-1 transform -rotate-6 border-2 border-white shadow-[4px_4px_0_0_#00ffff] hover:scale-110 transition-transform">S</span>
+            <span className="bg-black text-[#ff00cc] px-2 py-1 transform rotate-3 border-2 border-white shadow-[4px_4px_0_0_#ff00cc] hover:scale-110 transition-transform">E</span>
+            <span className="bg-black text-[#ccff00] px-2 py-1 transform -rotate-3 border-2 border-white shadow-[4px_4px_0_0_#ccff00] hover:scale-110 transition-transform">M</span>
+
+            <span className="ml-2 bg-[#ffde00] text-black px-3 py-1 transform rotate-6 border-2 border-black shadow-[4px_4px_0_0_rgba(0,0,0,1)] rounded-full hover:scale-110 transition-transform">3</span>
+          </div>
+          <span className="text-white mt-2 md:mt-0" style={{ textShadow: '4px 4px 0px #000' }}>UNLEASHED</span>
         </h1>
 
 

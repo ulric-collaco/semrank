@@ -74,6 +74,7 @@ export const statsAPI = {
     return fetchWithRetry(`/stats/subjects?${params}`)
   },
   getClassStats: (className) => fetchWithRetry(`/stats/class/${encodeURIComponent(className)}`),
+  getBatchDistribution: () => fetchWithRetry('/stats/distribution'),
 }
 
 export const birthdayAPI = {

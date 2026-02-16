@@ -1,7 +1,7 @@
 import React from 'react';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell } from 'recharts';
 
-export default function InsightCard({ title, subtitle, type, data, accentColor = '#ffde00', icon: Icon, onStudentClick }) {
+export default function InsightCard({ title, subtitle, type, data, accentColor = '#ffde00', icon: Icon, onStudentClick, showXAxis = false }) {
     // Brutalist Card Container
     return (
         <div className="bg-white border-4 border-black p-6 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] hover:translate-x-1 hover:translate-y-1 hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all relative group overflow-hidden h-full flex flex-col">
@@ -17,7 +17,7 @@ export default function InsightCard({ title, subtitle, type, data, accentColor =
             {/* Content Body */}
             <div className="flex-1 flex flex-col justify-center z-10 relative min-h-[160px]">
                 {type === 'rivalry' && <RivalryContent data={data} onClick={onStudentClick} />}
-                {type === 'chart' && <ChartContent data={data} color={accentColor} />}
+                {type === 'chart' && <ChartContent data={data} color={accentColor} showXAxis={showXAxis} />}
                 {type === 'stat' && <StatContent data={data} color={accentColor} />}
                 {type === 'list' && <ListContent data={data} onClick={onStudentClick} />}
             </div>
@@ -77,13 +77,20 @@ function RivalryContent({ data, onClick }) {
     );
 }
 
-function ChartContent({ data, color }) {
+function ChartContent({ data, color, showXAxis }) {
     if (!data) return null;
     return (
         <div className="w-full h-40 relative group/chart cursor-pointer active:scale-[0.98] transition-transform" style={{ width: '100%', height: '160px' }}>
             <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0}>
-                <BarChart data={data}>
-                    <XAxis dataKey="name" hide />
+                <BarChart data={data} margin={{ bottom: showXAxis ? 20 : 0 }}>
+                    <XAxis
+                        dataKey="name"
+                        hide={!showXAxis}
+                        axisLine={false}
+                        tickLine={false}
+                        tick={{ fontSize: 10, fontWeight: 'bold', fill: '#666' }}
+                        interval={0}
+                    />
                     <Tooltip
                         cursor={{ fill: 'transparent' }}
                         contentStyle={{ border: '3px solid black', borderRadius: '0', boxShadow: '4px 4px 0 0 #000', fontWeight: 'bold' }}
