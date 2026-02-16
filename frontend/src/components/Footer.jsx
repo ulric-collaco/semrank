@@ -15,9 +15,13 @@ export default function Footer() {
                         href="https://ulriccollaco.me"
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-sm font-bold text-gray-400 hover:text-white transition-colors flex items-center gap-1 uppercase"
+                        className="group inline-flex items-center gap-3 mt-4 px-6 py-3 border-4 border-[#333] hover:border-[#00ffff] bg-black hover:bg-[#0a0a0a] transition-all duration-300 transform hover:-translate-y-1 hover:shadow-[8px_8px_0_0_#00ffff]"
                     >
-                        Created by Ulric Collaco <ExternalLink size={12} />
+                        <div className="flex flex-col items-start">
+                            <span className="text-[10px] font-bold text-gray-500 uppercase tracking-[0.2em] leading-none mb-1 group-hover:text-[#00ffff] transition-colors">Created By</span>
+                            <span className="text-xl font-black text-white uppercase leading-none tracking-wide group-hover:text-white transition-colors">Ulric Collaco</span>
+                        </div>
+                        <ExternalLink size={24} className="text-[#333] group-hover:text-[#00ffff] group-hover:rotate-45 transition-all duration-300 ml-1" />
                     </a>
                 </div>
 
@@ -25,15 +29,23 @@ export default function Footer() {
                 <div className="flex flex-col gap-4 items-start md:items-end">
 
                     {/* Inspiration Credit */}
-                    <div className="text-right flex flex-col items-start md:items-end">
-                        <span className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-1">Inspired By</span>
+                    <div className="text-right flex flex-col items-start md:items-end gap-1">
+                        <span className="text-[10px] font-bold text-gray-500 uppercase tracking-widest leading-none">Inspiration</span>
+                        <a
+                            href="https://whereyoustand.vercel.app"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="font-black text-2xl uppercase hover:text-[#00ffff] transition-colors leading-none"
+                        >
+                            WhereYouStand
+                        </a>
                         <a
                             href="https://www.romeirofernandes.tech"
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="font-bold text-lg hover:text-[#00ffff] hover:underline decoration-4 underline-offset-4 transition-all uppercase flex items-center gap-2"
+                            className="text-xs font-bold text-gray-400 uppercase tracking-wide hover:text-[#ffde00] transition-colors"
                         >
-                            Romeiro Fernandes
+                            by Romeiro Fernandes
                         </a>
                     </div>
 
