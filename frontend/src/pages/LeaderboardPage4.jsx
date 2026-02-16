@@ -329,9 +329,9 @@ export default function LeaderboardPage4() {
                     />
                 </Suspense>
             )}
+            )}
+
+            <Footer4 />
         </div>
-    )
-} <Footer4 />
-        </div >
     )
 }
