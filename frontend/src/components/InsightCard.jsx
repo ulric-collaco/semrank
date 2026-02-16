@@ -115,7 +115,7 @@ function StatContent({ data }) {
     if (!data) return <div className="text-center font-bold text-gray-300 animate-pulse">LOADING...</div>;
     return (
         <div className="text-center">
-            <div className="text-5xl md:text-6xl font-black mb-2" style={{ WebkitTextStroke: '2px black', color: 'transparent', backgroundImage: 'linear-gradient(45deg, #000, #333)', WebkitBackgroundClip: 'text' }}>
+            <div className="text-2xl md:text-4xl font-black mb-2 line-clamp-2 overflow-hidden text-ellipsis leading-tight break-words min-h-[3rem] flex items-center justify-center" style={{ WebkitTextStroke: '1px black', color: 'transparent', backgroundImage: 'linear-gradient(45deg, #000, #333)', WebkitBackgroundClip: 'text' }} title={data.value}>
                 {data.value}
             </div>
             <div className="text-lg font-bold bg-black text-white inline-block px-3 py-1 transform -rotate-2">

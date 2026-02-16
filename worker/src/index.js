@@ -799,28 +799,26 @@ async function handleRequest(request, env) {
       `).bind(className).first();
 
       // 3. Subject Stats (Mass Bunk, Einstein, Nightmare)
-      const subjectStats = await db.prepare(`
-        SELECT 
-          sub.subject_name,
-          AVG(ss.attendance_percentage) as avg_att,
       // 3. Subject Metrics (Grouped by Normalized Name for consistency)
       const subjectMetrics = await db.prepare(`
         SELECT 
           REPLACE(MAX(sub.subject_name), '  ', ' ') as subject_name,
-        AVG(scl.avg_subject_marks) as avg_marks,
-        AVG(scl.avg_attendance) as avg_attendance
-        FROM SUBJECT_CLASS_LEADERBOARD scl
-        JOIN SUBJECT sub ON scl.subject_id = sub.subject_id
-        JOIN CLASS c ON scl.class_id = c.class_id
+          MAX(sub.subject_code) as subject_code,
+          AVG(ssl.subject_total) as avg_marks,
+          AVG(ssl.attendance) as avg_attendance,
+          MAX(sub.maxMarks) as max_marks
+        FROM STUDENT_SUBJECT_LEADERBOARD ssl
+        JOIN SUBJECT sub ON ssl.subject_id = sub.subject_id
+        JOIN CLASS c ON ssl.class_id = c.class_id
         WHERE c.class_name = ?
         GROUP BY REPLACE(sub.subject_name, '  ', ' ')
-        `).bind(className).all();
+      `).bind(className).all();
 
-      // Find 'Mass Bunk' (Lowest Avg Attendance)
+      // Find 'Mass Bunk' (Lowest Avg Attendance) -- Include all subjects, even DM
       const validAttendanceSubjects = subjectMetrics.results
         .filter(s => s.avg_attendance > 0);
-      
-      const massBunkSubject = validAttendanceSubjects.length > 0 
+
+      const massBunkSubject = validAttendanceSubjects.length > 0
         ? validAttendanceSubjects.sort((a, b) => a.avg_attendance - b.avg_attendance)[0]
         : null;
 
@@ -829,27 +827,29 @@ async function handleRequest(request, env) {
         value: Math.round(massBunkSubject.avg_attendance) + '%'
       } : { subject: 'N/A', value: '-' };
 
-      // Find 'Einstein' (Highest Avg Marks)
-      const validMarksSubjects = subjectMetrics.results
-        .filter(s => s.avg_marks > 0);
+      // Find 'Einstein' & 'Nightmare' (Exclude Double Minor '25DM' & Non-Graded)
+      // Double Minors are excluded from SGPI, so they shouldn't count as "Nightmare" for grades
+      const gradedSubjects = subjectMetrics.results
+        .filter(s => s.avg_marks > 0 && !s.subject_code.startsWith('25DM'));
 
-      const einsteinSubject = validMarksSubjects.length > 0
-        ? [...validMarksSubjects].sort((a, b) => b.avg_marks - a.avg_marks)[0]
+      // Einstein: Highest % Marks
+      const einsteinSubject = gradedSubjects.length > 0
+        ? [...gradedSubjects].sort((a, b) => (b.avg_marks / b.max_marks) - (a.avg_marks / a.max_marks))[0]
         : null;
 
       const einstein = einsteinSubject ? {
         subject: einsteinSubject.subject_name,
-        value: einsteinSubject.avg_marks.toFixed(1)
+        value: einsteinSubject.avg_marks.toFixed(1) + ' / ' + einsteinSubject.max_marks
       } : { subject: 'N/A', value: '-' };
 
-      // Find 'Nightmare' (Lowest Avg Marks)
-      const nightmareSubject = validMarksSubjects.length > 0
-        ? [...validMarksSubjects].sort((a, b) => a.avg_marks - b.avg_marks)[0]
+      // Nightmare: Lowest % Marks
+      const nightmareSubject = gradedSubjects.length > 0
+        ? [...gradedSubjects].sort((a, b) => (a.avg_marks / a.max_marks) - (b.avg_marks / b.max_marks))[0]
         : null;
 
       const nightmare = nightmareSubject ? {
         subject: nightmareSubject.subject_name,
-        value: nightmareSubject.avg_marks.toFixed(1)
+        value: nightmareSubject.avg_marks.toFixed(1) + ' / ' + nightmareSubject.max_marks
       } : { subject: 'N/A', value: '-' };
 
       // 4. Granular Bell Curve (SGPI Distribution - 0.5 steps)

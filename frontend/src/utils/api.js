@@ -1,5 +1,5 @@
 // Base API URL - update this when backend is ready
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000/api'
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://semrank-api.collacou.workers.dev/api'
 
 // Retry config — handles Cloudflare Worker cold starts
 const MAX_RETRIES = 3
