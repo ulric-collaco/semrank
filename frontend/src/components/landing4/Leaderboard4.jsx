@@ -1,8 +1,10 @@
-import { useState } from 'react';
+import { useState, lazy, Suspense } from 'react';
 import { Link } from 'react-router-dom';
-import { Crown } from 'lucide-react';
+import Crown from 'lucide-react/dist/esm/icons/crown';
 import { formatClassName } from '../../utils/format';
-import StudentModal4 from './StudentModal4';
+import OptimizedImage from '../common/OptimizedImage';
+
+const StudentModal4 = lazy(() => import('./StudentModal4'));
 
 export default function Leaderboard4({ data, sortBy = 'sgpa', setSortBy }) {
     const [selectedStudentRoll, setSelectedStudentRoll] = useState(null);
@@ -63,11 +65,12 @@ export default function Leaderboard4({ data, sortBy = 'sgpa', setSortBy }) {
                             </div>
 
                             <div className="w-24 h-24 bg-[#ffde00] border-4 border-black rounded-full mb-4 overflow-hidden shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] group-hover:scale-110 transition-transform duration-300">
-                                <img
+                                <OptimizedImage
                                     src={`/student_faces/${student.roll_no}.png`}
                                     alt={student.name}
                                     className="w-full h-full object-cover"
-                                    onError={(e) => { e.target.style.display = 'none'; }}
+                                    width={96}
+                                    height={96}
                                 />
                             </div>
 
@@ -93,10 +96,12 @@ export default function Leaderboard4({ data, sortBy = 'sgpa', setSortBy }) {
             </div>
 
             {selectedStudentRoll && (
-                <StudentModal4
-                    rollNo={selectedStudentRoll}
-                    onClose={() => setSelectedStudentRoll(null)}
-                />
+                <Suspense fallback={null}>
+                    <StudentModal4
+                        rollNo={selectedStudentRoll}
+                        onClose={() => setSelectedStudentRoll(null)}
+                    />
+                </Suspense>
             )}
         </section>
     );

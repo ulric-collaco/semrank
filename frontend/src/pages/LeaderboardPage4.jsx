@@ -1,12 +1,15 @@
 
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect, useRef, lazy, Suspense } from 'react'
 import { gsap } from 'gsap'
 import { leaderboardAPI, statsAPI } from '../utils/api'
 import { formatClassName } from '../utils/format'
 import Navbar4 from '../components/landing4/Navbar4'
 import Footer4 from '../components/landing4/Footer4'
-import StudentModal4 from '../components/landing4/StudentModal4'
-import { ChevronDown, Crown } from 'lucide-react'
+import ChevronDown from 'lucide-react/dist/esm/icons/chevron-down'
+import Crown from 'lucide-react/dist/esm/icons/crown'
+import OptimizedImage from '../components/common/OptimizedImage'
+
+const StudentModal4 = lazy(() => import('../components/landing4/StudentModal4'));
 
 // Simple Neo-Brutalist Toggle
 const ToggleButton = ({ options, active, onChange }) => {
@@ -280,11 +283,12 @@ export default function LeaderboardPage4() {
 
                                     <div className="hidden md:block col-span-1">
                                         <div className="w-10 h-10 md:w-12 md:h-12 border-2 border-black overflow-hidden bg-gray-200">
-                                            <img
+                                            <OptimizedImage
                                                 src={`/student_faces/${student.roll_no}.png`}
                                                 alt=""
                                                 className="w-full h-full object-cover transition-all"
-                                                onError={(e) => { e.target.style.display = 'none'; }}
+                                                width={48}
+                                                height={48}
                                             />
                                         </div>
                                     </div>
@@ -318,13 +322,16 @@ export default function LeaderboardPage4() {
             </div>
 
             {selectedStudentRoll && (
-                <StudentModal4
-                    rollNo={selectedStudentRoll}
-                    onClose={() => setSelectedStudentRoll(null)}
-                />
+                <Suspense fallback={null}>
+                    <StudentModal4
+                        rollNo={selectedStudentRoll}
+                        onClose={() => setSelectedStudentRoll(null)}
+                    />
+                </Suspense>
             )}
-
-            <Footer4 />
         </div>
+    )
+} <Footer4 />
+        </div >
     )
 }

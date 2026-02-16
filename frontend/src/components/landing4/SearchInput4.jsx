@@ -1,8 +1,10 @@
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, lazy, Suspense } from 'react';
 import { studentAPI } from '../../utils/api';
-import { Search } from 'lucide-react';
-import StudentModal4 from './StudentModal4';
+import Search from 'lucide-react/dist/esm/icons/search';
+import OptimizedImage from '../common/OptimizedImage';
+
+const StudentModal4 = lazy(() => import('./StudentModal4'));
 
 export default function SearchInput4() {
     const [query, setQuery] = useState('');
@@ -95,11 +97,12 @@ export default function SearchInput4() {
 
                                     <div className="relative z-10 flex items-center gap-4 md:gap-6 overflow-hidden w-full">
                                         <div className="w-12 h-12 md:w-16 md:h-16 border-4 border-black bg-white flex-shrink-0 overflow-hidden shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
-                                            <img
+                                            <OptimizedImage
                                                 src={`/student_faces/${student.roll_no}.png`}
                                                 alt=""
                                                 className="w-full h-full object-cover"
-                                                onError={(e) => { e.target.style.display = 'none'; }}
+                                                width={64}
+                                                height={64}
                                             />
                                         </div>
                                         <div className="min-w-0 flex-1">
@@ -123,10 +126,12 @@ export default function SearchInput4() {
             </div>
 
             {selectedStudentRoll && (
-                <StudentModal4
-                    rollNo={selectedStudentRoll}
-                    onClose={() => setSelectedStudentRoll(null)}
-                />
+                <Suspense fallback={null}>
+                    <StudentModal4
+                        rollNo={selectedStudentRoll}
+                        onClose={() => setSelectedStudentRoll(null)}
+                    />
+                </Suspense>
             )}
         </>
     );
