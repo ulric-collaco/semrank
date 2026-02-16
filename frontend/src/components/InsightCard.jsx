@@ -78,10 +78,10 @@ function RivalryContent({ data, onClick }) {
 }
 
 function ChartContent({ data, color, showXAxis }) {
-    if (!data) return null;
+    if (!data || data.length === 0) return <div className="text-center font-bold text-gray-300 py-8 uppercase tracking-widest">Collecting Data...</div>;
     return (
-        <div className="w-full h-40 relative group/chart cursor-pointer active:scale-[0.98] transition-transform" style={{ width: '100%', height: '160px' }}>
-            <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0}>
+        <div className="w-full h-40 relative group/chart cursor-pointer active:scale-[0.98] transition-transform" style={{ width: '100%', height: '160px', minHeight: '160px' }}>
+            <ResponsiveContainer width="99%" height="100%" minWidth={0} minHeight={0}>
                 <BarChart data={data} margin={{ bottom: showXAxis ? 20 : 0 }}>
                     <XAxis
                         dataKey="name"

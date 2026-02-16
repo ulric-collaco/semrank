@@ -303,7 +303,7 @@ const ViewRechartsBarChart = ({ activeSubject, maxMarks }) => {
 
     return (
         <div style={{ width: '100%', height: '100%', minHeight: '200px' }}>
-            <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0}>
+            <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0} aspect={1.5}>
                 <BarChart data={data} margin={{ top: 25, right: 10, left: -20, bottom: 0 }}>
                     <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#000" strokeOpacity={0.1} />
                     <XAxis

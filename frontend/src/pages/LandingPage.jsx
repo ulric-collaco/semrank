@@ -62,12 +62,17 @@ export default function LandingPage() {
 
                 // --- 3. GPA Booster (Best Subject) ---
                 if (subjectStats && subjectStats.subjects?.length > 0) {
-                    const sortedSubjects = [...subjectStats.subjects].sort((a, b) => (b.avg_gp || 0) - (a.avg_gp || 0));
+                    const subjects = subjectStats.subjects || [];
+                    const sortedSubjects = [...subjects].sort((a, b) => {
+                        const gpA = parseFloat(a.avg_gp || a.avg_gpa || 0);
+                        const gpB = parseFloat(b.avg_gp || b.avg_gpa || 0);
+                        return gpB - gpA;
+                    });
                     const easiest = sortedSubjects[0];
 
                     setGpaBoosterData({
                         value: easiest.subject_name.split(' ')[0], // Short name
-                        label: `AVG GP: ${easiest.avg_gp?.toFixed(2) || 'N/A'}`,
+                        label: `AVG GP: ${parseFloat(easiest.avg_gp || easiest.avg_gpa || 0).toFixed(2)}`,
                         subtext: 'EASIEST 10 POINTER'
                     });
                 }
