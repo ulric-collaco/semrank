@@ -651,9 +651,11 @@ async function handleRequest(request, env) {
         class_filter: classFilter,
         students: formattedStudents
       });
-      // GET /api/stats/distribution - Batch CGPA distribution
-      if (path === '/api/stats/distribution' && method === 'GET') {
-        const query = `
+    }
+
+    // GET /api/stats/distribution - Batch CGPA distribution
+    if (path === '/api/stats/distribution' && method === 'GET') {
+      const query = `
         SELECT 
           SUM(CASE WHEN cgpa >= 9.5 THEN 1 ELSE 0 END) as "9.5+",
           SUM(CASE WHEN cgpa >= 9.0 AND cgpa < 9.5 THEN 1 ELSE 0 END) as "9.0-9.5",
@@ -666,35 +668,35 @@ async function handleRequest(request, env) {
         FROM STUDENT_LEADERBOARD
       `;
 
-        try {
-          const result = await db.prepare(query).first();
+      try {
+        const result = await db.prepare(query).first();
 
-          // Transform to array format expected by frontend
-          // Order: Low -> High for Bell Curve
-          const distribution = [
-            { name: '<6.0', value: result['<6.0'] || 0 },
-            { name: '6.0-7.0', value: result['6.0-7.0'] || 0 },
-            { name: '7.0-7.5', value: result['7.0-7.5'] || 0 },
-            { name: '7.5-8.0', value: result['7.5-8.0'] || 0 },
-            { name: '8.0-8.5', value: result['8.0-8.5'] || 0 },
-            { name: '8.5-9.0', value: result['8.5-9.0'] || 0 },
-            { name: '9.0-9.5', value: result['9.0-9.5'] || 0 },
-            { name: '9.5+', value: result['9.5+'] || 0 }
-          ];
+        // Transform to array format expected by frontend
+        // Order: Low -> High for Bell Curve
+        const distribution = [
+          { name: '<6.0', value: result['<6.0'] || 0 },
+          { name: '6.0-7.0', value: result['6.0-7.0'] || 0 },
+          { name: '7.0-7.5', value: result['7.0-7.5'] || 0 },
+          { name: '7.5-8.0', value: result['7.5-8.0'] || 0 },
+          { name: '8.0-8.5', value: result['8.0-8.5'] || 0 },
+          { name: '8.5-9.0', value: result['8.5-9.0'] || 0 },
+          { name: '9.0-9.5', value: result['9.0-9.5'] || 0 },
+          { name: '9.5+', value: result['9.5+'] || 0 }
+        ];
 
-          return jsonResponse(distribution);
-        } catch (error) {
-          return errorResponse(`Database error: ${error.message}`, 500);
-        }
+        return jsonResponse(distribution);
+      } catch (error) {
+        return errorResponse(`Database error: ${error.message}`, 500);
       }
+    }
 
-      // GET /api/stats/subjects - Subject-wise statistics
-      if (path === '/api/stats/subjects' && method === 'GET') {
-        const classFilter = url.searchParams.get('class') || 'all';
+    // GET /api/stats/subjects - Subject-wise statistics
+    if (path === '/api/stats/subjects' && method === 'GET') {
+      const classFilter = url.searchParams.get('class') || 'all';
 
-        // Optimized query: Aggregate stats directly from STUDENT_SUBJECT_LEADERBOARD
-        // Groups by normalized subject name to handle duplicates/spaces
-        let query = `
+      // Optimized query: Aggregate stats directly from STUDENT_SUBJECT_LEADERBOARD
+      // Groups by normalized subject name to handle duplicates/spaces
+      let query = `
         SELECT 
           REPLACE(sub.subject_name, '  ', ' ') as subject_name,
           MAX(sub.subject_code) as subject_code,
@@ -719,43 +721,43 @@ async function handleRequest(request, env) {
         JOIN STUDENT s ON ssl.student_id = s.student_id
       `;
 
-        if (classFilter !== 'all') {
-          query += ` WHERE s.class = ?`;
-        }
-
-        query += ` GROUP BY REPLACE(sub.subject_name, '  ', ' ') ORDER BY avg_gp DESC`;
-
-        try {
-          const results = classFilter === 'all'
-            ? await db.prepare(query).all()
-            : await db.prepare(query).bind(classFilter).all();
-
-          const subjects = (results.results || []).map(row => ({
-            subject_code: row.subject_code,
-            subject_name: row.subject_name,
-            enrollment_count: row.enrollment_count,
-            avg_marks: parseFloat(row.avg_marks.toFixed(2)),
-            avg_gp: parseFloat((row.avg_gp || 0).toFixed(2)),
-            max_marks: row.max_marks || 0,
-            min_marks: row.min_marks || 0,
-            top_student: null // Optimization: Skip expensive top student lookup for list view
-          }));
-
-          return jsonResponse({
-            class_filter: classFilter,
-            subjects
-          });
-        } catch (error) {
-          return errorResponse(`Database error: ${error.message}`, 500);
-        }
+      if (classFilter !== 'all') {
+        query += ` WHERE s.class = ?`;
       }
 
-      // GET /api/stats/class/:className - Detailed class statistics
-      if (path.match(/^\/api\/stats\/class\/[^\/]+$/) && method === 'GET') {
-        const className = decodeURIComponent(path.split('/').pop());
+      query += ` GROUP BY REPLACE(sub.subject_name, '  ', ' ') ORDER BY avg_gp DESC`;
 
-        // 1. Basic Class Info
-        const classInfo = await db.prepare(`
+      try {
+        const results = classFilter === 'all'
+          ? await db.prepare(query).all()
+          : await db.prepare(query).bind(classFilter).all();
+
+        const subjects = (results.results || []).map(row => ({
+          subject_code: row.subject_code,
+          subject_name: row.subject_name,
+          enrollment_count: row.enrollment_count,
+          avg_marks: parseFloat(row.avg_marks.toFixed(2)),
+          avg_gp: parseFloat((row.avg_gp || 0).toFixed(2)),
+          max_marks: row.max_marks || 0,
+          min_marks: row.min_marks || 0,
+          top_student: null // Optimization: Skip expensive top student lookup for list view
+        }));
+
+        return jsonResponse({
+          class_filter: classFilter,
+          subjects
+        });
+      } catch (error) {
+        return errorResponse(`Database error: ${error.message}`, 500);
+      }
+    }
+
+    // GET /api/stats/class/:className - Detailed class statistics
+    if (path.match(/^\/api\/stats\/class\/[^\/]+$/) && method === 'GET') {
+      const className = decodeURIComponent(path.split('/').pop());
+
+      // 1. Basic Class Info
+      const classInfo = await db.prepare(`
         SELECT 
           c.class_name,
           cl.avg_cgpa,
@@ -767,12 +769,12 @@ async function handleRequest(request, env) {
         WHERE c.class_name = ?
       `).bind(className).first();
 
-        if (!classInfo) {
-          return errorResponse('Class not found', 404);
-        }
+      if (!classInfo) {
+        return errorResponse('Class not found', 404);
+      }
 
-        // 2. Academic Weapon (Topper)
-        const topper = await db.prepare(`
+      // 2. Academic Weapon (Topper)
+      const topper = await db.prepare(`
         SELECT s.name, s.roll_no, sl.cgpa
         FROM STUDENT s
         JOIN STUDENT_LEADERBOARD sl ON s.student_id = sl.student_id
@@ -781,9 +783,9 @@ async function handleRequest(request, env) {
         LIMIT 1
       `).bind(className).first();
 
-        // 3. Subject Stats (Mass Bunk, Einstein, Nightmare)
-        // 3. Subject Metrics (Grouped by Normalized Name for consistency)
-        const subjectMetrics = await db.prepare(`
+      // 3. Subject Stats (Mass Bunk, Einstein, Nightmare)
+      // 3. Subject Metrics (Grouped by Normalized Name for consistency)
+      const subjectMetrics = await db.prepare(`
         SELECT 
           REPLACE(MAX(sub.subject_name), '  ', ' ') as subject_name,
           MAX(sub.subject_code) as subject_code,
@@ -797,46 +799,46 @@ async function handleRequest(request, env) {
         GROUP BY REPLACE(sub.subject_name, '  ', ' ')
       `).bind(className).all();
 
-        // Find 'Mass Bunk' (Lowest Avg Attendance) -- Include all subjects, even DM
-        const validAttendanceSubjects = subjectMetrics.results
-          .filter(s => s.avg_attendance > 0);
+      // Find 'Mass Bunk' (Lowest Avg Attendance) -- Include all subjects, even DM
+      const validAttendanceSubjects = subjectMetrics.results
+        .filter(s => s.avg_attendance > 0);
 
-        const massBunkSubject = validAttendanceSubjects.length > 0
-          ? validAttendanceSubjects.sort((a, b) => a.avg_attendance - b.avg_attendance)[0]
-          : null;
+      const massBunkSubject = validAttendanceSubjects.length > 0
+        ? validAttendanceSubjects.sort((a, b) => a.avg_attendance - b.avg_attendance)[0]
+        : null;
 
-        const massBunk = massBunkSubject ? {
-          subject: massBunkSubject.subject_name,
-          value: Math.round(massBunkSubject.avg_attendance) + '%'
-        } : { subject: 'N/A', value: '-' };
+      const massBunk = massBunkSubject ? {
+        subject: massBunkSubject.subject_name,
+        value: Math.round(massBunkSubject.avg_attendance) + '%'
+      } : { subject: 'N/A', value: '-' };
 
-        // Find 'Einstein' & 'Nightmare' (Exclude Double Minor '25DM' & Non-Graded)
-        // Double Minors are excluded from SGPI, so they shouldn't count as "Nightmare" for grades
-        const gradedSubjects = subjectMetrics.results
-          .filter(s => s.avg_marks > 0 && !s.subject_code.startsWith('25DM'));
+      // Find 'Einstein' & 'Nightmare' (Exclude Double Minor '25DM' & Non-Graded)
+      // Double Minors are excluded from SGPI, so they shouldn't count as "Nightmare" for grades
+      const gradedSubjects = subjectMetrics.results
+        .filter(s => s.avg_marks > 0 && !s.subject_code.startsWith('25DM'));
 
-        // Einstein: Highest % Marks
-        const einsteinSubject = gradedSubjects.length > 0
-          ? [...gradedSubjects].sort((a, b) => (b.avg_marks / b.max_marks) - (a.avg_marks / a.max_marks))[0]
-          : null;
+      // Einstein: Highest % Marks
+      const einsteinSubject = gradedSubjects.length > 0
+        ? [...gradedSubjects].sort((a, b) => (b.avg_marks / b.max_marks) - (a.avg_marks / a.max_marks))[0]
+        : null;
 
-        const einstein = einsteinSubject ? {
-          subject: einsteinSubject.subject_name,
-          value: einsteinSubject.avg_marks.toFixed(1) + ' / ' + einsteinSubject.max_marks
-        } : { subject: 'N/A', value: '-' };
+      const einstein = einsteinSubject ? {
+        subject: einsteinSubject.subject_name,
+        value: einsteinSubject.avg_marks.toFixed(1) + ' / ' + einsteinSubject.max_marks
+      } : { subject: 'N/A', value: '-' };
 
-        // Nightmare: Lowest % Marks
-        const nightmareSubject = gradedSubjects.length > 0
-          ? [...gradedSubjects].sort((a, b) => (a.avg_marks / a.max_marks) - (b.avg_marks / b.max_marks))[0]
-          : null;
+      // Nightmare: Lowest % Marks
+      const nightmareSubject = gradedSubjects.length > 0
+        ? [...gradedSubjects].sort((a, b) => (a.avg_marks / a.max_marks) - (b.avg_marks / b.max_marks))[0]
+        : null;
 
-        const nightmare = nightmareSubject ? {
-          subject: nightmareSubject.subject_name,
-          value: nightmareSubject.avg_marks.toFixed(1) + ' / ' + nightmareSubject.max_marks
-        } : { subject: 'N/A', value: '-' };
+      const nightmare = nightmareSubject ? {
+        subject: nightmareSubject.subject_name,
+        value: nightmareSubject.avg_marks.toFixed(1) + ' / ' + nightmareSubject.max_marks
+      } : { subject: 'N/A', value: '-' };
 
-        // 4. Granular Bell Curve (SGPI Distribution - 0.5 steps)
-        const sgpiDistribution = await db.prepare(`
+      // 4. Granular Bell Curve (SGPI Distribution - 0.5 steps)
+      const sgpiDistribution = await db.prepare(`
         SELECT 
           CAST(cgpa * 2 AS INTEGER) / 2.0 as bucket,
         COUNT(*) as count
@@ -847,55 +849,55 @@ async function handleRequest(request, env) {
         ORDER BY bucket DESC
         `).bind(className).all();
 
-        // Normalize to show full range even if empty
-        const bellCurve = [];
-        for (let i = 10; i >= 0; i -= 0.5) {
-          const bucket = sgpiDistribution.results.find(b => Math.abs(b.bucket - i) < 0.01);
-          bellCurve.push({
-            name: i.toFixed(1),
-            value: bucket ? bucket.count : 0
-          });
-        }
+      // Normalize to show full range even if empty
+      const bellCurve = [];
+      for (let i = 10; i >= 0; i -= 0.5) {
+        const bucket = sgpiDistribution.results.find(b => Math.abs(b.bucket - i) < 0.01);
+        bellCurve.push({
+          name: i.toFixed(1),
+          value: bucket ? bucket.count : 0
+        });
+      }
 
-        // 6. On The Edge (< 75%)
-        const onEdge = await db.prepare(`
+      // 6. On The Edge (< 75%)
+      const onEdge = await db.prepare(`
         SELECT COUNT(*) as count
         FROM STUDENT s
         JOIN STUDENT_LEADERBOARD sl ON s.student_id = sl.student_id
         WHERE s.class = ? AND sl.overall_attendance < 75
         `).bind(className).first();
 
-        // 5. Raw student data for precise highlighting on frontend
-        const students = await db.prepare(`
+      // 5. Raw student data for precise highlighting on frontend
+      const students = await db.prepare(`
         SELECT s.roll_no, sl.cgpa, s.name
         FROM STUDENT s
         JOIN STUDENT_LEADERBOARD sl ON s.student_id = sl.student_id
         WHERE s.class = ?
         `).bind(className).all();
 
-        return jsonResponse({
-          info: classInfo,
-          topper,
-          insights: {
-            massBunk,
-            einstein,
-            nightmare,
-            onEdge: onEdge.count
-          },
-          bellCurve,
-          students: students.results
-        });
-      }
+      return jsonResponse({
+        info: classInfo,
+        topper,
+        insights: {
+          massBunk,
+          einstein,
+          nightmare,
+          onEdge: onEdge.count
+        },
+        bellCurve,
+        students: students.results
+      });
+    }
 
 
 
-      // GET /api/students/rank/:rollNo - Get student rank
-      if (path.match(/^\/api\/students\/rank\/\d+$/) && method === 'GET') {
-        const rollNo = parseInt(path.split('/').pop());
+    // GET /api/students/rank/:rollNo - Get student rank
+    if (path.match(/^\/api\/students\/rank\/\d+$/) && method === 'GET') {
+      const rollNo = parseInt(path.split('/').pop());
 
-        // Get student from leaderboard with pre-computed ranks
-        const student = await db
-          .prepare(`
+      // Get student from leaderboard with pre-computed ranks
+      const student = await db
+        .prepare(`
           SELECT 
             s.student_id,
         s.roll_no,
@@ -914,73 +916,73 @@ async function handleRequest(request, env) {
           JOIN STUDENT_LEADERBOARD sl ON s.student_id = sl.student_id
           WHERE s.roll_no = ?
         `)
-          .bind(rollNo)
-          .first();
+        .bind(rollNo)
+        .first();
 
-        if (!student) {
-          return errorResponse('Student not found', 404);
-        }
+      if (!student) {
+        return errorResponse('Student not found', 404);
+      }
 
-        // Get total counts
-        const totals = await db
-          .prepare(`
+      // Get total counts
+      const totals = await db
+        .prepare(`
           SELECT 
             COUNT(*) as total_students,
         SUM(CASE WHEN s.class = ? THEN 1 ELSE 0 END) as total_in_class
           FROM STUDENT s
         `)
-          .bind(student.class)
-          .first();
+        .bind(student.class)
+        .first();
 
-        return jsonResponse({
-          ...student,
-          ranks: {
-            overall: student.rank_cgpa_college,
-            in_class: student.rank_cgpa_class,
-            total_students: totals.total_students,
-            total_in_class: totals.total_in_class
-          }
-        });
-      }
-
-      // Health check
-      if (path === '/api/health' && method === 'GET') {
-        return jsonResponse({ status: 'ok', timestamp: new Date().toISOString() });
-      }
-
-      // API documentation
-      if (path === '/api' && method === 'GET') {
-        return jsonResponse({
-          name: 'SemRank API',
-          version: '1.0.0',
-          endpoints: {
-            'GET /api/students': 'Get all students',
-            'GET /api/students/roll/:rollNo': 'Get student by roll number',
-            'GET /api/students/enrollment/:enrollmentId': 'Get student by enrollment ID',
-            'GET /api/students/search?q=query': 'Search students by name or roll',
-            'GET /api/students/rank/:rollNo': 'Get student rank (overall & in class)',
-            'GET /api/leaderboard/cgpa?limit=10&class=all': 'Top students by CGPA',
-            'GET /api/leaderboard/attendance?limit=10&class=all': 'Top students by attendance',
-            'GET /api/leaderboard/classes': 'Class rankings',
-            'GET /api/leaderboard/subject/:subject_code?limit=10&class=all': 'Top students by subject',
-            'GET /api/stats/subjects?class=all': 'Subject-wise statistics (avg/max/min marks, top students)',
-            'GET /api/birthdays/today': "Today's birthdays",
-            'GET /api/game/random-pair': 'Get random pair for game',
-            'GET /api/game/random-pair-subject': 'Get random pair with subject marks for game',
-            'GET /api/health': 'Health check',
-          },
-        });
-      }
-
-      return errorResponse('Not Found', 404);
-    } catch (error) {
-      console.error('Error:', error);
-      return errorResponse(error.message || 'Internal Server Error', 500);
+      return jsonResponse({
+        ...student,
+        ranks: {
+          overall: student.rank_cgpa_college,
+          in_class: student.rank_cgpa_class,
+          total_students: totals.total_students,
+          total_in_class: totals.total_in_class
+        }
+      });
     }
+
+    // Health check
+    if (path === '/api/health' && method === 'GET') {
+      return jsonResponse({ status: 'ok', timestamp: new Date().toISOString() });
+    }
+
+    // API documentation
+    if (path === '/api' && method === 'GET') {
+      return jsonResponse({
+        name: 'SemRank API',
+        version: '1.0.0',
+        endpoints: {
+          'GET /api/students': 'Get all students',
+          'GET /api/students/roll/:rollNo': 'Get student by roll number',
+          'GET /api/students/enrollment/:enrollmentId': 'Get student by enrollment ID',
+          'GET /api/students/search?q=query': 'Search students by name or roll',
+          'GET /api/students/rank/:rollNo': 'Get student rank (overall & in class)',
+          'GET /api/leaderboard/cgpa?limit=10&class=all': 'Top students by CGPA',
+          'GET /api/leaderboard/attendance?limit=10&class=all': 'Top students by attendance',
+          'GET /api/leaderboard/classes': 'Class rankings',
+          'GET /api/leaderboard/subject/:subject_code?limit=10&class=all': 'Top students by subject',
+          'GET /api/stats/subjects?class=all': 'Subject-wise statistics (avg/max/min marks, top students)',
+          'GET /api/birthdays/today': "Today's birthdays",
+          'GET /api/game/random-pair': 'Get random pair for game',
+          'GET /api/game/random-pair-subject': 'Get random pair with subject marks for game',
+          'GET /api/health': 'Health check',
+        },
+      });
+    }
+
+    return errorResponse('Not Found', 404);
+  } catch (error) {
+    console.error('Error:', error);
+    return errorResponse(error.message || 'Internal Server Error', 500);
   }
+}
 
 export default {
-    async fetch(request, env, ctx) {
-      return handleRequest(request, env);
-    },
-  };
+  async fetch(request, env, ctx) {
+    return handleRequest(request, env);
+  },
+};
