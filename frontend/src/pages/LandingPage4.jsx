@@ -11,7 +11,15 @@ import { Swords, BarChart3, TrendingUp, AlertTriangle, Cake } from 'lucide-react
 export default function LandingPage4() {
     const [topStudents, setTopStudents] = useState([]);
     const [sortBy, setSortBy] = useState('sgpa');
+    const [isMobile, setIsMobile] = useState(false);
     const [selectedStudentRoll, setSelectedStudentRoll] = useState(null);
+
+    useEffect(() => {
+        const checkMobile = () => setIsMobile(window.innerWidth < 768);
+        checkMobile();
+        window.addEventListener('resize', checkMobile);
+        return () => window.removeEventListener('resize', checkMobile);
+    }, []);
 
     // Insight Data States
     const [rivalryData, setRivalryData] = useState(null);
@@ -49,16 +57,41 @@ export default function LandingPage4() {
                 }
 
                 // --- 2. Rank Distribution (Refined Bell Curve - Static DB Data) ---
-                setRankDistData([
-                    { name: '9.5+', value: 9 },
-                    { name: '9.0', value: 21 },
-                    { name: '8.5', value: 40 },
-                    { name: '8.0', value: 72 },
-                    { name: '7.5', value: 52 },
-                    { name: '7.0', value: 28 },
-                    { name: '6-7', value: 16 },
-                    { name: '<6', value: 9 },
-                ]);
+                setRankDistData({
+                    simple: [
+                        { name: '9.5+', value: 9 },
+                        { name: '9.0', value: 21 },
+                        { name: '8.5', value: 40 },
+                        { name: '8.0', value: 72 },
+                        { name: '7.5', value: 52 },
+                        { name: '7.0', value: 28 },
+                        { name: '6-7', value: 16 },
+                        { name: '<6', value: 9 },
+                    ],
+                    detailed: [
+                        { name: '<5.0', value: 5 },
+                        { name: '5.0-5.25', value: 2 },
+                        { name: '5.25-5.5', value: 0 },
+                        { name: '5.5-5.75', value: 0 },
+                        { name: '5.75-6.0', value: 2 },
+                        { name: '6.0-6.25', value: 6 },
+                        { name: '6.25-6.5', value: 1 },
+                        { name: '6.5-6.75', value: 2 },
+                        { name: '6.75-7.0', value: 7 },
+                        { name: '7.0-7.25', value: 16 },
+                        { name: '7.25-7.5', value: 12 },
+                        { name: '7.5-7.75', value: 30 },
+                        { name: '7.75-8.0', value: 22 },
+                        { name: '8.0-8.25', value: 47 },
+                        { name: '8.25-8.5', value: 24 },
+                        { name: '8.5-8.75', value: 25 },
+                        { name: '8.75-9.0', value: 15 },
+                        { name: '9.0-9.25', value: 14 },
+                        { name: '9.25-9.5', value: 7 },
+                        { name: '9.5-9.75', value: 8 },
+                        { name: '9.75-10', value: 1 },
+                    ]
+                });
 
                 // --- 3. GPA Booster (Static from DB - Highest Grade Pointer) ---
                 // Subject with highest GP (10.0): ESSENTIAL COMPUTING SKILLS...
@@ -109,6 +142,25 @@ export default function LandingPage4() {
                     Daily Intel
                 </h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 auto-rows-fr">
+                    {/* Insight 0: Birthday Spotlight (Conditional - Top Priority) */}
+                    {birthdays.length > 0 && (
+                        <InsightCard
+                            title="Cake Day"
+                            subtitle="TODAY'S LEGENDS"
+                            type="list"
+                            data={birthdays.map(s => ({
+                                id: s.roll_no,
+                                label: s.name,
+                                value: '🎂',
+                                image: s.roll_no ? `/student_faces/${s.roll_no}.png` : null,
+                                subtext: s.class
+                            }))}
+                            onStudentClick={setSelectedStudentRoll}
+                            icon={Cake}
+                            accentColor="#ff69b4"
+                        />
+                    )}
+
                     {/* Insight 1: Rivalry */}
                     <InsightCard
                         title="Rivalry"
@@ -126,7 +178,7 @@ export default function LandingPage4() {
                             title="The Curve"
                             subtitle="BATCH PERFORMANCE"
                             type="chart"
-                            data={rankDistData}
+                            data={rankDistData ? (isMobile ? rankDistData.simple : rankDistData.detailed) : null}
                             icon={BarChart3}
                             accentColor="#00ffff"
                         />
@@ -152,24 +204,7 @@ export default function LandingPage4() {
                         accentColor="#ffde00"
                     />
 
-                    {/* Insight 5: Birthday Spotlight (Conditional) */}
-                    {birthdays.length > 0 && (
-                        <InsightCard
-                            title="Cake Day"
-                            subtitle="TODAY'S LEGENDS"
-                            type="list"
-                            data={birthdays.map(s => ({
-                                id: s.roll_no,
-                                label: s.name,
-                                value: '🎂',
-                                image: s.roll_no ? `/student_faces/${s.roll_no}.png` : null,
-                                subtext: s.class
-                            }))}
-                            onStudentClick={setSelectedStudentRoll}
-                            icon={Cake}
-                            accentColor="#ff69b4"
-                        />
-                    )}
+
                 </div>
             </section>
 

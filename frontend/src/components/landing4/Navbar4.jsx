@@ -30,14 +30,23 @@ export default function Navbar4() {
                 </Link>
             </div>
 
-            {/* Mobile Menu Toggle */}
-            <button
-                onClick={toggleMenu}
-                className="md:hidden z-[101] p-3 min-w-[48px] min-h-[48px] flex items-center justify-center border-2 border-black bg-white active:translate-y-1 transition-transform"
-                aria-label="Toggle Menu"
-            >
-                {isMenuOpen ? <X size={28} /> : <Menu size={28} />}
-            </button>
+
+            {/* Mobile Controls */}
+            <div className="flex items-center gap-2 md:hidden z-[101]">
+                {/* Mobile Game Button */}
+                <Link to="/game" className="bg-white border-2 border-black px-3 py-1.5 font-bold text-xs shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:translate-x-[1px] active:translate-y-[1px] active:shadow-none transition-all flex items-center gap-1 hover:bg-[#ffde00] hover:text-black hover:border-black">
+                    <span>PLAY</span>
+                </Link>
+
+                {/* Mobile Menu Toggle */}
+                <button
+                    onClick={toggleMenu}
+                    className="p-2 min-w-[44px] min-h-[44px] flex items-center justify-center border-2 border-black bg-white active:translate-y-1 transition-transform hover:bg-black hover:text-white"
+                    aria-label="Toggle Menu"
+                >
+                    {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
+                </button>
+            </div>
 
             {/* Mobile Overlay */}
             {isMenuOpen && (

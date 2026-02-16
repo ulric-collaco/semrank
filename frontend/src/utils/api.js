@@ -80,7 +80,10 @@ export const birthdayAPI = {
 }
 
 export const gameAPI = {
-  getRandomPair: () => fetchWithRetry('/game/random-pair'),
+  getRandomPair: (classFilter = 'all') => {
+    const params = new URLSearchParams({ class: classFilter })
+    return fetchWithRetry(`/game/random-pair?${params}`)
+  },
   getRandomPairWithSubject: () => fetchWithRetry('/game/random-pair-subject'),
 }
 

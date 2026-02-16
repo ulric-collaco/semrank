@@ -80,8 +80,8 @@ function RivalryContent({ data, onClick }) {
 function ChartContent({ data, color }) {
     if (!data) return null;
     return (
-        <div className="w-full h-40">
-            <ResponsiveContainer width="100%" height="100%">
+        <div className="w-full h-40 relative group/chart cursor-pointer active:scale-[0.98] transition-transform">
+            <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0}>
                 <BarChart data={data}>
                     <XAxis dataKey="name" hide />
                     <Tooltip
@@ -95,6 +95,18 @@ function ChartContent({ data, color }) {
                     </Bar>
                 </BarChart>
             </ResponsiveContainer>
+
+            {/* Interactive Hint Overlay */}
+            <div className="absolute top-2 right-2 bg-black text-white text-[10px] font-bold px-2 py-1 uppercase opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none md:opacity-0">
+                View Details
+            </div>
+
+            {/* Mobile Tap Hint (Always visible on mobile, or maybe just subtle) */}
+            <div className="absolute bottom-2 right-2 md:hidden">
+                <div className="bg-black text-white text-[9px] font-black px-1.5 py-0.5 uppercase shadow-sm animate-pulse">
+                    TAP
+                </div>
+            </div>
         </div>
     );
 }

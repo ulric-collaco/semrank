@@ -470,8 +470,10 @@ async function handleRequest(request, env) {
 
     // GET /api/game/random-pair - Get two random students for game
     if (path === '/api/game/random-pair' && method === 'GET') {
-      // Get all students from leaderboard
-      const allStudents = await getStudentLeaderboardData(db, 'all');
+      const classFilter = url.searchParams.get('class') || 'all';
+
+      // Get all students from leaderboard (filtered by class if provided)
+      const allStudents = await getStudentLeaderboardData(db, classFilter);
 
       if (allStudents.length < 2) {
         return errorResponse('Not enough students for game', 400);
