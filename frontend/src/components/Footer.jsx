@@ -8,9 +8,16 @@ export default function Footer() {
 
                 {/* Brand */}
                 <div>
-                    <h2 className="text-4xl md:text-6xl font-black uppercase mb-2 text-[#ffde00] leading-none">
-                        SemRank
-                    </h2>
+                    <div
+                        onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+                        className="cursor-pointer group"
+                        title="Back to Top"
+                    >
+                        <h2 className="text-4xl md:text-6xl font-black uppercase mb-2 text-[#ffde00] leading-none animate-glitch-bounce transition-transform">
+                            SemRank
+                        </h2>
+                        <span className="text-[10px] font-bold text-gray-500 uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-opacity duration-300">^ Back to Top</span>
+                    </div>
                     <a
                         href="https://ulriccollaco.me"
                         target="_blank"
@@ -30,7 +37,7 @@ export default function Footer() {
 
                     {/* Inspiration Credit */}
                     <div className="text-right flex flex-col items-start md:items-end gap-1">
-                        <span className="text-[10px] font-bold text-gray-500 uppercase tracking-widest leading-none">Inspiration</span>
+                        <span className="text-[10px] font-bold text-gray-500 uppercase tracking-widest leading-none">Inspired By</span>
                         <a
                             href="https://whereyoustand.vercel.app"
                             target="_blank"
@@ -39,6 +46,7 @@ export default function Footer() {
                         >
                             WhereYouStand
                         </a>
+                        <span className="block text-[10px] font-bold text-[#666] uppercase mt-0.5 tracking-tighter leading-none">(FOR TE's)</span>
                         <a
                             href="https://www.romeirofernandes.tech"
                             target="_blank"
@@ -67,8 +75,8 @@ export default function Footer() {
             {/* Copyright */}
             <div className="mt-12 pt-8 border-t-2 border-[#333] flex flex-col md:flex-row justify-between items-center gap-4 text-[#666] text-xs font-bold uppercase">
                 <span>(C) 2026 SEMRANK.</span>
-                <span className="opacity-50">Because numbers don't lie, but students do.</span>
+                <span className="opacity-50 tracking-wide">Where your CGPA is a joke but your attendance is the punchline.</span>
             </div>
-        </footer>
+        </footer >
     );
 }

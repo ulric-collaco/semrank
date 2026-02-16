@@ -87,7 +87,8 @@ export default function HomePage() {
       {/* Hero Section */}
       <div ref={heroRef} className="max-w-6xl mx-auto text-center mb-8 md:mb-12" style={{ opacity: 0 }}>
         <h1 className="text-[48px] md:text-[72px] lg:text-[90px] font-display text-ink mb-8 md:mb-12 leading-none tracking-tight drop-shadow-xl">
-          SemRank
+          <span className="text-[#ffde00] inline-block transform -rotate-6 px-2 bg-black border-4 border-white shadow-[4px_4px_0_0_rgba(255,255,255,0.5)] mr-4">SEM 3</span>
+          UNLEASHED
         </h1>
 
 

@@ -142,3 +142,35 @@
     color: #0a0a0f;
   }
 }
+
+@keyframes glitch-bounce {
+  0% {
+    transform: translateY(0) skewX(0);
+  }
+
+  20% {
+    transform: translateY(-15%) skewX(-10deg);
+  }
+
+  40% {
+    transform: translateY(-15%) skewX(10deg);
+  }
+
+  60% {
+    transform: translateY(0) skewX(0);
+  }
+
+  80% {
+    transform: translateY(-5%) skewX(-5deg);
+  }
+
+  100% {
+    transform: translateY(0) skewX(0);
+  }
+}
+
+.animate-glitch-bounce {
+  animation: glitch-bounce 1.5s infinite var(--ease-out-quint);
+  /* Requires ease definition or standard */
+  animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+}
