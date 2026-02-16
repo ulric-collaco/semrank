@@ -723,7 +723,7 @@ async function handleRequest(request, env) {
           query += ` WHERE s.class = ?`;
         }
 
-        query += ` GROUP BY REPLACE(sub.subject_name, '  ', ' ') ORDER BY avg_marks DESC`;
+        query += ` GROUP BY REPLACE(sub.subject_name, '  ', ' ') ORDER BY avg_gp DESC`;
 
         try {
           const results = classFilter === 'all'
