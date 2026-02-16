@@ -12,6 +12,7 @@
 !/CLOUDFLARE_SETUP.md
 !/README.md
 !/requirements.txt
+!/vercel.json
 
 # And keep .gitignore itself
 !.gitignore
