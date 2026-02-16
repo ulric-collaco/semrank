@@ -10,6 +10,7 @@ const LeaderboardPage = lazy(() => import('./pages/LeaderboardPage'))
 const ComparePage = lazy(() => import('./pages/ComparePage'))
 const GamePage = lazy(() => import('./pages/GamePage'))
 const LandingPage = lazy(() => import('./pages/LandingPage'))
+const ClassStatsPage = lazy(() => import('./pages/ClassStatsPage'))
 
 const LandingPage2 = lazy(() => import('./pages/LandingPage2'))
 
@@ -174,6 +175,7 @@ function App() {
           <Route path="/leaderboard" element={<LeaderboardPage />} />
           <Route path="/compare" element={<ComparePage />} />
           <Route path="/game" element={<GamePage />} />
+          <Route path="/classes" element={<ClassStatsPage />} />
 
           {/* Legacy V4 Routes (for backward compatibility during dev) */}
           <Route path="/4" element={<LandingPage />} />

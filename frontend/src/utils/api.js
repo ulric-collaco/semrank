@@ -73,6 +73,7 @@ export const statsAPI = {
     const params = new URLSearchParams({ class: classFilter })
     return fetchWithRetry(`/stats/subjects?${params}`)
   },
+  getClassStats: (className) => fetchWithRetry(`/stats/class/${encodeURIComponent(className)}`),
 }
 
 export const birthdayAPI = {

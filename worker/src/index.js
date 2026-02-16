@@ -767,6 +767,145 @@ async function handleRequest(request, env) {
       });
     }
 
+    // GET /api/stats/class/:className - Detailed class statistics
+    if (path.match(/^\/api\/stats\/class\/[^\/]+$/) && method === 'GET') {
+      const className = decodeURIComponent(path.split('/').pop());
+
+      // 1. Basic Class Info
+      const classInfo = await db.prepare(`
+        SELECT 
+          c.class_name,
+          cl.avg_cgpa,
+          cl.avg_attendance,
+          cl.total_students,
+          cl.rank_avg_cgpa
+        FROM CLASS_LEADERBOARD cl
+        JOIN CLASS c ON cl.class_id = c.class_id
+        WHERE c.class_name = ?
+      `).bind(className).first();
+
+      if (!classInfo) {
+        return errorResponse('Class not found', 404);
+      }
+
+      // 2. Academic Weapon (Topper)
+      const topper = await db.prepare(`
+        SELECT s.name, s.roll_no, sl.cgpa
+        FROM STUDENT s
+        JOIN STUDENT_LEADERBOARD sl ON s.student_id = sl.student_id
+        WHERE s.class = ?
+        ORDER BY sl.cgpa DESC
+        LIMIT 1
+      `).bind(className).first();
+
+      // 3. Subject Stats (Mass Bunk, Einstein, Nightmare)
+      const subjectStats = await db.prepare(`
+        SELECT 
+          sub.subject_name,
+          AVG(ss.attendance_percentage) as avg_att,
+      // 3. Subject Metrics (Grouped by Normalized Name for consistency)
+      const subjectMetrics = await db.prepare(`
+        SELECT 
+          REPLACE(MAX(sub.subject_name), '  ', ' ') as subject_name,
+        AVG(scl.avg_subject_marks) as avg_marks,
+        AVG(scl.avg_attendance) as avg_attendance
+        FROM SUBJECT_CLASS_LEADERBOARD scl
+        JOIN SUBJECT sub ON scl.subject_id = sub.subject_id
+        JOIN CLASS c ON scl.class_id = c.class_id
+        WHERE c.class_name = ?
+        GROUP BY REPLACE(sub.subject_name, '  ', ' ')
+        `).bind(className).all();
+
+      // Find 'Mass Bunk' (Lowest Avg Attendance)
+      const validAttendanceSubjects = subjectMetrics.results
+        .filter(s => s.avg_attendance > 0);
+      
+      const massBunkSubject = validAttendanceSubjects.length > 0 
+        ? validAttendanceSubjects.sort((a, b) => a.avg_attendance - b.avg_attendance)[0]
+        : null;
+
+      const massBunk = massBunkSubject ? {
+        subject: massBunkSubject.subject_name,
+        value: Math.round(massBunkSubject.avg_attendance) + '%'
+      } : { subject: 'N/A', value: '-' };
+
+      // Find 'Einstein' (Highest Avg Marks)
+      const validMarksSubjects = subjectMetrics.results
+        .filter(s => s.avg_marks > 0);
+
+      const einsteinSubject = validMarksSubjects.length > 0
+        ? [...validMarksSubjects].sort((a, b) => b.avg_marks - a.avg_marks)[0]
+        : null;
+
+      const einstein = einsteinSubject ? {
+        subject: einsteinSubject.subject_name,
+        value: einsteinSubject.avg_marks.toFixed(1)
+      } : { subject: 'N/A', value: '-' };
+
+      // Find 'Nightmare' (Lowest Avg Marks)
+      const nightmareSubject = validMarksSubjects.length > 0
+        ? [...validMarksSubjects].sort((a, b) => a.avg_marks - b.avg_marks)[0]
+        : null;
+
+      const nightmare = nightmareSubject ? {
+        subject: nightmareSubject.subject_name,
+        value: nightmareSubject.avg_marks.toFixed(1)
+      } : { subject: 'N/A', value: '-' };
+
+      // 4. Granular Bell Curve (SGPI Distribution - 0.5 steps)
+      const sgpiDistribution = await db.prepare(`
+        SELECT 
+          CAST(cgpa * 2 AS INTEGER) / 2.0 as bucket,
+        COUNT(*) as count
+        FROM STUDENT_LEADERBOARD sl
+        JOIN STUDENT s ON sl.student_id = s.student_id
+        WHERE s.class = ?
+        GROUP BY bucket
+        ORDER BY bucket DESC
+        `).bind(className).all();
+
+      // Normalize to show full range even if empty
+      const bellCurve = [];
+      for (let i = 10; i >= 0; i -= 0.5) {
+        const bucket = sgpiDistribution.results.find(b => Math.abs(b.bucket - i) < 0.01);
+        bellCurve.push({
+          name: i.toFixed(1),
+          value: bucket ? bucket.count : 0
+        });
+      }
+
+      // 6. On The Edge (< 75%)
+      const onEdge = await db.prepare(`
+        SELECT COUNT(*) as count
+        FROM STUDENT s
+        JOIN STUDENT_LEADERBOARD sl ON s.student_id = sl.student_id
+        WHERE s.class = ? AND sl.overall_attendance < 75
+        `).bind(className).first();
+
+      // 5. Raw student data for precise highlighting on frontend
+      const students = await db.prepare(`
+        SELECT s.roll_no, sl.cgpa, s.name
+        FROM STUDENT s
+        JOIN STUDENT_LEADERBOARD sl ON s.student_id = sl.student_id
+        WHERE s.class = ?
+        `).bind(className).all();
+
+      return jsonResponse({
+        info: classInfo,
+        topper,
+        insights: {
+          massBunk,
+          einstein,
+          nightmare,
+          onEdge: onEdge.count
+        },
+        bellCurve,
+        students: students.results
+      });
+    }
+
+
+
     // GET /api/students/rank/:rollNo - Get student rank
     if (path.match(/^\/api\/students\/rank\/\d+$/) && method === 'GET') {
       const rollNo = parseInt(path.split('/').pop());
@@ -776,18 +915,18 @@ async function handleRequest(request, env) {
         .prepare(`
           SELECT 
             s.student_id,
-            s.roll_no,
-            s.enrollment_id,
-            s.name,
-            s.dob,
-            s.class,
-            s.class_id,
-            sl.cgpa,
-            sl.overall_attendance as attendance,
-            sl.rank_cgpa_college,
-            sl.rank_cgpa_class,
-            sl.rank_attendance_college,
-            sl.rank_attendance_class
+        s.roll_no,
+        s.enrollment_id,
+        s.name,
+        s.dob,
+        s.class,
+        s.class_id,
+        sl.cgpa,
+        sl.overall_attendance as attendance,
+        sl.rank_cgpa_college,
+        sl.rank_cgpa_class,
+        sl.rank_attendance_college,
+        sl.rank_attendance_class
           FROM STUDENT s
           JOIN STUDENT_LEADERBOARD sl ON s.student_id = sl.student_id
           WHERE s.roll_no = ?
@@ -804,7 +943,7 @@ async function handleRequest(request, env) {
         .prepare(`
           SELECT 
             COUNT(*) as total_students,
-            SUM(CASE WHEN s.class = ? THEN 1 ELSE 0 END) as total_in_class
+        SUM(CASE WHEN s.class = ? THEN 1 ELSE 0 END) as total_in_class
           FROM STUDENT s
         `)
         .bind(student.class)

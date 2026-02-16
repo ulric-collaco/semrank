@@ -26,6 +26,7 @@ export default function Navbar() {
                 <div className="hidden md:flex gap-8 font-bold text-sm">
                     <Link to="/leaderboard" className="hover:underline decoration-4 decoration-black underline-offset-4 uppercase">Leaderboard</Link>
                     <Link to="/compare" className="hover:underline decoration-4 decoration-black underline-offset-4 uppercase">Compare</Link>
+                    <Link to="/classes" className="hover:underline decoration-4 decoration-black underline-offset-4 uppercase">Classes</Link>
                     <Link to="/game" className="hover:underline decoration-4 decoration-black underline-offset-4 uppercase">Game</Link>
                     <button onClick={openSearch} className="hover:underline decoration-4 decoration-black underline-offset-4 uppercase flex items-center gap-1">
                         <Search size={16} strokeWidth={3} /> Search
@@ -74,6 +75,13 @@ export default function Navbar() {
                             className="w-full py-4 text-3xl font-black uppercase hover:underline decoration-4 decoration-black underline-offset-8 text-center active:bg-black/5"
                         >
                             Compare
+                        </Link>
+                        <Link
+                            to="/classes"
+                            onClick={closeMenu}
+                            className="w-full py-4 text-3xl font-black uppercase hover:underline decoration-4 decoration-black underline-offset-8 text-center active:bg-black/5"
+                        >
+                            Classes
                         </Link>
 
                         {/* Search Button in Mobile Menu */}

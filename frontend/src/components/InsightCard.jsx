@@ -81,7 +81,7 @@ function ChartContent({ data, color }) {
     if (!data) return null;
     return (
         <div className="w-full h-40 relative group/chart cursor-pointer active:scale-[0.98] transition-transform" style={{ width: '100%', height: '160px' }}>
-            <ResponsiveContainer width="100%" height="100%">
+            <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0}>
                 <BarChart data={data}>
                     <XAxis dataKey="name" hide />
                     <Tooltip
