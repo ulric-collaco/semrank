@@ -1,9 +1,8 @@
-
 import React from 'react';
 import { Link } from 'react-router-dom';
-import SearchInput4 from './SearchInput4';
+import SearchInput from './SearchInput';
 
-export default function Hero4() {
+export default function Hero() {
     return (
         <header className="relative py-8 md:py-16 px-4 md:px-6 bg-white text-black flex flex-col items-center text-center border-b-4 border-black w-full max-w-full justify-center min-h-[60svh] md:min-h-[70svh]">
             {/* Decorative overlay — overflow-hidden here so shapes don't cause horizontal scroll */}
@@ -44,7 +43,7 @@ export default function Hero4() {
 
             {/* Search Input - Tilted — high z-index so dropdown floats above CTA & marquee below */}
             <div className="w-full max-w-md md:max-w-2xl px-2 md:px-0 mb-8 relative z-40 rotate-[-1deg]">
-                <SearchInput4 />
+                <SearchInput />
             </div>
 
             {/* CTA Buttons - lower z than search */}

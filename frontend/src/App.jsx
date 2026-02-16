@@ -1,4 +1,3 @@
-
 import { useState, useEffect, Suspense, lazy } from 'react'
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import LoadingScreen from './components/LoadingScreen'
@@ -6,17 +5,13 @@ import Grainient from './components/Grainient'
 
 const BubbleMenu = lazy(() => import('./components/BubbleMenu'))
 const PageTransition = lazy(() => import('./components/PageTransition'))
-const HomePage = lazy(() => import('./pages/HomePage'))
+// const HomePage = lazy(() => import('./pages/HomePage')) // Unused?
 const LeaderboardPage = lazy(() => import('./pages/LeaderboardPage'))
 const ComparePage = lazy(() => import('./pages/ComparePage'))
 const GamePage = lazy(() => import('./pages/GamePage'))
+const LandingPage = lazy(() => import('./pages/LandingPage'))
 
 const LandingPage2 = lazy(() => import('./pages/LandingPage2'))
-
-const LandingPage4 = lazy(() => import('./pages/LandingPage4'))
-const LeaderboardPage4 = lazy(() => import('./pages/LeaderboardPage4'))
-const ComparePage4 = lazy(() => import('./pages/ComparePage4'))
-const GamePage4 = lazy(() => import('./pages/GamePage4'))
 
 const menuItems = [
   {
@@ -85,11 +80,11 @@ function MainApp() {
   const renderPage = () => {
     let page
     switch (currentPage) {
-      case 'home': page = <HomePage />; break
+      case 'home': page = <LandingPage />; break
       case 'leaderboard': page = <LeaderboardPage />; break
       case 'compare': page = <ComparePage />; break
       case 'game': page = <GamePage />; break
-      default: page = <HomePage />
+      default: page = <LandingPage />
     }
     return <PageTransition key={currentPage}>{page}</PageTransition>
   }
@@ -175,22 +170,22 @@ function App() {
 
         <Routes>
           {/* V4 Pages as Default Routes */}
-          <Route path="/" element={<LandingPage4 />} />
-          <Route path="/leaderboard" element={<LeaderboardPage4 />} />
-          <Route path="/compare" element={<ComparePage4 />} />
-          <Route path="/game" element={<GamePage4 />} />
+          <Route path="/" element={<LandingPage />} />
+          <Route path="/leaderboard" element={<LeaderboardPage />} />
+          <Route path="/compare" element={<ComparePage />} />
+          <Route path="/game" element={<GamePage />} />
 
           {/* Legacy V4 Routes (for backward compatibility during dev) */}
-          <Route path="/4" element={<LandingPage4 />} />
-          <Route path="/4/leaderboard" element={<LeaderboardPage4 />} />
-          <Route path="/4/compare" element={<ComparePage4 />} />
-          <Route path="/4/game" element={<GamePage4 />} />
+          <Route path="/4" element={<LandingPage />} />
+          <Route path="/4/leaderboard" element={<LeaderboardPage />} />
+          <Route path="/4/compare" element={<ComparePage />} />
+          <Route path="/4/game" element={<GamePage />} />
 
           {/* Legacy V2 Route */}
           <Route path="/2" element={<LandingPage2 />} />
 
           {/* Fallback to Home */}
-          <Route path="/*" element={<LandingPage4 />} />
+          <Route path="/*" element={<LandingPage />} />
         </Routes>
       </Suspense>
     </BrowserRouter>

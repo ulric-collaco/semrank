@@ -1,7 +1,7 @@
 
 import { Link } from 'react-router-dom';
 
-export default function Footer4() {
+export default function Footer() {
     return (
         <footer className="bg-black text-white p-12 border-t-4 border-white font-mono">
             <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between gap-12">

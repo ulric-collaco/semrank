@@ -1,12 +1,12 @@
 import { useState, lazy, Suspense } from 'react';
 import { Link } from 'react-router-dom';
 import Crown from 'lucide-react/dist/esm/icons/crown';
-import { formatClassName } from '../../utils/format';
-import OptimizedImage from '../common/OptimizedImage';
+import { formatClassName } from '../utils/format';
+import OptimizedImage from './common/OptimizedImage';
 
-const StudentModal4 = lazy(() => import('./StudentModal4'));
+const StudentModal = lazy(() => import('./StudentModal'));
 
-export default function Leaderboard4({ data, sortBy = 'sgpa', setSortBy }) {
+export default function Leaderboard({ data, sortBy = 'sgpa', setSortBy }) {
     const [selectedStudentRoll, setSelectedStudentRoll] = useState(null);
 
     if (!data || data.length === 0) return null;
@@ -97,7 +97,7 @@ export default function Leaderboard4({ data, sortBy = 'sgpa', setSortBy }) {
 
             {selectedStudentRoll && (
                 <Suspense fallback={null}>
-                    <StudentModal4
+                    <StudentModal
                         rollNo={selectedStudentRoll}
                         onClose={() => setSelectedStudentRoll(null)}
                     />

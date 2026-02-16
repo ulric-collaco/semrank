@@ -1,14 +1,14 @@
 import { useEffect, useState } from 'react';
-import Navbar4 from '../components/landing4/Navbar4';
-import Hero4 from '../components/landing4/Hero4';
-import Leaderboard4 from '../components/landing4/Leaderboard4';
-import Footer4 from '../components/landing4/Footer4';
-import InsightCard from '../components/landing4/InsightCard';
-import StudentModal4 from '../components/landing4/StudentModal4';
+import Navbar from '../components/Navbar';
+import Hero from '../components/Hero';
+import Leaderboard from '../components/Leaderboard';
+import Footer from '../components/Footer';
+import InsightCard from '../components/InsightCard';
+import StudentModal from '../components/StudentModal';
 import { leaderboardAPI, studentAPI, birthdayAPI } from '../utils/api';
 import { Swords, BarChart3, TrendingUp, AlertTriangle, Cake } from 'lucide-react';
 
-export default function LandingPage4() {
+export default function LandingPage() {
     const [topStudents, setTopStudents] = useState([]);
     const [sortBy, setSortBy] = useState('sgpa');
     const [isMobile, setIsMobile] = useState(false);
@@ -119,9 +119,9 @@ export default function LandingPage4() {
 
     return (
         <div className="min-h-screen bg-white text-black font-sans box-border selection:bg-[#ffde00] overflow-x-hidden">
-            <Navbar4 />
+            <Navbar />
             <div className="relative z-50">
-                <Hero4 />
+                <Hero />
             </div>
 
             {/* Marquee Separator */}
@@ -134,7 +134,7 @@ export default function LandingPage4() {
                 </div>
             </div>
 
-            <Leaderboard4 data={topStudents} sortBy={sortBy} setSortBy={setSortBy} />
+            <Leaderboard data={topStudents} sortBy={sortBy} setSortBy={setSortBy} />
 
             {/* Daily Intel Section - Insights */}
             <section className="py-12 px-6 max-w-7xl mx-auto">
@@ -209,13 +209,13 @@ export default function LandingPage4() {
             </section>
 
             {selectedStudentRoll && (
-                <StudentModal4
+                <StudentModal
                     rollNo={selectedStudentRoll}
                     onClose={() => setSelectedStudentRoll(null)}
                 />
             )}
 
-            <Footer4 />
+            <Footer />
         </div>
     );
 }

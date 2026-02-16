@@ -1,290 +1,335 @@
-import { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect, useRef, lazy, Suspense } from 'react'
 import { gsap } from 'gsap'
 import { leaderboardAPI, statsAPI } from '../utils/api'
 import { formatClassName } from '../utils/format'
-import StudentModal from '../components/StudentModal'
-import ToggleSwitch from '../components/ToggleSwitch'
-import { ChevronDown, BookOpen, Trophy, Users, GraduationCap, LayoutGrid } from 'lucide-react'
+import Navbar from '../components/Navbar'
+import Footer from '../components/Footer'
+import ChevronDown from 'lucide-react/dist/esm/icons/chevron-down'
+import Crown from 'lucide-react/dist/esm/icons/crown'
+import OptimizedImage from '../components/common/OptimizedImage'
+
+const StudentModal = lazy(() => import('../components/StudentModal'));
+
+// Simple Neo-Brutalist Toggle
+const ToggleButton = ({ options, active, onChange }) => {
+    return (
+        <div className="flex border-4 border-black bg-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] w-full md:w-auto overflow-hidden">
+            {options.map((opt) => (
+                <button
+                    key={opt.value}
+                    onClick={() => onChange(opt.value)}
+                    className={`
+                        flex-1 md:flex-none px-2 md:px-6 py-3 min-h-[44px] font-bold uppercase font-mono transition-colors text-xs md:text-base truncate flex items-center justify-center
+                        ${active === opt.value
+                            ? 'bg-black text-[#ffde00]'
+                            : 'bg-white text-black hover:bg-gray-100'
+                        }
+                    `}
+                >
+                    {opt.label}
+                </button>
+            ))}
+        </div>
+    )
+}
 
 export default function LeaderboardPage() {
-  const [students, setStudents] = useState([])
-  const [subjectList, setSubjectList] = useState([])
-  const [isLoading, setIsLoading] = useState(true)
-  const [selectedStudentRoll, setSelectedStudentRoll] = useState(null)
+    const [students, setStudents] = useState([])
+    const [subjectList, setSubjectList] = useState([])
+    const [isLoading, setIsLoading] = useState(true)
+    const [selectedStudentRoll, setSelectedStudentRoll] = useState(null)
 
-  // New State Model
-  const [viewScope, setViewScope] = useState('overall') // 'overall' | 'subject'
-  const [metric, setMetric] = useState('marks')         // 'marks' | 'attendance'
+    // State
+    const [viewScope, setViewScope] = useState('overall')
+    const [metric, setMetric] = useState('marks')
+    const [filterClass, setFilterClass] = useState('all')
+    const [selectedSubject, setSelectedSubject] = useState('')
 
-  // Filters
-  const [filterClass, setFilterClass] = useState('all')
-  const [selectedSubject, setSelectedSubject] = useState('')
+    const LIMIT = 1000
+    const classes = ['all', 'COMPS_A', 'COMPS_B', 'COMPS_C', 'MECH']
+    const gridRef = useRef(null)
 
-  // Constants
-  const LIMIT = 1000
-  const classes = ['all', 'COMPS_A', 'COMPS_B', 'COMPS_C', 'MECH']
+    const [subjectCodeMap, setSubjectCodeMap] = useState({})
 
-  const gridRef = useRef(null)
+    useEffect(() => {
+        fetchLeaderboardData()
+    }, [viewScope, metric, filterClass, selectedSubject, subjectCodeMap])
 
-  // Fetch Data on Change
-  useEffect(() => {
-    fetchLeaderboardData()
-  }, [viewScope, metric, filterClass, selectedSubject])
-
-  // Fetch Subject List when entering Subject scope
-  useEffect(() => {
-    if (viewScope === 'subject' && subjectList.length === 0) {
-      fetchSubjects()
-    }
-  }, [viewScope])
-
-  const fetchLeaderboardData = async () => {
-    setIsLoading(true)
-    try {
-      let data = []
-
-      if (viewScope === 'subject') {
-        if (selectedSubject) {
-          // Fetch Subject Leaderboard (Marks or Attendance)
-          // metric 'marks' -> sortBy='marks', 'attendance' -> sortBy='attendance'
-          const response = await leaderboardAPI.getTopBySubject(selectedSubject, LIMIT, filterClass, metric)
-          data = response.students || []
-        } else {
-          data = [] // Waiting for subject
+    useEffect(() => {
+        if (viewScope === 'subject' && subjectList.length === 0) {
+            fetchSubjects()
         }
-      } else {
-        // Overall Scope
-        if (metric === 'attendance') {
-          data = await leaderboardAPI.getTopByAttendance(LIMIT, filterClass)
-        } else {
-          // Default: SGPA (Marks)
-          data = await leaderboardAPI.getTopBySGPA(LIMIT, filterClass)
+    }, [viewScope])
+
+    const fetchLeaderboardData = async () => {
+        setIsLoading(true)
+        try {
+            let data = []
+            if (viewScope === 'subject') {
+                if (selectedSubject) {
+                    // Get all codes associated with this subject (handling duplicates like "Community Engagement  Project" vs "Community Engagement Project")
+                    const codesToFetch = subjectCodeMap[selectedSubject] || [selectedSubject]
+
+                    // Fetch all variations in parallel
+                    const responses = await Promise.all(
+                        codesToFetch.map(code =>
+                            leaderboardAPI.getTopBySubject(code, LIMIT, filterClass, metric)
+                                .catch(err => {
+                                    console.warn(`Failed to fetch for code ${code}`, err)
+                                    return { students: [] }
+                                })
+                        )
+                    )
+
+                    // Merge results
+                    const allStudents = responses.flatMap(r => r.students || [])
+
+                    // Deduplicate by student_id
+                    const uniqueStudents = Array.from(
+                        new Map(allStudents.map(s => [s.student_id, s])).values()
+                    )
+
+                    data = uniqueStudents
+                }
+            } else {
+                if (metric === 'attendance') {
+                    data = await leaderboardAPI.getTopByAttendance(LIMIT, filterClass)
+                } else {
+                    data = await leaderboardAPI.getTopBySGPA(LIMIT, filterClass)
+                }
+            }
+            setStudents(data)
+        } catch (error) {
+            console.error('Failed to fetch leaderboard:', error)
+            setStudents([])
+        } finally {
+            setIsLoading(false)
         }
-      }
-
-      setStudents(data)
-    } catch (error) {
-      console.error('Failed to fetch leaderboard:', error)
-      setStudents([])
-    } finally {
-      setIsLoading(false)
     }
-  }
 
-  const fetchSubjects = async () => {
-    try {
-      const response = await statsAPI.getSubjectStats('all')
-      const subs = response.subjects || []
-      setSubjectList(subs)
-      // Select first subject by default
-      if (subs.length > 0 && !selectedSubject) {
-        setSelectedSubject(subs[0].subject_code)
-      }
-    } catch (error) {
-      console.error('Failed to fetch subjects:', error)
+    const fetchSubjects = async () => {
+        try {
+            const response = await statsAPI.getSubjectStats('all')
+            const rawSubs = response.subjects || []
+
+            // Deduplicate and Map Codes
+            const uniqueMap = {}
+            const codeMapping = {}
+
+            rawSubs.forEach(sub => {
+                // Normalize name: trim and reduce multiple spaces to single space
+                const normalizedName = sub.subject_name.trim().replace(/\s+/g, ' ')
+
+                if (!uniqueMap[normalizedName]) {
+                    uniqueMap[normalizedName] = {
+                        ...sub,
+                        subject_name: normalizedName // Use clean name
+                    }
+                    // Initialize mapping with this code
+                    codeMapping[sub.subject_code] = [sub.subject_code]
+                } else {
+                    // Found a duplicate! Add this code to the existing entry's mapping
+                    const existingCode = uniqueMap[normalizedName].subject_code
+                    if (!codeMapping[existingCode].includes(sub.subject_code)) {
+                        codeMapping[existingCode].push(sub.subject_code)
+                    }
+                }
+            })
+
+            const dedupedSubs = Object.values(uniqueMap).sort((a, b) => a.subject_name.localeCompare(b.subject_name))
+
+            setSubjectList(dedupedSubs)
+            setSubjectCodeMap(codeMapping)
+
+            if (dedupedSubs.length > 0 && !selectedSubject) {
+                setSelectedSubject(dedupedSubs[0].subject_code)
+            }
+        } catch (error) {
+            console.error('Failed to fetch subjects:', error)
+        }
     }
-  }
 
-  // Animation
-  useEffect(() => {
-    if (!gridRef.current || isLoading) return
-    gsap.fromTo(
-      gridRef.current.children,
-      { scale: 0.95, opacity: 0 },
-      { scale: 1, opacity: 1, duration: 0.4, stagger: 0.02, ease: 'power2.out' }
-    )
-  }, [students, isLoading])
+    useEffect(() => {
+        if (!gridRef.current || isLoading) return
+        gsap.fromTo(
+            gridRef.current.children,
+            { y: 20, opacity: 0 },
+            { y: 0, opacity: 1, duration: 0.3, stagger: 0.03, ease: 'power2.out' }
+        )
+    }, [students, isLoading])
 
-  return (
-    <div className="min-h-screen px-4 md:px-6 py-20 pb-32">
-      <div className="max-w-6xl mx-auto">
+    return (
+        <div className="min-h-screen bg-white text-black font-mono selection:bg-[#00ffff] overflow-x-hidden w-full max-w-full">
+            <Navbar />
 
-        {/* Header */}
-        <div className="text-center mb-8">
-          <h1 className="text-4xl md:text-6xl font-display font-black text-ink mb-2 tracking-tight md:tracking-normal uppercase">
-            Leaderboard
-          </h1>
-          <p className="text-slate-500 font-medium">
-            {viewScope === 'overall' ? 'Semester Rankings' : 'Subject-wise Performance'}
-          </p>
-        </div>
+            <div className="w-full max-w-7xl mx-auto px-2 sm:px-4 py-8 md:py-12 md:px-6">
 
-        {/* Controls Container */}
-        <div className="flex flex-col items-center gap-6 mb-10">
+                {/* Header */}
+                <div className="text-center mb-8 md:mb-12">
+                    <h1 className="text-5xl sm:text-6xl md:text-8xl font-black uppercase tracking-tighter mb-4 shadow-black drop-shadow-lg leading-none break-words hyphens-auto text-black">
+                        HALL OF <span className="text-[#00ffff] inline-block transform -skew-x-6" style={{ textShadow: '4px 4px 0px #000', WebkitTextStroke: '2px black' }}>FAME</span>
+                    </h1>
+                    <p className="bg-[#ffde00] inline-block border-2 border-black px-2 md:px-4 py-1 font-bold transform -rotate-2 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] md:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] text-xs md:text-base max-w-[90vw] truncate">
+                        {viewScope === 'overall' ? 'SEMESTER DOMINANCE' : 'SUBJECT SPECIALISTS'}
+                    </p>
+                </div>
 
-          {/* 1. Scope Toggle */}
-          <div className="mb-2">
-            <ToggleSwitch
-              options={[
-                { label: 'Overall', value: 'overall' },
-                { label: 'Subject', value: 'subject' },
-              ]}
-              activeValue={viewScope}
-              onChange={setViewScope}
-            />
-          </div>
+                {/* Controls */}
+                <div className="flex flex-col items-center gap-4 md:gap-6 mb-8 md:mb-16 w-full">
+                    <div className="flex flex-col sm:flex-row flex-wrap justify-center gap-2 md:gap-4 w-full md:w-auto">
+                        <ToggleButton
+                            options={[{ label: 'OVERALL', value: 'overall' }, { label: 'SUBJECT', value: 'subject' }]}
+                            active={viewScope}
+                            onChange={(v) => { setViewScope(v); if (v === 'overall') setMetric('marks'); }}
+                        />
+                        <ToggleButton
+                            options={[
+                                { label: viewScope === 'overall' ? 'SGPA' : 'MARKS', value: 'marks' },
+                                { label: 'ATTENDANCE', value: 'attendance' }
+                            ]}
+                            active={metric}
+                            onChange={setMetric}
+                        />
+                    </div>
 
-          {/* 2. Metric Toggle */}
-          <div className="mb-2">
-            <ToggleSwitch
-              options={[
-                { label: viewScope === 'overall' ? 'SGPA' : 'Marks', value: 'marks' },
-                { label: 'Attendance', value: 'attendance' },
-              ]}
-              activeValue={metric}
-              onChange={setMetric}
-            />
-          </div>
+                    <div className="flex flex-wrap justify-center gap-2 md:gap-4 w-full max-w-4xl">
+                        {/* Class Filter */}
+                        <div className="border-4 border-black bg-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] flex flex-wrap w-full md:w-auto">
+                            {classes.map(c => (
+                                <button
+                                    key={c}
+                                    onClick={() => setFilterClass(c)}
+                                    className={`flex-1 md:flex-none px-3 md:px-4 py-3 min-h-[44px] text-xs md:text-sm font-bold uppercase transition-colors whitespace-nowrap flex items-center justify-center
+                                        ${filterClass === c ? 'bg-black text-white' : 'hover:bg-gray-200'}
+                                    `}
+                                >
+                                    {c === 'all' ? 'ALL' : formatClassName(c)}
+                                </button>
+                            ))}
+                        </div>
 
-          {/* 3. Filters (Class & Subject) */}
-          <div className="flex flex-wrap justify-center gap-3 w-full max-w-2xl mt-2 z-10">
+                        {/* Subject Select */}
+                        {viewScope === 'subject' && (
+                            <div className="relative border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] bg-white w-full md:w-auto md:min-w-[250px]">
+                                <select
+                                    value={selectedSubject}
+                                    onChange={(e) => setSelectedSubject(e.target.value)}
+                                    className="w-full h-full p-3 min-h-[44px] bg-transparent font-bold uppercase appearance-none cursor-pointer focus:outline-none text-xs md:text-base truncate pr-10"
+                                >
+                                    {subjectList.map(s => (
+                                        <option key={s.subject_code} value={s.subject_code} className="font-mono">
+                                            {s.subject_name}
+                                        </option>
+                                    ))}
+                                </select>
+                                <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 pointer-events-none border-2 border-black bg-[#ffde00] rounded-full p-0.5" />
+                            </div>
+                        )}
+                    </div>
+                </div>
 
-            {/* Class Filter */}
-            <ToggleSwitch
-              options={classes.map(c => ({
-                label: c === 'all' ? 'All' : formatClassName(c),
-                value: c
-              }))}
-              activeValue={filterClass}
-              onChange={setFilterClass}
-            />
+                {/* List */}
+                {isLoading ? (
+                    <div className="flex justify-center py-20">
+                        <div className="h-12 w-12 border-4 border-black border-t-[#ff69b4] rounded-full animate-spin"></div>
+                    </div>
+                ) : students.length === 0 ? (
+                    <div className="text-center py-10 md:py-20 font-bold text-lg md:text-xl border-4 border-dashed border-gray-300 mx-4">
+                        NO DATA FOUND. THE ARCHIVES ARE INCOMPLETE.
+                    </div>
+                ) : (
+                    <div ref={gridRef} className="grid grid-cols-1 gap-3 md:gap-4 max-w-5xl mx-auto w-full">
+                        {/* Header Row - Hidden on Mobile */}
+                        <div className="hidden md:grid grid-cols-12 gap-4 px-6 font-black uppercase text-sm border-b-4 border-black pb-2">
+                            <div className="col-span-1 text-center">Rank</div>
+                            <div className="col-span-1"></div>
+                            <div className="col-span-6">Student</div>
+                            <div className="col-span-2 text-right">Score</div>
+                            <div className="col-span-2 text-right">Class</div>
+                        </div>
 
-            {/* Subject Selector */}
-            {viewScope === 'subject' && (
-              <div className="relative group flex-grow md:flex-grow-0 min-w-[200px]">
-                <select
-                  value={selectedSubject}
-                  onChange={(e) => setSelectedSubject(e.target.value)}
-                  className="appearance-none bg-slate-800/80 border border-white/10 text-amber-100 pl-4 pr-10 py-2.5 rounded-xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-amber-500/50 hover:bg-slate-800 transition-colors w-full cursor-pointer h-[42px]"
-                >
-                  {subjectList.map(sub => (
-                    <option key={sub.subject_code} value={sub.subject_code}>
-                      {sub.subject_name}
-                    </option>
-                  ))}
-                </select>
-                <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-amber-400 pointer-events-none" />
-              </div>
-            )}
-          </div>
-        </div>
+                        {students.map((student, index) => {
+                            const rank = student.rank || (index + 1);
+                            const isTop3 = rank <= 3;
 
-        {/* Data List */}
-        {isLoading ? (
-          <div className="flex flex-col items-center justify-center py-20 gap-4">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-500"></div>
-            <p className="text-slate-500 animate-pulse text-sm">Loading rankings...</p>
-          </div>
-        ) : students.length === 0 ? (
-          <div className="text-center py-20 bg-slate-900/30 rounded-3xl border border-white/5">
-            <p className="text-slate-400">No students found.</p>
-          </div>
-        ) : (
-          <div ref={gridRef} className="grid grid-cols-1 gap-3 pb-20">
-            {/* Table Header */}
-            <div className="hidden md:grid grid-cols-12 gap-4 px-6 py-3 text-xs font-bold text-slate-500 uppercase tracking-wider">
-              <div className="col-span-1 text-center">Rank</div>
-              <div className="col-span-5">Student</div>
-              <div className="col-span-3 text-right">
-                {metric === 'attendance' ? 'Attendance' : (viewScope === 'subject' ? 'Marks / 50' : 'SGPI')}
-              </div>
-              <div className="col-span-3 text-right">Class</div>
+                            let displayValue = '';
+                            if (metric === 'attendance') {
+                                displayValue = `${parseFloat((viewScope === 'subject' ? student.attendance_percentage : student.attendance) || 0).toFixed(1)}%`;
+                            } else if (viewScope === 'subject') {
+                                displayValue = parseFloat(student.marks?.total ?? 0).toFixed(2);
+                            } else {
+                                displayValue = parseFloat(student.cgpa || 0).toFixed(2);
+                            }
+
+                            return (
+                                <div
+                                    key={student.student_id}
+                                    onClick={() => setSelectedStudentRoll(student.roll_no)}
+                                    className={`
+                                        group relative grid grid-cols-12 gap-2 md:gap-4 items-center p-3 md:p-4 border-4 border-black transition-transform cursor-pointer w-full
+                                        ${isTop3 ? 'bg-[#ffde00] hover:translate-x-1 hover:translate-y-1 hover:shadow-none shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] md:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)]' : 'bg-white hover:bg-gray-50'}
+                                    `}
+                                >
+                                    {/* Mobile: Rank + Name + Score Layout */}
+                                    <div className="col-span-2 md:col-span-1 flex justify-center">
+                                        <div className={`
+                                            w-8 h-8 md:w-10 md:h-10 flex items-center justify-center font-black text-sm md:text-lg border-2 border-black
+                                            ${rank === 1 ? 'bg-[#ff69b4] text-black' : rank === 2 ? 'bg-gray-300' : rank === 3 ? 'bg-orange-400' : 'bg-white'}
+                                         `}>
+                                            {rank === 1 ? <Crown className="w-4 h-4 md:w-6 md:h-6" /> : rank}
+                                        </div>
+                                    </div>
+
+                                    <div className="hidden md:block col-span-1">
+                                        <div className="w-10 h-10 md:w-12 md:h-12 border-2 border-black overflow-hidden bg-gray-200">
+                                            <OptimizedImage
+                                                src={`/student_faces/${student.roll_no}.png`}
+                                                alt=""
+                                                className="w-full h-full object-cover transition-all"
+                                                width={48}
+                                                height={48}
+                                            />
+                                        </div>
+                                    </div>
+
+                                    <div className="col-span-7 md:col-span-6 overflow-hidden pr-2">
+                                        {/* Mobile: Name on top, Class/Roll below */}
+                                        <div className="font-bold text-xs sm:text-sm md:text-lg uppercase truncate leading-tight">{student.name}</div>
+                                        <div className="flex gap-2 mt-1 items-center">
+                                            <div className="text-[10px] md:text-xs font-mono bg-black text-white inline-block px-1">{student.roll_no}</div>
+                                            <div className="md:hidden text-[9px] font-bold border border-black px-1 bg-white truncate max-w-[80px]">
+                                                {formatClassName(student.class)}
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div className="col-span-3 md:col-span-2 text-right">
+                                        <div className="font-black text-base sm:text-lg md:text-2xl">{displayValue}</div>
+                                        <div className="text-[8px] md:text-[10px] uppercase font-bold tracking-widest">{metric === 'attendance' ? 'ATT' : 'SCORE'}</div>
+                                    </div>
+
+                                    <div className="hidden md:block col-span-2 text-right">
+                                        <span className="font-bold border-2 border-black px-2 py-1 bg-white text-xs">
+                                            {formatClassName(student.class)}
+                                        </span>
+                                    </div>
+                                </div>
+                            );
+                        })}
+                    </div>
+                )}
             </div>
 
-            {/* Rows */}
-            {students.map((student, index) => {
-              // Determine Display Value
-              let displayValue = ''
-              let accentColor = ''
+            {selectedStudentRoll && (
+                <Suspense fallback={null}>
+                    <StudentModal
+                        rollNo={selectedStudentRoll}
+                        onClose={() => setSelectedStudentRoll(null)}
+                    />
+                </Suspense>
+            )}
 
-              if (metric === 'attendance') {
-                const att = viewScope === 'subject' ? student.attendance_percentage : student.attendance
-                displayValue = `${parseFloat(att || 0).toFixed(1)}%`
-                accentColor = 'text-emerald-400'
-              } else if (viewScope === 'subject') {
-                displayValue = parseFloat(student.marks?.total ?? 0).toFixed(2)
-                accentColor = 'text-amber-400'
-              } else {
-                displayValue = parseFloat(student.cgpa || 0).toFixed(2)
-                accentColor = 'text-indigo-400'
-              }
-
-              const rank = student.rank || (index + 1)
-              const isTop3 = rank <= 3
-
-              // Top 3 specific styling for better visibility
-              const cardBg = isTop3
-                ? 'bg-slate-800/90 border-white/20 shadow-lg'
-                : 'bg-slate-900/40 hover:bg-slate-800/60 border-white/5 hover:border-white/10'
-
-              return (
-                <div
-                  key={student.student_id}
-                  onClick={() => setSelectedStudentRoll(student.roll_no)}
-                  className={`group relative ${cardBg} border rounded-xl p-4 md:px-6 md:py-4 transition-all cursor-pointer flex flex-col md:grid md:grid-cols-12 gap-3 items-start md:items-center`}
-                >
-                  {/* Rank Badge */}
-                  <div className="absolute top-4 right-4 md:static md:col-span-1 md:flex md:justify-center">
-                    <div className={`
-                      w-8 h-8 rounded-lg flex items-center justify-center font-bold text-sm shadow-sm
-                      ${rank === 1 ? 'bg-yellow-500 text-yellow-950 border border-yellow-400' :
-                        rank === 2 ? 'bg-slate-300 text-slate-800 border border-slate-200' :
-                          rank === 3 ? 'bg-orange-400 text-orange-950 border border-orange-300' :
-                            'bg-slate-800 text-slate-400 border border-slate-700'}
-                    `}>
-                      {rank}
-                    </div>
-                  </div>
-
-                  {/* Student Details */}
-                  <div className="col-span-12 md:col-span-5 flex items-center gap-4">
-                    <div className={`w-10 h-10 md:w-12 md:h-12 rounded-full overflow-hidden border flex-shrink-0 ${isTop3 ? 'border-white/30' : 'border-white/10 bg-slate-800'}`}>
-                      <img
-                        src={`/student_faces/${student.roll_no}.png`}
-                        alt={student.name}
-                        className="w-full h-full object-cover"
-                        onError={(e) => { e.target.style.display = 'none'; e.target.nextSibling.style.display = 'flex'; }}
-                      />
-                      <div className="hidden w-full h-full flex items-center justify-center text-slate-600 bg-slate-900">
-                        <span className="text-xs">IMG</span>
-                      </div>
-                    </div>
-                    <div className="min-w-0">
-                      <h3 className={`font-bold line-clamp-2 md:line-clamp-1 break-words leading-tight pr-8 md:pr-0 ${isTop3 ? 'text-white text-lg' : 'text-slate-200'}`}>{student.name}</h3>
-                      <p className={`text-xs font-mono mt-0.5 ${isTop3 ? 'text-slate-300' : 'text-slate-500'}`}>{student.roll_no}</p>
-                    </div>
-                  </div>
-
-                  {/* Statistic */}
-                  <div className="col-span-6 md:col-span-3 flex md:justify-end items-center gap-2 md:gap-0">
-                    <span className="md:hidden text-xs text-slate-500 uppercase font-bold mr-2">
-                      {metric === 'attendance' ? 'Att:' : (viewScope === 'subject' ? 'Marks:' : 'SGPI:')}
-                    </span>
-                    <span className={`text-xl font-bold font-mono ${isTop3 ? 'text-white scale-110 origin-right' : accentColor}`}>
-                      {displayValue}
-                    </span>
-                  </div>
-
-                  {/* Class Badge */}
-                  <div className="col-span-6 md:col-span-3 flex md:justify-end items-center">
-                    <span className="md:hidden text-xs text-slate-500 uppercase font-bold mr-2">Class:</span>
-                    <span className={`text-sm font-medium px-2 py-1 rounded-md border ${isTop3 ? 'bg-white/10 text-white border-white/20' : 'bg-white/5 text-slate-400 border-white/5'}`}>
-                      {formatClassName(student.class)}
-                    </span>
-                  </div>
-                </div>
-              )
-            })}
-          </div>
-        )}
-      </div>
-
-      {selectedStudentRoll && (
-        <StudentModal
-          rollNo={selectedStudentRoll}
-          onClose={() => setSelectedStudentRoll(null)}
-        />
-      )}
-    </div>
-  )
+            <Footer />
+        </div>
+    )
 }

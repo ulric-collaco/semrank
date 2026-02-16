@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Menu, X, Search } from 'lucide-react';
-import SearchInput4 from './SearchInput4';
+import SearchInput from './SearchInput';
 
-export default function Navbar4() {
+export default function Navbar() {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [isSearchOpen, setIsSearchOpen] = useState(false);
 
@@ -116,7 +116,7 @@ export default function Navbar4() {
                         <h2 className="text-[#00ffff] font-black text-2xl md:text-4xl text-center mb-8 uppercase tracking-widest">
                             Search Database
                         </h2>
-                        <SearchInput4 />
+                        <SearchInput />
                     </div>
                 </div>
             )}
