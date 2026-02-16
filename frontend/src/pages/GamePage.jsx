@@ -249,7 +249,7 @@ export default function GamePage() {
 
     return (
         <div className="h-screen w-screen bg-black text-black font-sans overflow-hidden flex flex-col box-border">
-            <Navbar4 />
+            <Navbar />
 
             <div ref={containerRef} className="flex-1 relative flex flex-col md:flex-row overflow-hidden w-full h-full">
 
