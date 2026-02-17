@@ -94,7 +94,7 @@ export default function SearchInput() {
                                     {/* Hover Effect Background */}
                                     <div className="absolute inset-0 bg-[#ff69b4] translate-x-[-100%] group-hover:translate-x-0 transition-transform duration-300 z-0"></div>
 
-                                    <div className="relative z-10 flex items-center gap-4 md:gap-6 overflow-hidden w-full">
+                                    <div className="relative z-10 flex items-center gap-3 md:gap-4 overflow-hidden w-full">
                                         <div className="w-12 h-12 md:w-16 md:h-16 border-4 border-black bg-white flex-shrink-0 overflow-hidden shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
                                             <OptimizedImage
                                                 src={`/student_faces/${student.roll_no}.png`}

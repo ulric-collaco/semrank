@@ -4,6 +4,7 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Cell, LabelList, Responsive
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart';
 import { formatClassName } from '../utils/format';
 import { studentAPI } from '../utils/api';
+import OptimizedImage from './common/OptimizedImage';
 
 export default function StudentIDCard({ student, loading, error, onClose }) {
     // Move hooks to top level, before any conditional returns
@@ -77,7 +78,7 @@ export default function StudentIDCard({ student, loading, error, onClose }) {
                     <div className="flex gap-4 md:gap-6 items-center">
                         <div className="w-24 h-24 md:w-32 md:h-32 border-4 border-black bg-white shrink-0 overflow-hidden shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
                             {student.roll_no ? (
-                                <img src={`/student_faces/${student.roll_no}.png`} alt={student.name} className="w-full h-full object-cover" onError={(e) => { e.target.style.display = 'none'; }} />
+                                <OptimizedImage src={`/student_faces/${student.roll_no}.png`} alt={student.name} className="w-full h-full object-cover" onError={(e) => { e.target.style.display = 'none'; }} />
                             ) : <div className="w-full h-full flex items-center justify-center"><User size={40} /></div>}
                         </div>
                         <div>

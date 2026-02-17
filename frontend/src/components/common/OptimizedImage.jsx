@@ -18,13 +18,15 @@ const OptimizedImage = ({
 }) => {
     const [isLoaded, setIsLoaded] = useState(false);
     const [hasError, setHasError] = useState(false);
+    const [currentSrc, setCurrentSrc] = useState(src);
 
     useEffect(() => {
         if (!src) return;
 
-        // Reset state when src changes
+        // Reset state when src prop changes
         setIsLoaded(false);
         setHasError(false);
+        setCurrentSrc(src);
 
         const img = new Image();
         img.src = src;
@@ -34,7 +36,7 @@ const OptimizedImage = ({
             setIsLoaded(true);
             if (onLoad) onLoad();
         }
-    }, [src, onLoad]);
+    }, [src]);
 
     const handleLoad = (e) => {
         setIsLoaded(true);
@@ -42,6 +44,17 @@ const OptimizedImage = ({
     };
 
     const handleError = (e) => {
+        // Try fallback extension if not already tried
+        if (currentSrc && !hasError) {
+            if (currentSrc.endsWith('.png')) {
+                setCurrentSrc(currentSrc.replace('.png', '.jpg'));
+                return;
+            } else if (currentSrc.endsWith('.jpg')) {
+                setCurrentSrc(currentSrc.replace('.jpg', '.png'));
+                return;
+            }
+        }
+
         setHasError(true);
         if (onError) onError(e);
         // Optional: Hide the broken image
@@ -50,7 +63,7 @@ const OptimizedImage = ({
 
     // Construct common props
     const imgProps = {
-        src,
+        src: currentSrc,
         alt: alt || '',
         className: `transition-opacity duration-500 ${isLoaded ? 'opacity-100' : 'opacity-0'} ${className || ''}`,
         width,
@@ -62,8 +75,16 @@ const OptimizedImage = ({
         ...props
     };
 
+    // Extract layout-related classes to apply to wrapper
+    const wrapperClasses = className ? className.split(' ').filter(c =>
+        c.startsWith('w-') || c.startsWith('h-') || c.includes('rounded') || c.includes('object-')
+    ).join(' ') : '';
+
     return (
-        <div className={`relative overflow-hidden ${className?.includes('rounded') ? '' : ''}`} style={{ width: width ? 'fit-content' : '100%', height: height ? 'fit-content' : '100%' }}>
+        <div className={`relative overflow-hidden ${wrapperClasses}`} style={{
+            width: width ? 'fit-content' : undefined,
+            height: height ? 'fit-content' : undefined
+        }}>
             {/* Placeholder / Skeleton - Shows until loaded or error */}
             {!isLoaded && !hasError && (
                 <div className="absolute inset-0 bg-gray-200 animate-pulse" />

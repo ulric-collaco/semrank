@@ -33,6 +33,10 @@ const ToggleButton = ({ options, active, onChange }) => {
     )
 }
 
+import { CLASSES } from '../utils/constants'
+
+// ... existing imports
+
 export default function LeaderboardPage() {
     const [students, setStudents] = useState([])
     const [subjectList, setSubjectList] = useState([])
@@ -46,7 +50,8 @@ export default function LeaderboardPage() {
     const [selectedSubject, setSelectedSubject] = useState('')
 
     const LIMIT = 1000
-    const classes = ['all', 'COMPS_A', 'COMPS_B', 'COMPS_C', 'MECH']
+    // Derive classes list for filter (prepend 'all')
+    const classes = ['all', ...CLASSES.map(c => c.id)]
     const gridRef = useRef(null)
 
     const [subjectCodeMap, setSubjectCodeMap] = useState({})

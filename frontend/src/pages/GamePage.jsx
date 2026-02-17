@@ -4,183 +4,129 @@ import { gameAPI } from '../utils/api'
 import Navbar from '../components/Navbar'
 import { ArrowUp, ArrowDown, Trophy, XCircle, RotateCcw, Loader2, ArrowLeft } from 'lucide-react'
 
+import { CLASSES } from '../utils/constants'
+
 export default function GamePage() {
     // --- State ---
-    const [gameState, setGameState] = useState('menu') // menu, loading, playing, correct, wrong
-    const [studentQueue, setStudentQueue] = useState([]) // Array of student objects
-    const [currentMetric, setCurrentMetric] = useState('cgpa') // 'cgpa' or 'attendance'
-    const [score, setScore] = useState(0)
-    const [highScore, setHighScore] = useState(parseInt(localStorage.getItem('semrank_highscore') || '0'))
+    const [gameState, setGameState] = useState('menu'); // menu, loading, playing, correct, wrong
+    const [studentQueue, setStudentQueue] = useState([]);
+    const [score, setScore] = useState(0);
+    const [highScore, setHighScore] = useState(0);
+    const [selectedClass, setSelectedClass] = useState('all');
+    const [currentMetric, setCurrentMetric] = useState('cgpa'); // cgpa, attendance
+    const [feedback, setFeedback] = useState(null); // 'higher', 'lower'
 
-    // Game Mode State: 'all' or specific class name
-    const [selectedClass, setSelectedClass] = useState('all')
+    // --- Refs for Animation ---
+    const containerRef = useRef(null);
+    const p1Ref = useRef(null);
+    const p2Ref = useRef(null);
+    const vsRef = useRef(null);
 
-    // --- Refs ---
-    const p1Ref = useRef(null)
-    const p2Ref = useRef(null)
-    const vsRef = useRef(null)
-    const containerRef = useRef(null)
-
-    // --- Helpers ---
-    const getRandomMetric = () => Math.floor(Math.random() * 2) === 0 ? 'cgpa' : 'attendance'
-
-    // --- API & Info ---
-    const fetchMoreStudents = useCallback(async (count = 3, classFilter = 'all') => {
-        try {
-            const newStudents = []
-            for (let i = 0; i < count; i++) {
-                // Fetch random pair -> flatten to single students
-                // NOW PASSING CLASS FILTER
-                const pair = await gameAPI.getRandomPair(classFilter)
-                if (pair && pair.length === 2) {
-                    newStudents.push(pair[0], pair[1])
-                }
-            }
-            return newStudents
-        } catch (e) {
-            console.error("Failed to fetch students", e)
-            return []
-        }
-    }, [])
-
-    // --- Start Game ---
-    const startGame = async (mode = 'all') => {
-        setSelectedClass(mode)
-        setGameState('loading')
-        setScore(0)
-
-        // Initial Fetch with selected mode
-        const students = await fetchMoreStudents(3, mode)
-        setStudentQueue(students)
-        setCurrentMetric(getRandomMetric())
-        setGameState('playing')
-    }
-
-    // --- Refill Queue ---
+    // --- Effects ---
     useEffect(() => {
-        if (gameState === 'playing' && studentQueue.length < 5) {
-            fetchMoreStudents(2, selectedClass).then(newStudents => {
-                setStudentQueue(prev => [...prev, ...newStudents])
-            })
+        const stored = localStorage.getItem('semrank_highscore');
+        if (stored) setHighScore(parseInt(stored));
+    }, []);
+
+    useEffect(() => {
+        if (score > highScore) {
+            setHighScore(score);
+            localStorage.setItem('semrank_highscore', score.toString());
         }
-    }, [studentQueue.length, gameState, fetchMoreStudents, selectedClass])
+    }, [score, highScore]);
 
-    // --- Gameplay ---
-    const handleGuess = (guess) => {
-        if (gameState !== 'playing' || studentQueue.length < 2) return
+    // --- Logic ---
+    const startGame = async (mode) => {
+        setSelectedClass(mode);
+        setGameState('loading');
+        setScore(0);
 
-        const p1 = studentQueue[0]
-        const p2 = studentQueue[1]
+        try {
+            // Initial fetch
+            await fetchNewPair(mode);
+        } catch (e) {
+            console.error(e);
+            alert("Failed to start game. Try again.");
+            setGameState('menu');
+        }
+    };
 
-        const v1 = currentMetric === 'cgpa' ? (p1.cgpa || 0) : (p1.attendance || 0)
-        const v2 = currentMetric === 'cgpa' ? (p2.cgpa || 0) : (p2.attendance || 0)
+    const fetchNewPair = async (className) => {
+        try {
+            // Determine metric randomly for variety if not set, or keep consistent?
+            // For now, let's randomize metric at start or keep it simple.
+            // Let's stick to CGPA for now as primary, or random.
+            // valid metrics: 'cgpa', 'attendance'
+            // Randomize metric for the session or per turn? Per turn is fun.
+            const metrics = ['cgpa', 'attendance'];
+            const nextMetric = metrics[Math.floor(Math.random() * metrics.length)];
+            setCurrentMetric(nextMetric);
 
-        // Equal is correct
-        const isHigher = v2 >= v1
-        const isLower = v2 <= v1
-        const isCorrect = (guess === 'higher' && isHigher) || (guess === 'lower' && isLower)
+            const pair = await gameAPI.getRandomPair(className);
+            if (pair && pair.length === 2) {
+                // Ensure p1 != p2 and values aren't identical to avoid confusion (though equality is handleable)
+                setStudentQueue(pair);
+                setGameState('playing');
+            } else {
+                throw new Error("Invalid pair data");
+            }
+        } catch (e) {
+            console.error("Game Fetch Error:", e);
+            // Fallback or retry
+            setGameState('menu');
+        }
+    };
+
+    const handleGuess = async (guess) => {
+        if (gameState !== 'playing') return;
+
+        const p1 = studentQueue[0];
+        const p2 = studentQueue[1];
+
+        const v1 = currentMetric === 'cgpa' ? p1.cgpa : p1.attendance;
+        const v2 = currentMetric === 'cgpa' ? p2.cgpa : p2.attendance;
+
+        let isCorrect = false;
+        if (guess === 'higher') isCorrect = v2 >= v1;
+        if (guess === 'lower') isCorrect = v2 <= v1;
 
         if (isCorrect) {
-            handleWin()
+            setGameState('correct');
+            setScore(s => s + 1);
+
+            // Animation for correct?
+            // Delay then next round
+            setTimeout(async () => {
+                // Determine next round: P2 becomes P1, fetch new P2
+                // Optimization: Pre-fetch? For now, simple fetch.
+                // We need a way to keep P2 and get a NEW opponent.
+                // The API currently returns a random pair. 
+                // To chain, we should ideally request a random opponent for P2.
+                // Since our API is simple 'get pair', we can just get a new pair for now.
+                // improved flow: studentQueue could be a list we append to.
+
+                // For MVP: New Pair.
+                await fetchNewPair(selectedClass);
+            }, 1000); // 1s delay to show result
         } else {
-            handleLoss()
+            setGameState('wrong');
         }
-    }
+    };
 
-    const handleWin = () => {
-        setGameState('correct')
-        const newScore = score + 1
-        setScore(newScore)
-        if (newScore > highScore) {
-            setHighScore(newScore)
-            localStorage.setItem('semrank_highscore', newScore.toString())
-        }
-
-        // Win Animation: Green Flash on P2
-        gsap.to(p2Ref.current, { backgroundColor: '#22c55e', duration: 0.15, yoyo: true, repeat: 1 })
-
-        setTimeout(() => advanceRound(), 800)
-    }
-
-    const handleLoss = () => {
-        setGameState('wrong')
-        // Loss Animation: Red Shake on P2
-        gsap.to(p2Ref.current, { x: 10, backgroundColor: '#ef4444', duration: 0.08, yoyo: true, repeat: 5 })
-    }
-
-    const advanceRound = () => {
-        const isMobile = window.innerWidth <= 768
-        const tl = gsap.timeline({
-            onComplete: () => {
-                // Shift Queue: P1 leaves, P2 becomes new P1
-                setStudentQueue(prev => {
-                    const next = prev.slice(1) // Remove old P1
-                    return next
-                })
-
-                // Randomize Metric
-                const nextMetric = getRandomMetric()
-                setCurrentMetric(nextMetric)
-
-                setGameState('playing')
-
-                // RESET ANIMATION STATE (Instant Snap)
-                gsap.set(p1Ref.current, { x: 0, y: 0, opacity: 1, clearProps: 'all' })
-
-                // P2 enters from 'off screen'
-                gsap.fromTo(p2Ref.current,
-                    {
-                        x: isMobile ? 0 : '100%',
-                        y: isMobile ? '100%' : 0,
-                        opacity: 0
-                    },
-                    {
-                        x: 0,
-                        y: 0,
-                        opacity: 1,
-                        duration: 0.5,
-                        ease: 'power3.out',
-                        clearProps: 'all'
-                    }
-                )
-
-                // Subtle pop on P1 to indicate it settled?
-                gsap.from(p1Ref.current, { scale: 0.98, duration: 0.2 })
-            }
-        })
-
-        // Animate Out Transition
-        if (isMobile) {
-            // Mobile: P1 leaves Top (-100%). P2 leaves Top (-100%) to become P1.
-            tl.to(p1Ref.current, { y: '-100%', opacity: 0.5, duration: 0.4 }, 0)
-            tl.to(p2Ref.current, { y: '-100%', duration: 0.4, ease: 'power2.inOut' }, 0)
-        } else {
-            // Desktop: P1 Left, P2 Right.
-            // P1 moves Left (-100%). P2 moves Left (-100%) to take P1's place.
-            tl.to(p1Ref.current, { x: '-100%', opacity: 0.5, duration: 0.4 }, 0)
-            tl.to(p2Ref.current, { x: '-100%', duration: 0.4, ease: 'power2.inOut' }, 0)
-        }
-    }
-
-    const resetGame = async () => {
-        // Keeps the same mode
-        startGame(selectedClass)
-    }
+    const resetGame = () => {
+        startGame(selectedClass);
+    };
 
     const goToMenu = () => {
-        setGameState('menu')
-        setStudentQueue([])
-        setScore(0)
-    }
-
-    // --- Render: Menu ---
+        setGameState('menu');
+        setStudentQueue([]);
+        setScore(0);
+    };
     if (gameState === 'menu') {
-        const secondaryModes = [
-            { id: 'MECH', label: 'Mechanical' },
-            { id: 'COMPS_A', label: 'COMPS A' },
-            { id: 'COMPS_B', label: 'COMPS B' },
-            { id: 'COMPS_C', label: 'COMPS C' },
-        ]
+        const secondaryModes = CLASSES.map(c => ({
+            id: c.id,
+            label: c.label // Use 'Mechanical' for MECH, etc.
+        }))
 
         return (
             <div className="h-screen w-full bg-black flex flex-col items-center justify-center font-sans tracking-tight">

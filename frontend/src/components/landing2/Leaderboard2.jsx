@@ -1,4 +1,5 @@
 
+import OptimizedImage from '../common/OptimizedImage';
 import { formatClassName } from '../../utils/format';
 
 export default function Leaderboard2({ data }) {
@@ -24,14 +25,12 @@ export default function Leaderboard2({ data }) {
 
                             <div className="flex items-start gap-4">
                                 <div className="w-16 h-16 bg-green-900/20 border border-green-500/30 relative overflow-hidden group-hover:border-green-400/60 transition-colors">
-                                    <img
+                                    <OptimizedImage
                                         src={`/student_faces/${student.roll_no}.png`}
                                         alt={student.name}
                                         className="w-full h-full object-cover opacity-80 group-hover:opacity-100 grayscale group-hover:grayscale-0 transition-all duration-500"
                                         onError={(e) => {
-                                            e.target.style.display = 'none';
-                                            e.target.parentNode.className += " flex items-center justify-center";
-                                            e.target.parentNode.innerHTML = "<span class='text-green-500'>ERR</span>";
+                                            // Handled by OptimizedImage fallback
                                         }}
                                     />
                                     <div className="absolute inset-0 bg-scanlines opacity-20 pointer-events-none"></div>

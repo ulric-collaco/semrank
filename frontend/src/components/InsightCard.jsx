@@ -79,9 +79,11 @@ function RivalryContent({ data, onClick }) {
 
 function ChartContent({ data, color, showXAxis }) {
     if (!data || data.length === 0) return <div className="text-center font-bold text-gray-300 py-8 uppercase tracking-widest">Collecting Data...</div>;
+
     return (
-        <div className="w-full h-40 relative group/chart cursor-pointer active:scale-[0.98] transition-transform" style={{ width: '100%', height: '160px', minHeight: '160px' }}>
-            <ResponsiveContainer width="99%" height="100%" minWidth={0} minHeight={0}>
+        <div className="w-full relative group/chart cursor-pointer active:scale-[0.98] transition-transform" style={{ height: '180px', minHeight: '180px' }}>
+            {/* Added explicit pixel height to prevent collapse */}
+            <ResponsiveContainer width="100%" height="100%" minWidth={100} minHeight={100}>
                 <BarChart data={data} margin={{ bottom: showXAxis ? 20 : 0 }}>
                     <XAxis
                         dataKey="name"
@@ -108,7 +110,7 @@ function ChartContent({ data, color, showXAxis }) {
                 View Details
             </div>
 
-            {/* Mobile Tap Hint (Always visible on mobile, or maybe just subtle) */}
+            {/* Mobile Tap Hint */}
             <div className="absolute bottom-2 right-2 md:hidden">
                 <div className="bg-black text-white text-[9px] font-black px-1.5 py-0.5 uppercase shadow-sm animate-pulse">
                     TAP

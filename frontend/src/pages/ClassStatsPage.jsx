@@ -28,6 +28,8 @@ import {
     ReferenceLine
 } from 'recharts';
 
+import { CLASSES } from '../utils/constants';
+
 export default function ClassStatsPage() {
     // State
     const [selectedClass, setSelectedClass] = useState(null);
@@ -36,12 +38,11 @@ export default function ClassStatsPage() {
     const [rollHighlight, setRollHighlight] = useState('');
     const [highlightedStudent, setHighlightedStudent] = useState(null);
 
-    const classes = [
-        { id: 'COMPS_A', name: 'COMPS A' },
-        { id: 'COMPS_B', name: 'COMPS B' },
-        { id: 'COMPS_C', name: 'COMPS C' },
-        { id: 'MECH', name: 'MECH' }
-    ];
+    // Use name from constant for display
+    const classes = CLASSES.map(c => ({
+        id: c.id,
+        name: c.name
+    }));
 
     // Load Stats when class is selected
     useEffect(() => {
