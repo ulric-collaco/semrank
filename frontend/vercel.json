@@ -1,9 +1,7 @@
 {
-    "cleanUrls": true,
-    "outputDirectory": "dist",
     "rewrites": [
         {
-            "source": "/(.*)",
+            "source": "/:path*",
             "destination": "/index.html"
         }
     ],
