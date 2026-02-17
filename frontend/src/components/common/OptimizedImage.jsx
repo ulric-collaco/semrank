@@ -19,6 +19,7 @@ const OptimizedImage = ({
     const [isLoaded, setIsLoaded] = useState(false);
     const [hasError, setHasError] = useState(false);
     const [currentSrc, setCurrentSrc] = useState(src);
+    const [triedFallback, setTriedFallback] = useState(false);
 
     useEffect(() => {
         if (!src) return;
@@ -26,6 +27,7 @@ const OptimizedImage = ({
         // Reset state when src prop changes
         setIsLoaded(false);
         setHasError(false);
+        setTriedFallback(false);
         setCurrentSrc(src);
 
         const img = new Image();
@@ -45,20 +47,20 @@ const OptimizedImage = ({
 
     const handleError = (e) => {
         // Try fallback extension if not already tried
-        if (currentSrc && !hasError) {
+        if (currentSrc && !hasError && !triedFallback) {
             if (currentSrc.endsWith('.png')) {
                 setCurrentSrc(currentSrc.replace('.png', '.jpg'));
+                setTriedFallback(true);
                 return;
             } else if (currentSrc.endsWith('.jpg')) {
                 setCurrentSrc(currentSrc.replace('.jpg', '.png'));
+                setTriedFallback(true);
                 return;
             }
         }
 
         setHasError(true);
         if (onError) onError(e);
-        // Optional: Hide the broken image
-        e.target.style.display = 'none';
     };
 
     // Construct common props
@@ -80,6 +82,8 @@ const OptimizedImage = ({
         c.startsWith('w-') || c.startsWith('h-') || c.includes('rounded') || c.includes('object-')
     ).join(' ') : '';
 
+    if (hasError) return props.fallback || null;
+
     return (
         <div className={`relative overflow-hidden ${wrapperClasses}`} style={{
             width: width ? 'fit-content' : undefined,
@@ -92,13 +96,6 @@ const OptimizedImage = ({
 
             {/* The Image */}
             <img {...imgProps} />
-
-            {/* Error State Fallback (Optional - could be an icon) */}
-            {hasError && (
-                <div className="absolute inset-0 flex items-center justify-center bg-gray-100 text-gray-400 text-xs text-center p-1">
-                    failed
-                </div>
-            )}
         </div>
     );
 };

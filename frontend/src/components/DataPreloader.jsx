@@ -31,7 +31,7 @@ const DataPreloader = () => {
                         const top20 = topStudents.slice(0, 20);
                         top20.forEach((student, index) => {
                             setTimeout(() => {
-                                preloadImage(`/student_faces/${student.roll_no}.png`);
+                                preloadImage(`/student_faces/${student.roll_no}.png`).catch(() => { });
                             }, index * 100); // 100ms stagger
                         });
                     }

@@ -6,7 +6,7 @@ import Footer from '../components/Footer';
 import InsightCard from '../components/InsightCard';
 import StudentModal from '../components/StudentModal';
 import { leaderboardAPI, studentAPI, birthdayAPI, statsAPI } from '../utils/api';
-import { Swords, BarChart3, TrendingUp, AlertTriangle, Cake } from 'lucide-react';
+import { Swords, BarChart3, TrendingUp, AlertTriangle, Cake, Shield, Trophy, Zap } from 'lucide-react';
 
 export default function LandingPage() {
     const [topStudents, setTopStudents] = useState([]);
@@ -27,6 +27,10 @@ export default function LandingPage() {
     const [gpaBoosterData, setGpaBoosterData] = useState(null);
     const [bunkStatsData, setBunkStatsData] = useState(null);
     const [birthdays, setBirthdays] = useState([]);
+    const [carryDiffData, setCarryDiffData] = useState(null);
+    const [carryDiffLabel, setCarryDiffLabel] = useState('1V63 DIFF');
+    const [classWarData, setClassWarData] = useState(null);
+    const [attGradesData, setAttGradesData] = useState(null);
 
     useEffect(() => {
         async function fetchData() {
@@ -86,6 +90,75 @@ export default function LandingPage() {
                         label: `${bunkLordClass.avg_attendance}%`,
                         subtext: 'LOWEST ATTENDANCE'
                     });
+                }
+
+                // --- 5. Carry Diff (Class whose topper carries hardest — with photo) ---
+                if (classRankings && classRankings.length > 0) {
+                    let maxDiff = 0;
+                    let carryClass = null;
+                    classRankings.forEach(c => {
+                        if (c.top_student) {
+                            const diff = parseFloat(c.top_student.cgpa) - parseFloat(c.avg_cgpa);
+                            if (diff > maxDiff) {
+                                maxDiff = diff;
+                                carryClass = c;
+                            }
+                        }
+                    });
+
+                    if (carryClass && carryClass.top_student) {
+                        setCarryDiffLabel(`+${maxDiff.toFixed(2)} ABOVE CLASS AVG`);
+                        setCarryDiffData([{
+                            id: carryClass.top_student.roll_no,
+                            label: carryClass.top_student.name,
+                            value: '',
+                            image: `/student_faces/${carryClass.top_student.roll_no}.png`,
+                            subtext: carryClass.class_name
+                        }]);
+                    }
+                }
+
+                // --- 6. Class War (Most students in top 50) ---
+                if (leaderboardData && leaderboardData.length > 0) {
+                    const classCounts = {};
+                    leaderboardData.forEach(s => {
+                        const cls = s.class || 'Unknown';
+                        classCounts[cls] = (classCounts[cls] || 0) + 1;
+                    });
+                    const sorted = Object.entries(classCounts).sort((a, b) => b[1] - a[1]);
+                    const [topClass, topCount] = sorted[0];
+
+                    setClassWarData({
+                        value: topClass,
+                        label: 'TOP CLASS RN',
+                        subtext: `${topCount} IN TOP 50`
+                    });
+                }
+
+                // --- 7. Attendance ≠ Grades (High SGPA + Low Attendance, daily rotation) ---
+                if (leaderboardData && leaderboardData.length >= 10) {
+                    // From top 20 SGPA students, find those with worst attendance
+                    const top20 = [...leaderboardData]
+                        .sort((a, b) => parseFloat(b.cgpa) - parseFloat(a.cgpa))
+                        .slice(0, 20);
+                    const byLowestAtt = [...top20].sort((a, b) => parseFloat(a.attendance) - parseFloat(b.attendance));
+                    const pool = byLowestAtt.slice(0, 5);
+
+                    // Daily rotation using date seed
+                    const todayStr = new Date().toDateString();
+                    let attHash = 0;
+                    for (let i = 0; i < todayStr.length; i++) attHash = todayStr.charCodeAt(i) + ((attHash << 3) - attHash);
+                    const pick = pool[Math.abs(attHash) % pool.length];
+
+                    if (pick) {
+                        setAttGradesData([{
+                            id: pick.roll_no,
+                            label: pick.name,
+                            value: '',
+                            image: `/student_faces/${pick.roll_no}.png`,
+                            subtext: `SGPA ${pick.cgpa} • ATT ${parseFloat(pick.attendance).toFixed(0)}%`
+                        }]);
+                    }
                 }
 
 
@@ -182,6 +255,38 @@ export default function LandingPage() {
                         data={bunkStatsData}
                         icon={AlertTriangle}
                         accentColor="#ffde00"
+                    />
+
+                    {/* Insight 5: Carry Diff (with topper photo, clickable) */}
+                    <InsightCard
+                        title="Carry Diff"
+                        subtitle={carryDiffLabel}
+                        type="list"
+                        data={carryDiffData}
+                        onStudentClick={setSelectedStudentRoll}
+                        icon={Shield}
+                        accentColor="#9333ea"
+                    />
+
+                    {/* Insight 6: Class War */}
+                    <InsightCard
+                        title="Class War"
+                        subtitle="TOP 50 DOMINATION"
+                        type="stat"
+                        data={classWarData}
+                        icon={Trophy}
+                        accentColor="#ffde00"
+                    />
+
+                    {/* Insight 7: Attendance ≠ Grades (daily rotation, clickable) */}
+                    <InsightCard
+                        title="ATT ≠ GPA"
+                        subtitle="BODY ABSENT, MIND PRESENT"
+                        type="list"
+                        data={attGradesData}
+                        onStudentClick={setSelectedStudentRoll}
+                        icon={Zap}
+                        accentColor="#ff4500"
                     />
 
 

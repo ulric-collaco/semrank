@@ -108,10 +108,17 @@ export const birthdayAPI = {
 
 export const gameAPI = {
   getRandomPair: (classFilter = 'all') => {
-    const params = new URLSearchParams({ class: classFilter })
+    // Force fresh fetch by appending timestamp and specific cache-bust param
+    const params = new URLSearchParams({ class: classFilter, _t: Date.now() })
+    // We can also pass a fetch option to ignore internal cache if implemented, 
+    // but the fetchWithRetry function uses the URL as cache key. 
+    // Since we are appending a unique timestamp to params, the URL is unique every call.
+    // fetchWithRetry ALREADY appends _t, but let's be explicit and ensure it's not cached in memory.
+    // The current fetchWithRetry implementation caches based on 'url' argument BEFORE _t is appended internally.
+    // So we need to append a unique string to the 'url' argument itself to bypass the Map cache.
     return fetchWithRetry(`/game/random-pair?${params}`)
   },
-  getRandomPairWithSubject: () => fetchWithRetry('/game/random-pair-subject'),
+  getRandomPairWithSubject: () => fetchWithRetry(`/game/random-pair-subject?_t=${Date.now()}`),
 }
 
 export default { fetchWithRetry }

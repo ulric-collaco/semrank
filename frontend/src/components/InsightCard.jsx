@@ -146,13 +146,16 @@ function ListContent({ data, onClick }) {
                     {/* Avatar with Fallback */}
                     {item.image && (
                         <div className="w-12 h-12 border-2 border-black rounded-full overflow-hidden bg-yellow-300 flex-shrink-0 flex items-center justify-center relative shadow-sm">
-                            <span className="font-black text-lg">{item.label.charAt(0)}</span>
-                            <OptimizedImage
-                                src={item.image}
-                                className="absolute inset-0 w-full h-full object-cover"
-                                onError={(e) => e.target.style.display = 'none'}
-                                alt=""
-                            />
+                            {item.image && (
+                                <OptimizedImage
+                                    src={item.image}
+                                    className="absolute inset-0 w-full h-full object-cover"
+                                    onError={(e) => e.target.style.display = 'none'}
+                                    alt=""
+                                    fallback={<span className="font-black text-lg">{item.label.charAt(0)}</span>}
+                                />
+                            )}
+                            {!item.image && <span className="font-black text-lg">{item.label.charAt(0)}</span>}
                         </div>
                     )}
 
@@ -178,34 +181,36 @@ function ListContent({ data, onClick }) {
 function SingleProfileContent({ item, onClick }) {
     return (
         <div
-            className="flex flex-col items-center justify-center h-full w-full cursor-pointer group hover:scale-[1.02] transition-transform"
+            className="flex flex-col items-center justify-center h-full w-full cursor-pointer group hover:scale-[1.02] transition-transform py-2"
             onClick={() => onClick && item.id && onClick(item.id)}
         >
-            <div className="relative mb-4">
-                <div className="w-24 h-24 md:w-28 md:h-28 border-4 border-black rounded-full overflow-hidden bg-yellow-300 flex items-center justify-center shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] relative z-10">
-                    <span className="font-black text-4xl">{item.label.charAt(0)}</span>
+            <div className="relative mb-2">
+                <div className="w-20 h-20 md:w-24 md:h-24 border-4 border-black rounded-full overflow-hidden bg-yellow-300 flex items-center justify-center shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] relative z-10">
                     {/* Fallback Initials above, Image Overlay below */}
-                    {item.image && (
+                    {item.image ? (
                         <OptimizedImage
                             src={item.image}
                             className="absolute inset-0 w-full h-full object-cover"
                             onError={(e) => e.target.style.display = 'none'}
                             alt={item.label}
+                            fallback={<span className="font-black text-3xl">{item.label.charAt(0)}</span>}
                         />
+                    ) : (
+                        <span className="font-black text-3xl">{item.label.charAt(0)}</span>
                     )}
                 </div>
                 {/* Decorative Icon (e.g. Cake) absolute */}
-                <div className="absolute -bottom-2 -right-2 text-3xl z-20 transform rotate-12 group-hover:rotate-0 transition-transform">
+                <div className="absolute -bottom-2 -right-2 text-2xl z-20 transform rotate-12 group-hover:rotate-0 transition-transform">
                     {item.value}
                 </div>
             </div>
 
-            <h4 className="font-black text-xl md:text-2xl uppercase text-center leading-tight mb-2 px-2 line-clamp-2">
+            <h4 className="font-black text-lg md:text-xl uppercase text-center leading-tight mb-1 px-2 line-clamp-2">
                 {item.label}
             </h4>
 
             {item.subtext && (
-                <div className="bg-black text-white font-mono font-bold text-sm px-3 py-1 transform -rotate-2 group-hover:rotate-0 transition-transform">
+                <div className="bg-black text-white font-mono font-bold text-xs px-2 py-0.5 transform -rotate-2 group-hover:rotate-0 transition-transform">
                     {item.subtext}
                 </div>
             )}

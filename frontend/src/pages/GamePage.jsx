@@ -1,27 +1,27 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react'
-import { gsap } from 'gsap'
 import { gameAPI } from '../utils/api'
 import Navbar from '../components/Navbar'
 import { ArrowUp, ArrowDown, Trophy, XCircle, RotateCcw, Loader2, ArrowLeft } from 'lucide-react'
 import OptimizedImage from '../components/common/OptimizedImage'
-
+import { motion, LayoutGroup } from 'framer-motion'
 import { CLASSES } from '../utils/constants'
+
+// Animation variants
+const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: { opacity: 1, transition: { staggerChildren: 0.1 } }
+}
 
 export default function GamePage() {
     // --- State ---
-    const [gameState, setGameState] = useState('menu'); // menu, loading, playing, correct, wrong
-    const [studentQueue, setStudentQueue] = useState([]);
+    const [gameState, setGameState] = useState('menu'); // menu, loading, playing, wrong
+    const [studentQueue, setStudentQueue] = useState([]); // Array of student objects
     const [score, setScore] = useState(0);
     const [highScore, setHighScore] = useState(0);
     const [selectedClass, setSelectedClass] = useState('all');
     const [currentMetric, setCurrentMetric] = useState('cgpa'); // cgpa, attendance
-    const [feedback, setFeedback] = useState(null); // 'higher', 'lower'
-
-    // --- Refs for Animation ---
-    const containerRef = useRef(null);
-    const p1Ref = useRef(null);
-    const p2Ref = useRef(null);
-    const vsRef = useRef(null);
+    const [loadingMore, setLoadingMore] = useState(false);
+    const [recentRolls, setRecentRolls] = useState([]); // Track history to prevent immediate repeats
 
     // --- Effects ---
     useEffect(() => {
@@ -36,15 +36,109 @@ export default function GamePage() {
         }
     }, [score, highScore]);
 
+    // Keep queue populated
+    useEffect(() => {
+        if (gameState === 'playing' && studentQueue.length < 5 && !loadingMore) {
+            fetchMoreStudents();
+        }
+    }, [studentQueue.length, gameState, loadingMore]);
+
+    const addToHistory = (rollNo) => {
+        setRecentRolls(prev => {
+            const newHistory = [...prev, rollNo];
+            if (newHistory.length > 50) newHistory.shift(); // Keep last 50
+            return newHistory;
+        });
+    }
+
     // --- Logic ---
-    const startGame = async (mode) => {
-        setSelectedClass(mode);
-        setGameState('loading');
+    const fetchMoreStudents = useCallback(async () => {
+        setLoadingMore(true);
+        try {
+            let attempts = 0;
+            let foundNew = false;
+
+            // We need to add strictly 1 person to the end of the queue to maintain the chain.
+            // But gameAPI.getRandomPair returns 2.
+            while (attempts < 5 && !foundNew) {
+                const pair = await gameAPI.getRandomPair(selectedClass);
+
+                if (pair && pair.length === 2) {
+                    // Check candidates against current queue AND recent history
+                    const validCandidates = pair.filter(p => {
+                        const inQueue = studentQueue.some(q => q.roll_no === p.roll_no);
+                        const inHistory = recentRolls.includes(p.roll_no);
+                        return !inQueue && !inHistory;
+                    });
+
+                    if (validCandidates.length > 0) {
+                        // We found at least one valid new person.
+                        // Add them to the queue and history.
+                        const nextStudent = validCandidates[0];
+
+                        setStudentQueue(prev => {
+                            // Double check inside setter to be safe against async race conditions
+                            if (prev.some(q => q.roll_no === nextStudent.roll_no)) return prev;
+                            return [...prev, nextStudent];
+                        });
+                        addToHistory(nextStudent.roll_no);
+                        foundNew = true;
+                    }
+                }
+                attempts++;
+            }
+
+            if (!foundNew) {
+                console.warn("Could not find new unique student after attempts");
+                // Fallback: If we really can't find one (e.g. small class size), just take one from a fresh pair 
+                // but at least ensure it's not the IMMEDIATE last person.
+                const fallbackPair = await gameAPI.getRandomPair(selectedClass);
+                if (fallbackPair && fallbackPair.length > 0) {
+                    const lastStudent = studentQueue[studentQueue.length - 1];
+                    const fallbackBuilder = fallbackPair.filter(p => !lastStudent || p.roll_no !== lastStudent.roll_no);
+                    if (fallbackBuilder.length > 0) {
+                        setStudentQueue(prev => [...prev, fallbackBuilder[0]]);
+                    }
+                }
+            }
+
+        } catch (e) {
+            console.error("Bg Fetch Error", e);
+        } finally {
+            setLoadingMore(false);
+        }
+    }, [selectedClass, studentQueue, recentRolls]);
+
+
+    const startGame = async (context) => {  // Added async keyword
+        setSelectedClass(context);
+        const metrics = ['cgpa', 'attendance'];
+        setCurrentMetric(metrics[Math.floor(Math.random() * metrics.length)]);
         setScore(0);
+        setGameState('loading');
+        setRecentRolls([]);
 
         try {
-            // Initial fetch
-            await fetchNewPair(mode);
+            // Initial fetch needs 2 people to start a chain.
+            // We define Initial History immediately to block them from showing up in the next fetch.
+            const pair = await gameAPI.getRandomPair(context); // Changed 'mode' to 'context'
+            if (pair && pair.length === 2) {
+                const p1 = pair[0];
+                const p2 = pair[1];
+
+                let initialQueue = [p1, p2];
+                let initialHistory = [p1.roll_no, p2.roll_no];
+
+                // Set initial state
+                setStudentQueue(initialQueue);
+                setRecentRolls(initialHistory);
+                setGameState('playing');
+
+                // Immediately trigger background fetch to build up buffer to 3-5
+                // The useEffect will catch "queue < 5" and call fetchMoreStudents automatically.
+            } else {
+                throw new Error("Failed to init");
+            }
         } catch (e) {
             console.error(e);
             alert("Failed to start game. Try again.");
@@ -52,34 +146,8 @@ export default function GamePage() {
         }
     };
 
-    const fetchNewPair = async (className) => {
-        try {
-            // Determine metric randomly for variety if not set, or keep consistent?
-            // For now, let's randomize metric at start or keep it simple.
-            // Let's stick to CGPA for now as primary, or random.
-            // valid metrics: 'cgpa', 'attendance'
-            // Randomize metric for the session or per turn? Per turn is fun.
-            const metrics = ['cgpa', 'attendance'];
-            const nextMetric = metrics[Math.floor(Math.random() * metrics.length)];
-            setCurrentMetric(nextMetric);
-
-            const pair = await gameAPI.getRandomPair(className);
-            if (pair && pair.length === 2) {
-                // Ensure p1 != p2 and values aren't identical to avoid confusion (though equality is handleable)
-                setStudentQueue(pair);
-                setGameState('playing');
-            } else {
-                throw new Error("Invalid pair data");
-            }
-        } catch (e) {
-            console.error("Game Fetch Error:", e);
-            // Fallback or retry
-            setGameState('menu');
-        }
-    };
-
-    const handleGuess = async (guess) => {
-        if (gameState !== 'playing') return;
+    const handleGuess = (guess) => {
+        if (gameState !== 'playing' || studentQueue.length < 2) return;
 
         const p1 = studentQueue[0];
         const p2 = studentQueue[1];
@@ -92,24 +160,21 @@ export default function GamePage() {
         if (guess === 'lower') isCorrect = v2 <= v1;
 
         if (isCorrect) {
-            setGameState('correct');
-            setScore(s => s + 1);
+            // Visual Reveal Phase ONLY for correct answers
+            setGameState('revealing');
 
-            // Animation for correct?
-            // Delay then next round
-            setTimeout(async () => {
-                // Determine next round: P2 becomes P1, fetch new P2
-                // Optimization: Pre-fetch? For now, simple fetch.
-                // We need a way to keep P2 and get a NEW opponent.
-                // The API currently returns a random pair. 
-                // To chain, we should ideally request a random opponent for P2.
-                // Since our API is simple 'get pair', we can just get a new pair for now.
-                // improved flow: studentQueue could be a list we append to.
+            setTimeout(() => {
+                setScore(s => s + 1);
+                setStudentQueue(prev => prev.slice(1));
 
-                // For MVP: New Pair.
-                await fetchNewPair(selectedClass);
-            }, 1000); // 1s delay to show result
+                // Randomize metric for next round
+                const metrics = ['cgpa', 'attendance'];
+                setCurrentMetric(metrics[Math.floor(Math.random() * metrics.length)]);
+
+                setGameState('playing');
+            }, 700);
         } else {
+            // Immediate Game Over for wrong answers
             setGameState('wrong');
         }
     };
@@ -123,224 +188,220 @@ export default function GamePage() {
         setStudentQueue([]);
         setScore(0);
     };
+
+    // --- RENDER HELPERS ---
+    const p1 = studentQueue[0];
+    const p2 = studentQueue[1];
+    const metricLabel = currentMetric === 'cgpa' ? 'SGPA' : 'ATTENDANCE';
+
+    // --- MENU ---
     if (gameState === 'menu') {
-        const secondaryModes = CLASSES.map(c => ({
-            id: c.id,
-            label: c.label // Use 'Mechanical' for MECH, etc.
-        }))
+        const secondaryModes = CLASSES.map(c => ({ id: c.id, label: c.label }));
 
         return (
-            <div className="h-screen w-full bg-black flex flex-col items-center justify-center font-sans tracking-tight">
+            <div className="h-screen w-full bg-white flex flex-col items-center justify-center font-sans tracking-tight text-black overflow-hidden relative">
                 <Navbar />
-                <div className="flex-1 w-full max-w-4xl px-4 md:px-6 flex flex-col items-center justify-center animate-in fade-in zoom-in duration-500 pb-20">
-                    <h1 className="text-4xl md:text-7xl font-black text-white uppercase text-center mb-2 tracking-tighter leading-none">
-                        HIGHER <span className="text-[#00ffff]">OR</span> LOWER
-                    </h1>
-                    <p className="text-gray-400 text-base md:text-xl mb-8 md:mb-12 font-bold tracking-widest uppercase opacity-80">Select Context</p>
+                <motion.div
+                    initial="hidden" animate="visible" variants={containerVariants}
+                    className="flex-1 w-full max-w-4xl px-4 md:px-6 flex flex-col items-center justify-center pb-4 pt-16 md:pt-0"
+                >
+                    <motion.h1 className="text-4xl md:text-7xl font-black text-black uppercase text-center mb-2 tracking-tighter leading-none z-10">
+                        HIGHER <span className="text-[#ffde00] px-2 bg-black">OR</span> LOWER
+                    </motion.h1>
+                    <p className="text-neutral-500 text-sm md:text-xl mb-4 md:mb-12 font-bold tracking-widest uppercase opacity-80 z-10">Select Context</p>
 
-                    <div className="w-full flex flex-col gap-4 max-w-3xl">
-                        {/* Primary Mode: Everyone */}
-                        <button
+                    <div className="w-full flex flex-col gap-2 md:gap-4 max-w-3xl z-10 overflow-y-auto flex-1 md:flex-none px-1 scrollbar-hide">
+                        <motion.button
+                            whileHover={{ scale: 1.02 }}
+                            whileTap={{ scale: 0.98 }}
                             onClick={() => startGame('all')}
-                            className="group relative overflow-hidden bg-[#00ffff] border-4 border-[#00ffff] p-6 md:p-8 text-left transition-all hover:scale-[1.02] hover:shadow-[0px_0px_30px_rgba(0,255,255,0.4)] flex items-center justify-between"
+                            className="bg-[#ffde00] border-4 border-black p-4 md:p-8 text-left shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] flex items-center justify-between shrink-0 mb-2"
                         >
-                            <div>
-                                <div className="font-black text-3xl md:text-6xl text-black uppercase tracking-tighter leading-none group-hover:drop-shadow-sm transition-all">EVERYONE</div>
-                            </div>
-                            <ArrowUp className="w-10 h-10 md:w-16 md:h-16 text-black rotate-45 opacity-60 group-hover:opacity-100 transition-all transform group-hover:translate-x-2 group-hover:-translate-y-2 stroke-[3]" />
-                        </button>
+                            <div className="font-black text-2xl md:text-6xl text-black uppercase tracking-tighter leading-none">EVERYONE</div>
+                            <ArrowUp className="w-8 h-8 md:w-16 md:h-16 text-black rotate-45 stroke-[3]" />
+                        </motion.button>
 
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 w-full">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-3 w-full shrink-0 pb-10">
                             {secondaryModes.map(mode => (
-                                <button
+                                <motion.button
                                     key={mode.id}
+                                    whileHover={{ y: -5 }}
                                     onClick={() => startGame(mode.id)}
-                                    className="group relative overflow-hidden bg-neutral-900 border-2 border-neutral-700 hover:border-white p-5 text-left transition-all hover:-translate-y-1 hover:shadow-[4px_4px_0px_white] flex items-center justify-between"
+                                    className="bg-white border-2 border-black p-4 text-left shadow-[2px_2px_0px_black] flex items-center justify-between"
                                 >
-                                    <div className="font-black text-xl md:text-2xl text-white uppercase group-hover:text-white transition-colors">{mode.label}</div>
-                                    <div className="opacity-0 group-hover:opacity-100 transition-opacity">
-                                        <ArrowUp className="w-5 h-5 text-white rotate-45" />
-                                    </div>
-                                </button>
+                                    <div className="font-black text-lg md:text-2xl text-black uppercase">{mode.label}</div>
+                                    <ArrowUp className="w-4 h-4 md:w-5 md:h-5 text-black rotate-45" />
+                                </motion.button>
                             ))}
                         </div>
                     </div>
-                </div>
+                </motion.div>
             </div>
         )
     }
 
-    // --- Render: Loading ---
-    if (gameState === 'loading' || studentQueue.length < 2) {
+    if (gameState === 'loading' || !p1 || !p2) {
         return (
-            <div className="h-screen w-full bg-black flex flex-col items-center justify-center text-[#00ffff] font-mono gap-4">
-                <Loader2 className="w-12 h-12 animate-spin" />
+            <div className="h-screen w-full bg-white flex flex-col items-center justify-center text-black font-mono gap-4">
+                <Loader2 className="w-12 h-12 animate-spin text-black" />
                 <div className="text-xl font-black uppercase tracking-widest">Constructing Arena...</div>
-                <div className="text-sm font-bold text-gray-500">FILTER: {selectedClass === 'all' ? 'EVERYONE' : selectedClass}</div>
             </div>
         )
     }
 
-    const p1 = studentQueue[0]
-    const p2 = studentQueue[1]
+    const p1Value = currentMetric === 'cgpa' ? p1.cgpa : p1.attendance;
+    const p2Value = currentMetric === 'cgpa' ? p2.cgpa : p2.attendance;
 
-    // Values
-    const p1Value = currentMetric === 'cgpa' ? p1.cgpa : `${p1.attendance}%`
-    const p2Value = currentMetric === 'cgpa' ? p2.cgpa : `${p2.attendance}%`
-    const metricLabel = currentMetric === 'cgpa' ? 'SGPA' : 'ATTENDANCE'
-
-    // P2 Background: Dark Mode (bg-neutral-950) by default
-    let p2Bg = 'bg-neutral-950'
-    if (gameState === 'correct') p2Bg = 'bg-green-500'
-    if (gameState === 'wrong') p2Bg = 'bg-red-600'
-
+    // --- MAIN GAME ---
     return (
-        <div className="h-[100dvh] w-screen bg-black text-black font-sans overflow-hidden flex flex-col box-border">
+        <div className="fixed inset-0 w-full h-full bg-white text-black font-sans overflow-hidden flex flex-col">
             <Navbar />
 
-            <div ref={containerRef} className="flex-1 relative flex flex-col md:flex-row overflow-hidden w-full h-full">
+            {/* Match Container */}
+            <div className="flex-1 w-full max-w-6xl mx-auto flex flex-col md:flex-row items-stretch justify-center p-1 md:p-4 gap-1 md:gap-8 overflow-hidden">
+                <LayoutGroup>
 
-                {/* --- Player 1 (Top/Left - LIGHT THEME) --- */}
-                <div
-                    ref={p1Ref}
-                    className="flex-1 bg-white relative flex flex-col items-center justify-center p-2 md:p-6 border-b-4 md:border-b-0 md:border-r-4 border-black z-20 w-full"
-                >
-                    <div className="flex flex-col items-center text-center z-10 w-full max-w-md">
-                        <div className="w-20 h-20 md:w-32 md:h-32 border-4 border-black rounded-full overflow-hidden mb-2 md:mb-4 bg-gray-200 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] flex-shrink-0 relative flex items-center justify-center">
-                            <span className="text-4xl md:text-5xl font-black text-gray-400">{p1.name.charAt(0)}</span>
+                    {/* STREAK BAR (Mobile: Top Strip, Desktop: Floating) */}
+                    <div className="w-full flex justify-end md:absolute md:top-4 md:right-4 md:w-auto md:z-[60] mb-1 md:mb-0 pointer-events-none">
+                        <div className="bg-[#ffde00] text-black border-2 border-black px-2 py-0.5 md:px-3 md:py-1 font-black text-xs md:text-xl uppercase shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] transform md:rotate-2">
+                            Streak: {score}
+                        </div>
+                    </div>
+
+                    {/* PLAYER 1 CARD */}
+                    <motion.div
+                        layout
+                        key={p1.roll_no}
+                        initial={{ opacity: 0, x: -50 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        exit={{ opacity: 0, scale: 0.9 }}
+                        transition={{ type: "spring", stiffness: 120, damping: 20, mass: 1.5 }}
+                        className="relative flex-1 w-full md:w-1/2 bg-white border-2 md:border-4 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] md:shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] flex flex-col min-h-0"
+                    >
+                        {/* Image Section - Scale to fit */}
+                        <div className="relative flex-1 bg-gray-100 border-b-2 md:border-b-4 border-black overflow-hidden flex items-end justify-center min-h-0">
                             <OptimizedImage
                                 src={`/student_faces/${p1.roll_no}.png`}
-                                className="w-full h-full object-cover"
-                                onError={e => e.target.style.display = 'none'}
+                                className="w-full h-full object-contain object-bottom p-1 md:p-2"
+                                fallback={<div className="w-full h-full flex items-center justify-center"><span className="text-6xl font-black text-neutral-300">{p1.name.charAt(0)}</span></div>}
                                 alt="P1"
                             />
+                            <div className="absolute top-1 left-1 md:top-2 md:left-2 bg-[#ffde00] text-black font-bold px-1.5 py-0.5 md:px-2 md:py-1 border-2 border-black text-[10px] md:text-xs shadow-sm">
+                                #{p1.roll_no}
+                            </div>
                         </div>
-                        {/* P1 Name: Full Name, wrap allowed */}
-                        <h2 className="text-xl md:text-3xl font-black uppercase leading-tight mb-1 md:mb-2 w-full">{p1.name}</h2>
-                        <div className="font-bold bg-black text-white px-3 py-1 text-xs md:text-base mb-2 md:mb-6">{p1.class}</div>
 
-                        <div className="flex flex-col items-center">
-                            <div className="text-5xl md:text-8xl font-black tracking-tighter" style={{ WebkitTextStroke: '2px black' }}>
-                                {p1Value}
+                        {/* Content Section */}
+                        <div className="flex flex-col items-center text-center bg-white text-black justify-between shrink-0 z-10 p-2 md:p-4 pb-3 md:pb-4 gap-1 md:gap-0">
+                            <div className="w-full">
+                                <h2 className="text-base md:text-2xl font-black uppercase leading-none line-clamp-1 md:line-clamp-2 md:leading-tight">{p1.name}</h2>
+                                <div className="text-[10px] md:text-xs font-bold opacity-60 uppercase mt-0.5 md:mt-1">{p1.class}</div>
                             </div>
-                            <div className={`font-black opacity-80 uppercase tracking-[0.2em] text-base md:text-2xl mt-1 md:mt-2 drop-shadow-md`}>
-                                {metricLabel}
+
+                            <div className="flex flex-col items-center justify-center w-full pt-1 md:pt-2 border-t-2 border-dashed border-black mt-1">
+                                <span className="font-bold text-[10px] md:text-xs uppercase opacity-50 mb-0.5">{metricLabel}</span>
+                                <div className="text-2xl md:text-5xl font-black tracking-tighter text-black leading-none">
+                                    {currentMetric === 'attendance' ? `${p1Value}%` : p1Value}
+                                </div>
                             </div>
+                        </div>
+                    </motion.div>
+
+
+                    {/* VS Badge - Positioned on right for mobile to avoid text overlap, Center for desktop */}
+                    <div className="z-50 absolute right-4 top-1/2 -translate-y-1/2 md:left-1/2 md:right-auto md:-translate-x-1/2 pointer-events-none">
+                        <div className="bg-[#ffde00] text-black border-2 md:border-4 border-black font-black text-xs md:text-xl px-2 py-1 md:px-4 md:py-2 transform -skew-x-12 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] md:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+                            VS
                         </div>
                     </div>
-                </div>
 
-                {/* --- VS Badge --- */}
-                <div
-                    ref={vsRef}
-                    className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-50 pointer-events-none"
-                    style={{ marginLeft: 0, marginTop: 0 }}
-                >
-                    <div className="w-12 h-12 md:w-20 md:h-20 bg-[#ffde00] border-4 border-black rounded-full flex items-center justify-center shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] animate-bounce">
-                        <span className="font-black text-xl md:text-3xl">VS</span>
-                    </div>
-                </div>
 
-                {/* --- Player 2 (Bottom/Right - DARK THEME) --- */}
-                <div
-                    ref={p2Ref}
-                    className={`flex-1 relative flex flex-col items-center justify-center p-2 md:p-6 transition-colors duration-300 z-10 w-full ${p2Bg}`}
-                >
-                    {/* Game Over Overlay */}
-                    {gameState === 'wrong' && (
-                        <div className="absolute inset-0 bg-red-600/95 z-50 flex flex-col items-center justify-center animate-in fade-in duration-200 p-4 text-center">
-                            <XCircle className="w-16 h-16 md:w-20 md:h-20 text-white mb-2 md:mb-4 drop-shadow-[4px_4px_0px_rgba(0,0,0,1)]" />
-                            <div className="text-3xl md:text-6xl font-black text-white uppercase mb-2 drop-shadow-[4px_4px_0px_rgba(0,0,0,1)]">GAME OVER</div>
-
-                            {/* Stats Breakdown */}
-                            <div className="bg-black/20 p-4 rounded-lg border-2 border-white/50 mb-4 md:mb-6 w-full max-w-sm backdrop-blur-sm shadow-xl">
-                                <div className="flex justify-between items-center text-white mb-2">
-                                    <span className="font-bold uppercase opacity-80 truncate mr-2 max-w-[60%] text-left">{p1.name}</span>
-                                    <span className="font-mono font-black">{p1Value}</span>
-                                </div>
-                                <div className="w-full h-0.5 bg-white/30 my-2"></div>
-                                <div className="flex justify-between items-center text-white">
-                                    <span className="font-bold uppercase opacity-80 truncate mr-2 max-w-[60%] text-left">{p2.name}</span>
-                                    <span className="font-mono font-black text-[#ffde00] text-xl">{p2Value}</span>
-                                </div>
-                                <div className="text-center font-black text-white uppercase mt-4 text-xs tracking-widest opacity-70">
-                                    {metricLabel} Comparison
-                                </div>
-                            </div>
-
-                            <div className="text-xl md:text-2xl font-bold text-white mb-4 md:mb-6">SCORE: {score}</div>
-
-                            <div className="flex flex-col md:flex-row gap-3 w-full justify-center max-w-sm">
-                                <button onClick={resetGame} className="bg-white text-black border-4 border-black px-4 py-3 md:px-8 md:py-4 font-black text-lg md:text-xl shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-y-1 hover:shadow-none transition-all flex items-center justify-center gap-2 cursor-pointer flex-1">
-                                    <RotateCcw size={20} /> TRY AGAIN
-                                </button>
-                                <button onClick={goToMenu} className="bg-black text-white border-4 border-white px-4 py-3 md:px-8 md:py-4 font-black text-lg md:text-xl shadow-[4px_4px_0px_0px_#ffffff] hover:translate-y-1 hover:shadow-none transition-all flex items-center justify-center gap-2 cursor-pointer flex-1">
-                                    <ArrowLeft size={20} /> QUIT
-                                </button>
-                            </div>
-                        </div>
-                    )}
-
-                    <div className="flex flex-col items-center text-center z-10 w-full h-full justify-center max-w-md">
-                        <div className="w-20 h-20 md:w-32 md:h-32 border-4 border-white/20 rounded-full overflow-hidden mb-2 md:mb-4 bg-neutral-800 shadow-[4px_4px_0px_0px_rgba(255,255,255,0.2)] flex-shrink-0 relative flex items-center justify-center">
-                            <span className="text-4xl md:text-5xl font-black text-white/20">{p2.name.charAt(0)}</span>
+                    {/* PLAYER 2 CARD */}
+                    <motion.div
+                        layout
+                        key={p2.roll_no}
+                        initial={{ opacity: 0, x: 50 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ type: "spring", stiffness: 120, damping: 20, mass: 1.5 }}
+                        className="relative flex-1 w-full md:w-1/2 bg-white border-2 md:border-4 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] md:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] flex flex-col min-h-0"
+                    >
+                        {/* Image Section */}
+                        <div className="relative flex-1 bg-gray-100 border-b-2 md:border-b-4 border-black overflow-hidden flex items-end justify-center min-h-0">
                             <OptimizedImage
                                 src={`/student_faces/${p2.roll_no}.png`}
-                                className="w-full h-full object-cover"
-                                onError={e => e.target.style.display = 'none'}
+                                className="w-full h-full object-contain object-bottom p-1 md:p-2"
+                                fallback={<div className="w-full h-full flex items-center justify-center"><span className="text-6xl font-black text-neutral-300">{p2.name.charAt(0)}</span></div>}
                                 alt="P2"
                             />
+                            <div className="absolute top-1 right-1 md:top-2 md:right-2 bg-white text-black font-bold px-1.5 py-0.5 md:px-2 md:py-1 border-2 border-black text-[10px] md:text-xs shadow-sm">
+                                #{p2.roll_no}
+                            </div>
                         </div>
-                        {/* P2 Name: White Text, Full Name */}
-                        <h2 className="text-xl md:text-3xl font-black uppercase leading-tight mb-1 md:mb-2 text-white w-full drop-shadow-md">{p2.name}</h2>
-                        {/* P2 Class: White BG, Black Text (Inverted) */}
-                        <div className="font-bold bg-white text-black px-3 py-1 text-xs md:text-base mb-3 md:mb-8 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] border-2 border-transparent">{p2.class}</div>
 
-                        {gameState === 'playing' ? (
-                            <div className="flex flex-col gap-2 md:gap-4 w-full max-w-sm px-2 md:px-4">
-                                <button
-                                    onClick={() => handleGuess('higher')}
-                                    className="bg-[#00ffff] border-4 border-black p-3 md:p-5 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-y-1 hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:shadow-none active:translate-y-2 transition-all flex items-center justify-center gap-2 group w-full"
-                                >
-                                    <ArrowUp className="w-5 h-5 md:w-8 md:h-8 stroke-[3] group-hover:-translate-y-1 transition-transform" />
-                                    <span className="font-black text-lg md:text-2xl uppercase tracking-wider">Higher</span>
-                                </button>
-                                <button
-                                    onClick={() => handleGuess('lower')}
-                                    className="bg-[#ff69b4] border-4 border-black p-3 md:p-5 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-y-1 hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:shadow-none active:translate-y-2 transition-all flex items-center justify-center gap-2 group w-full"
-                                >
-                                    <ArrowDown className="w-5 h-5 md:w-8 md:h-8 stroke-[3] group-hover:translate-y-1 transition-transform" />
-                                    <span className="font-black text-lg md:text-2xl uppercase tracking-wider">Lower</span>
-                                </button>
-                                <div className="text-center font-bold text-xs md:text-sm mt-1 md:mt-2 opacity-60 uppercase tracking-widest hidden md:block text-white/50">
-                                    Than {p1.name}'s {metricLabel}
-                                </div>
+                        {/* Content Section */}
+                        <div className="flex flex-col items-center text-center bg-white text-black justify-between shrink-0 z-10 p-2 md:p-4 pt-4 md:pt-4 gap-2 md:gap-0 pr-8 md:pr-4">
+                            <div className="w-full">
+                                <h2 className="text-base md:text-2xl font-black uppercase leading-none line-clamp-1 md:line-clamp-2 md:leading-tight">{p2.name}</h2>
+                                <div className="text-[10px] md:text-xs font-bold opacity-60 uppercase mt-0.5 md:mt-1">{p2.class}</div>
                             </div>
-                        ) : (
-                            // Result View
-                            <div className="flex flex-col items-center animate-in zoom-in spin-in-3 duration-500">
-                                <div className="text-5xl md:text-8xl font-black tracking-tighter text-white drop-shadow-[4px_4px_0px_rgba(0,0,0,1)]" style={{ WebkitTextStroke: '2px black' }}>
-                                    {p2Value}
-                                </div>
-                                <div className="font-black text-white uppercase tracking-[0.2em] text-base md:text-2xl mt-1 md:mt-2 drop-shadow-md">
-                                    {metricLabel}
-                                </div>
-                            </div>
-                        )}
-                    </div>
-                </div>
 
-                {/* Score HUD */}
-                <div className="absolute top-4 right-4 z-[60] flex flex-col items-end gap-2 pointer-events-none">
-                    <div className="bg-black text-[#00ffff] border-2 border-white px-3 py-1 font-black text-xl uppercase shadow-lg transform rotate-2">
-                        Streak: {score}
-                    </div>
-                    <div className="bg-white text-black border-2 border-black px-2 py-0.5 font-bold text-xs uppercase shadow-md -rotate-1 flex items-center gap-1">
-                        <Trophy size={12} /> High: {highScore}
-                    </div>
-                </div>
+                            {gameState === 'playing' ? (
+                                <div className="w-full grid grid-cols-2 gap-2 mt-auto">
+                                    <button
+                                        onClick={() => handleGuess('higher')}
+                                        className="bg-[#00ffff] border-2 md:border-4 border-black p-1 hover:-translate-y-1 hover:shadow-[2px_2px_0px_black] active:translate-y-0 active:shadow-none transition-all flex flex-col items-center justify-center gap-0.5 h-10 md:h-16"
+                                    >
+                                        <ArrowUp className="w-4 h-4 md:w-5 md:h-5 stroke-[3]" />
+                                        <span className="font-black text-[10px] md:text-sm uppercase leading-none text-black">High</span>
+                                    </button>
+                                    <button
+                                        onClick={() => handleGuess('lower')}
+                                        className="bg-[#ff69b4] border-2 md:border-4 border-black p-1 hover:-translate-y-1 hover:shadow-[2px_2px_0px_black] active:translate-y-0 active:shadow-none transition-all flex flex-col items-center justify-center gap-0.5 h-10 md:h-16"
+                                    >
+                                        <ArrowDown className="w-4 h-4 md:w-5 md:h-5 stroke-[3]" />
+                                        <span className="font-black text-[10px] md:text-sm uppercase leading-none text-black">Low</span>
+                                    </button>
+                                </div>
+                            ) : (
+                                <div className="flex flex-col items-center justify-center w-full pt-1 md:pt-2 border-t-2 border-dashed border-black animate-in zoom-in duration-300 mt-1">
+                                    <span className="font-bold text-[10px] md:text-xs uppercase opacity-50 mb-0.5">{metricLabel}</span>
+                                    <div className="text-2xl md:text-5xl font-black tracking-tighter text-black leading-none">
+                                        {currentMetric === 'attendance' ? `${p2Value}%` : p2Value}
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+                    </motion.div>
 
+                </LayoutGroup>
             </div>
+
+            {/* --- GAME OVER OVERLAY (Fixed & Scrollable) --- */}
+            {gameState === 'wrong' && (
+                <div className="fixed inset-0 z-[100] bg-white/90 backdrop-blur-sm flex flex-col animate-in fade-in duration-300 overflow-y-auto">
+                    <div className="flex-1 flex flex-col items-center justify-center p-4 min-h-[600px]">
+                        <XCircle className="w-20 h-20 text-red-500 mb-6 drop-shadow-[4px_4px_0px_rgba(0,0,0,1)]" strokeWidth={2} />
+                        <h2 className="text-6xl md:text-8xl font-black text-black uppercase italic text-center leading-none mb-2 drop-shadow-[2px_2px_0px_rgba(0,0,0,0.1)]">GAME OVER</h2>
+                        <div className="text-2xl md:text-4xl font-bold text-black mb-8 font-mono">SCORE: {score}</div>
+
+                        <div className="bg-white border-4 border-black p-6 rounded-none w-full max-w-sm mb-8 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] flex flex-col items-center gap-2">
+                            <span className="font-bold uppercase opacity-60 text-sm tracking-widest text-center text-black">{p2.name}'s {metricLabel}</span>
+                            <span className="font-black text-black text-4xl">
+                                {currentMetric === 'attendance' ? `${p2Value}%` : p2Value}
+                            </span>
+                        </div>
+
+                        <div className="flex flex-col md:flex-row gap-4 w-full max-w-sm">
+                            <button onClick={resetGame} className="flex-1 bg-[#ffde00] text-black border-4 border-black py-4 font-black text-xl hover:translate-y-[-4px] hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all flex items-center justify-center gap-2 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
+                                <RotateCcw size={24} /> RETRY
+                            </button>
+                            <button onClick={goToMenu} className="flex-1 bg-white text-black border-4 border-black py-4 font-black text-xl hover:translate-y-[-4px] hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all flex items-center justify-center gap-2 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
+                                <ArrowLeft size={24} /> EXIT
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     )
 }
