@@ -282,20 +282,20 @@ const ViewRechartsBarChart = ({ activeSubject, maxMarks }) => {
 
     // Only add MSE/ESE if either has marks
     if ((activeSubject.mse && activeSubject.mse > 0) || (activeSubject.ese && activeSubject.ese > 0)) {
-        data.push({ name: 'MSE', value: activeSubject.mse || 0 });
-        data.push({ name: 'ESE', value: activeSubject.ese || 0 });
+        data.push({ name: 'MSE', value: Number(activeSubject.mse) || 0 });
+        data.push({ name: 'ESE', value: Number(activeSubject.ese) || 0 });
     }
 
     // Only add T1/T2 (Term Work) if either has marks
     if ((activeSubject.th_ise1 && activeSubject.th_ise1 > 0) || (activeSubject.th_ise2 && activeSubject.th_ise2 > 0)) {
-        data.push({ name: 'T1', value: activeSubject.th_ise1 || 0 });
-        data.push({ name: 'T2', value: activeSubject.th_ise2 || 0 });
+        data.push({ name: 'T1', value: Number(activeSubject.th_ise1) || 0 });
+        data.push({ name: 'T2', value: Number(activeSubject.th_ise2) || 0 });
     }
 
     // Only add P1/P2 (Practicals) if either has marks
     if ((activeSubject.pr_ise1 && activeSubject.pr_ise1 > 0) || (activeSubject.pr_ise2 && activeSubject.pr_ise2 > 0)) {
-        data.push({ name: 'P1', value: activeSubject.pr_ise1 || 0 });
-        data.push({ name: 'P2', value: activeSubject.pr_ise2 || 0 });
+        data.push({ name: 'P1', value: Number(activeSubject.pr_ise1) || 0 });
+        data.push({ name: 'P2', value: Number(activeSubject.pr_ise2) || 0 });
     }
 
     // Ensure maxMarks is reasonable (at least 20 to avoid huge bars for small marks)
@@ -303,7 +303,7 @@ const ViewRechartsBarChart = ({ activeSubject, maxMarks }) => {
 
     return (
         <div style={{ width: '100%', height: '100%', minHeight: '200px' }}>
-            <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0} aspect={1.5}>
+            <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0}>
                 <BarChart data={data} margin={{ top: 25, right: 10, left: -20, bottom: 0 }}>
                     <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#000" strokeOpacity={0.1} />
                     <XAxis

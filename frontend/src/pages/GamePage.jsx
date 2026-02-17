@@ -248,7 +248,7 @@ export default function GamePage() {
     if (gameState === 'wrong') p2Bg = 'bg-red-600'
 
     return (
-        <div className="h-screen w-screen bg-black text-black font-sans overflow-hidden flex flex-col box-border">
+        <div className="h-[100dvh] w-screen bg-black text-black font-sans overflow-hidden flex flex-col box-border">
             <Navbar />
 
             <div ref={containerRef} className="flex-1 relative flex flex-col md:flex-row overflow-hidden w-full h-full">
@@ -256,22 +256,22 @@ export default function GamePage() {
                 {/* --- Player 1 (Top/Left - LIGHT THEME) --- */}
                 <div
                     ref={p1Ref}
-                    className="flex-1 bg-white relative flex flex-col items-center justify-center p-6 border-b-4 md:border-b-0 md:border-r-4 border-black z-20 w-full"
+                    className="flex-1 bg-white relative flex flex-col items-center justify-center p-2 md:p-6 border-b-4 md:border-b-0 md:border-r-4 border-black z-20 w-full"
                 >
                     <div className="flex flex-col items-center text-center z-10 w-full max-w-md">
-                        <div className="w-24 h-24 md:w-32 md:h-32 border-4 border-black rounded-full overflow-hidden mb-4 bg-gray-200 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] flex-shrink-0 relative flex items-center justify-center">
+                        <div className="w-20 h-20 md:w-32 md:h-32 border-4 border-black rounded-full overflow-hidden mb-2 md:mb-4 bg-gray-200 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] flex-shrink-0 relative flex items-center justify-center">
                             <span className="text-4xl md:text-5xl font-black text-gray-400">{p1.name.charAt(0)}</span>
                             <img src={`/student_faces/${p1.roll_no}.png`} className="absolute inset-0 w-full h-full object-cover" onError={e => e.target.style.display = 'none'} alt="P1" />
                         </div>
                         {/* P1 Name: Full Name, wrap allowed */}
-                        <h2 className="text-2xl md:text-3xl font-black uppercase leading-tight mb-2 w-full">{p1.name}</h2>
-                        <div className="font-bold bg-black text-white px-3 py-1 text-sm md:text-base mb-6">{p1.class}</div>
+                        <h2 className="text-xl md:text-3xl font-black uppercase leading-tight mb-1 md:mb-2 w-full">{p1.name}</h2>
+                        <div className="font-bold bg-black text-white px-3 py-1 text-xs md:text-base mb-2 md:mb-6">{p1.class}</div>
 
                         <div className="flex flex-col items-center">
-                            <div className="text-6xl md:text-8xl font-black tracking-tighter" style={{ WebkitTextStroke: '2px black' }}>
+                            <div className="text-5xl md:text-8xl font-black tracking-tighter" style={{ WebkitTextStroke: '2px black' }}>
                                 {p1Value}
                             </div>
-                            <div className={`font-black opacity-80 uppercase tracking-[0.2em] text-lg md:text-2xl mt-2 drop-shadow-md`}>
+                            <div className={`font-black opacity-80 uppercase tracking-[0.2em] text-base md:text-2xl mt-1 md:mt-2 drop-shadow-md`}>
                                 {metricLabel}
                             </div>
                         </div>
@@ -284,24 +284,24 @@ export default function GamePage() {
                     className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-50 pointer-events-none"
                     style={{ marginLeft: 0, marginTop: 0 }}
                 >
-                    <div className="w-16 h-16 md:w-20 md:h-20 bg-[#ffde00] border-4 border-black rounded-full flex items-center justify-center shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] animate-bounce">
-                        <span className="font-black text-2xl md:text-3xl">VS</span>
+                    <div className="w-12 h-12 md:w-20 md:h-20 bg-[#ffde00] border-4 border-black rounded-full flex items-center justify-center shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] animate-bounce">
+                        <span className="font-black text-xl md:text-3xl">VS</span>
                     </div>
                 </div>
 
                 {/* --- Player 2 (Bottom/Right - DARK THEME) --- */}
                 <div
                     ref={p2Ref}
-                    className={`flex-1 relative flex flex-col items-center justify-center p-6 transition-colors duration-300 z-10 w-full ${p2Bg}`}
+                    className={`flex-1 relative flex flex-col items-center justify-center p-2 md:p-6 transition-colors duration-300 z-10 w-full ${p2Bg}`}
                 >
                     {/* Game Over Overlay */}
                     {gameState === 'wrong' && (
                         <div className="absolute inset-0 bg-red-600/95 z-50 flex flex-col items-center justify-center animate-in fade-in duration-200 p-4 text-center">
-                            <XCircle className="w-20 h-20 text-white mb-4 drop-shadow-[4px_4px_0px_rgba(0,0,0,1)]" />
-                            <div className="text-4xl md:text-6xl font-black text-white uppercase mb-2 drop-shadow-[4px_4px_0px_rgba(0,0,0,1)]">GAME OVER</div>
+                            <XCircle className="w-16 h-16 md:w-20 md:h-20 text-white mb-2 md:mb-4 drop-shadow-[4px_4px_0px_rgba(0,0,0,1)]" />
+                            <div className="text-3xl md:text-6xl font-black text-white uppercase mb-2 drop-shadow-[4px_4px_0px_rgba(0,0,0,1)]">GAME OVER</div>
 
                             {/* Stats Breakdown */}
-                            <div className="bg-black/20 p-4 rounded-lg border-2 border-white/50 mb-6 w-full max-w-sm backdrop-blur-sm">
+                            <div className="bg-black/20 p-4 rounded-lg border-2 border-white/50 mb-4 md:mb-6 w-full max-w-sm backdrop-blur-sm shadow-xl">
                                 <div className="flex justify-between items-center text-white mb-2">
                                     <span className="font-bold uppercase opacity-80 truncate mr-2 max-w-[60%] text-left">{p1.name}</span>
                                     <span className="font-mono font-black">{p1Value}</span>
@@ -316,56 +316,56 @@ export default function GamePage() {
                                 </div>
                             </div>
 
-                            <div className="text-2xl font-bold text-white mb-6">SCORE: {score}</div>
+                            <div className="text-xl md:text-2xl font-bold text-white mb-4 md:mb-6">SCORE: {score}</div>
 
-                            <div className="flex flex-col md:flex-row gap-4 w-full justify-center">
-                                <button onClick={resetGame} className="bg-white text-black border-4 border-black px-8 py-4 font-black text-xl shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] hover:translate-y-1 hover:shadow-none transition-all flex items-center justify-center gap-2 cursor-pointer flex-1 md:flex-none">
-                                    <RotateCcw size={24} /> TRY AGAIN
+                            <div className="flex flex-col md:flex-row gap-3 w-full justify-center max-w-sm">
+                                <button onClick={resetGame} className="bg-white text-black border-4 border-black px-4 py-3 md:px-8 md:py-4 font-black text-lg md:text-xl shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-y-1 hover:shadow-none transition-all flex items-center justify-center gap-2 cursor-pointer flex-1">
+                                    <RotateCcw size={20} /> TRY AGAIN
                                 </button>
-                                <button onClick={goToMenu} className="bg-black text-white border-4 border-white px-8 py-4 font-black text-xl shadow-[8px_8px_0px_0px_#ffffff] hover:translate-y-1 hover:shadow-none transition-all flex items-center justify-center gap-2 cursor-pointer flex-1 md:flex-none">
-                                    <ArrowLeft size={24} /> CHANGE MODE
+                                <button onClick={goToMenu} className="bg-black text-white border-4 border-white px-4 py-3 md:px-8 md:py-4 font-black text-lg md:text-xl shadow-[4px_4px_0px_0px_#ffffff] hover:translate-y-1 hover:shadow-none transition-all flex items-center justify-center gap-2 cursor-pointer flex-1">
+                                    <ArrowLeft size={20} /> QUIT
                                 </button>
                             </div>
                         </div>
                     )}
 
                     <div className="flex flex-col items-center text-center z-10 w-full h-full justify-center max-w-md">
-                        <div className="w-24 h-24 md:w-32 md:h-32 border-4 border-white/20 rounded-full overflow-hidden mb-4 bg-neutral-800 shadow-[4px_4px_0px_0px_rgba(255,255,255,0.2)] flex-shrink-0 relative flex items-center justify-center">
+                        <div className="w-20 h-20 md:w-32 md:h-32 border-4 border-white/20 rounded-full overflow-hidden mb-2 md:mb-4 bg-neutral-800 shadow-[4px_4px_0px_0px_rgba(255,255,255,0.2)] flex-shrink-0 relative flex items-center justify-center">
                             <span className="text-4xl md:text-5xl font-black text-white/20">{p2.name.charAt(0)}</span>
                             <img src={`/student_faces/${p2.roll_no}.png`} className="absolute inset-0 w-full h-full object-cover" onError={e => e.target.style.display = 'none'} alt="P2" />
                         </div>
                         {/* P2 Name: White Text, Full Name */}
-                        <h2 className="text-2xl md:text-3xl font-black uppercase leading-tight mb-2 text-white w-full drop-shadow-md">{p2.name}</h2>
+                        <h2 className="text-xl md:text-3xl font-black uppercase leading-tight mb-1 md:mb-2 text-white w-full drop-shadow-md">{p2.name}</h2>
                         {/* P2 Class: White BG, Black Text (Inverted) */}
-                        <div className="font-bold bg-white text-black px-3 py-1 text-sm md:text-base mb-8 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] border-2 border-transparent">{p2.class}</div>
+                        <div className="font-bold bg-white text-black px-3 py-1 text-xs md:text-base mb-3 md:mb-8 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] border-2 border-transparent">{p2.class}</div>
 
                         {gameState === 'playing' ? (
-                            <div className="flex flex-col gap-4 w-full max-w-sm px-4">
+                            <div className="flex flex-col gap-2 md:gap-4 w-full max-w-sm px-2 md:px-4">
                                 <button
                                     onClick={() => handleGuess('higher')}
-                                    className="bg-[#00ffff] border-4 border-black p-4 md:p-5 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-y-1 hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:shadow-none active:translate-y-2 transition-all flex items-center justify-center gap-2 group w-full"
+                                    className="bg-[#00ffff] border-4 border-black p-3 md:p-5 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-y-1 hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:shadow-none active:translate-y-2 transition-all flex items-center justify-center gap-2 group w-full"
                                 >
-                                    <ArrowUp className="w-6 h-6 md:w-8 md:h-8 stroke-[3] group-hover:-translate-y-1 transition-transform" />
-                                    <span className="font-black text-xl md:text-2xl uppercase tracking-wider">Higher</span>
+                                    <ArrowUp className="w-5 h-5 md:w-8 md:h-8 stroke-[3] group-hover:-translate-y-1 transition-transform" />
+                                    <span className="font-black text-lg md:text-2xl uppercase tracking-wider">Higher</span>
                                 </button>
                                 <button
                                     onClick={() => handleGuess('lower')}
-                                    className="bg-[#ff69b4] border-4 border-black p-4 md:p-5 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-y-1 hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:shadow-none active:translate-y-2 transition-all flex items-center justify-center gap-2 group w-full"
+                                    className="bg-[#ff69b4] border-4 border-black p-3 md:p-5 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-y-1 hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:shadow-none active:translate-y-2 transition-all flex items-center justify-center gap-2 group w-full"
                                 >
-                                    <ArrowDown className="w-6 h-6 md:w-8 md:h-8 stroke-[3] group-hover:translate-y-1 transition-transform" />
-                                    <span className="font-black text-xl md:text-2xl uppercase tracking-wider">Lower</span>
+                                    <ArrowDown className="w-5 h-5 md:w-8 md:h-8 stroke-[3] group-hover:translate-y-1 transition-transform" />
+                                    <span className="font-black text-lg md:text-2xl uppercase tracking-wider">Lower</span>
                                 </button>
-                                <div className="text-center font-bold text-sm mt-2 opacity-60 uppercase tracking-widest hidden md:block text-white/50">
+                                <div className="text-center font-bold text-xs md:text-sm mt-1 md:mt-2 opacity-60 uppercase tracking-widest hidden md:block text-white/50">
                                     Than {p1.name}'s {metricLabel}
                                 </div>
                             </div>
                         ) : (
                             // Result View
                             <div className="flex flex-col items-center animate-in zoom-in spin-in-3 duration-500">
-                                <div className="text-6xl md:text-8xl font-black tracking-tighter text-white drop-shadow-[4px_4px_0px_rgba(0,0,0,1)]" style={{ WebkitTextStroke: '2px black' }}>
+                                <div className="text-5xl md:text-8xl font-black tracking-tighter text-white drop-shadow-[4px_4px_0px_rgba(0,0,0,1)]" style={{ WebkitTextStroke: '2px black' }}>
                                     {p2Value}
                                 </div>
-                                <div className="font-black text-white uppercase tracking-[0.2em] text-lg md:text-2xl mt-2 drop-shadow-md">
+                                <div className="font-black text-white uppercase tracking-[0.2em] text-base md:text-2xl mt-1 md:mt-2 drop-shadow-md">
                                     {metricLabel}
                                 </div>
                             </div>
