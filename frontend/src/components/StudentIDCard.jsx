@@ -125,18 +125,22 @@ export default function StudentIDCard({ student, loading, error, onClose }) {
                         <span className="bg-black text-[#ffde00] px-2">TOP PERFORMING SUBJECTS</span>
                     </h3>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        {topSubjects.map((sub, idx) => (
-                            <div key={idx} className="border-4 border-black p-3 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] flex justify-between items-center bg-white hover:bg-[#ffde00] transition-colors">
-                                <div>
-                                    <div className="text-xs font-bold text-gray-500">#{idx + 1}</div>
-                                    <div className="font-black text-sm md:text-lg uppercase truncate max-w-[150px]">{sub.subject_name}</div>
+                        {subjects
+                            .filter(s => !s.subject_code?.startsWith('25DM')) // Exclude DM subjects
+                            .sort((a, b) => (b.total_marks || 0) - (a.total_marks || 0))
+                            .slice(0, 4)
+                            .map((sub, idx) => (
+                                <div key={idx} className="border-4 border-black p-3 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] flex justify-between items-center bg-white hover:bg-[#ffde00] transition-colors">
+                                    <div>
+                                        <div className="text-xs font-bold text-gray-500">#{idx + 1}</div>
+                                        <div className="font-black text-sm md:text-lg uppercase truncate max-w-[150px]">{sub.subject_name}</div>
+                                    </div>
+                                    <div className="text-right">
+                                        <div className="text-2xl font-black">{sub.total_marks || 0}</div>
+                                        <div className="text-xs font-bold">/{sub.maxMarks || 50}</div>
+                                    </div>
                                 </div>
-                                <div className="text-right">
-                                    <div className="text-2xl font-black">{sub.total_marks}</div>
-                                    <div className="text-xs font-bold">/{sub.maxMarks || 50}</div>
-                                </div>
-                            </div>
-                        ))}
+                            ))}
                     </div>
                 </div>
 
