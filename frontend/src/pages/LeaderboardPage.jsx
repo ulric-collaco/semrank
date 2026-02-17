@@ -7,6 +7,7 @@ import Footer from '../components/Footer'
 import ChevronDown from 'lucide-react/dist/esm/icons/chevron-down'
 import Crown from 'lucide-react/dist/esm/icons/crown'
 import OptimizedImage from '../components/common/OptimizedImage'
+import SubjectSelector from '../components/SubjectSelector'
 
 const StudentModal = lazy(() => import('../components/StudentModal'));
 
@@ -215,20 +216,12 @@ export default function LeaderboardPage() {
 
                         {/* Subject Select */}
                         {viewScope === 'subject' && (
-                            <div className="relative border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] bg-white w-full md:w-auto md:min-w-[250px]">
-                                <select
-                                    value={selectedSubject}
-                                    onChange={(e) => setSelectedSubject(e.target.value)}
-                                    className="w-full h-full p-3 min-h-[44px] bg-transparent font-bold uppercase appearance-none cursor-pointer focus:outline-none text-xs md:text-base truncate pr-10"
-                                >
-                                    {subjectList.map(s => (
-                                        <option key={s.subject_code} value={s.subject_code} className="font-mono">
-                                            {s.subject_name}
-                                        </option>
-                                    ))}
-                                </select>
-                                <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 pointer-events-none border-2 border-black bg-[#ffde00] rounded-full p-0.5" />
-                            </div>
+                            <SubjectSelector
+                                subjects={subjectList}
+                                selectedValue={selectedSubject}
+                                onChange={setSelectedSubject}
+                                placeholder="CHOOSE SUBJECT"
+                            />
                         )}
                     </div>
                 </div>

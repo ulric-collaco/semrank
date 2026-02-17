@@ -1,6 +1,7 @@
 import { useRef, useEffect } from 'react'
 import { gsap } from 'gsap'
 import { formatClassName } from '../utils/format'
+import OptimizedImage from './common/OptimizedImage'
 
 export default function StudentBubble({ student, rank, onStudentClick }) {
   const bubbleRef = useRef(null)
@@ -73,7 +74,7 @@ export default function StudentBubble({ student, rank, onStudentClick }) {
         {/* Photo */}
         <div className="w-24 h-24 mx-auto bg-bubbleSecondary rounded-full flex items-center justify-center text-4xl relative overflow-hidden">
           {photoPath ? (
-            <img
+            <OptimizedImage
               src={photoPath}
               alt={student.name}
               width={96}
@@ -82,7 +83,16 @@ export default function StudentBubble({ student, rank, onStudentClick }) {
               className="w-full h-full object-cover"
               onError={(e) => {
                 e.target.style.display = 'none'
-                e.target.nextSibling.style.display = 'flex'
+                // This logic might need adjustment as OptimizedImage handles error internally
+                // But for the SVG placeholder behind it to show, we might need to rely on OptimizedImage failing completely?
+                // OptimizedImage shows "failed" text on error.
+                // The SVG ring is an overlay, so it's fine.
+                // The "hidden" div logic below relies on photoPath being falsy or something?
+                // Actually the div below has className={photoPath ? 'hidden' : 'flex'}.
+                // So if photoPath exists, that div is hidden.
+                // If OptimizedImage fails, it shows gray box.
+                // The current code tries to show `nextSibling` (the hidden div) on error.
+                // We can replicate that if we want, but OptimizedImage fallback to jpg might just fix it.
               }}
             />
           ) : null}

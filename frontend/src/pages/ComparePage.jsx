@@ -10,6 +10,7 @@ import { studentAPI } from '../utils/api';
 import { formatClassName } from '../utils/format';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
+import OptimizedImage from '../components/common/OptimizedImage';
 
 // Neo-Brutalist Palette
 const THEME_COLORS = [
@@ -369,7 +370,7 @@ export default function ComparePage() {
                                             {/* Student Photo */}
                                             <div className="w-9 h-9 md:w-10 md:h-10 border-2 border-black bg-gray-100 flex-shrink-0 overflow-hidden">
                                                 {student.roll_no ? (
-                                                    <img
+                                                    <OptimizedImage
                                                         src={`/student_faces/${student.roll_no}.png`}
                                                         alt={student.name}
                                                         className="w-full h-full object-cover"
@@ -420,7 +421,7 @@ export default function ComparePage() {
                                     {/* Fighter Photo */}
                                     <div className="w-12 h-12 border-3 border-black bg-gray-100 flex-shrink-0 overflow-hidden">
                                         {student.roll_no ? (
-                                            <img
+                                            <OptimizedImage
                                                 src={`/student_faces/${student.roll_no}.png`}
                                                 alt={student.name}
                                                 className="w-full h-full object-cover"

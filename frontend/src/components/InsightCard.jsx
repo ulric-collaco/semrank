@@ -1,5 +1,6 @@
 import React from 'react';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell } from 'recharts';
+import OptimizedImage from './common/OptimizedImage';
 
 export default function InsightCard({ title, subtitle, type, data, accentColor = '#ffde00', icon: Icon, onStudentClick, showXAxis = false }) {
     // Brutalist Card Container
@@ -42,7 +43,7 @@ function RivalryContent({ data, onClick }) {
                 onClick={() => onClick && onClick(p1.roll_no)}
             >
                 <div className="w-16 h-16 md:w-20 md:h-20 border-3 border-black rounded-full overflow-hidden bg-gray-200 mb-2 relative shadow-sm group-hover/p1:shadow-md transition-all">
-                    <img src={`/student_faces/${p1.roll_no}.png`} className="w-full h-full object-cover" onError={(e) => e.target.style.display = 'none'} alt={p1.name} />
+                    <OptimizedImage src={`/student_faces/${p1.roll_no}.png`} className="w-full h-full object-cover" onError={(e) => e.target.style.display = 'none'} alt={p1.name} />
                 </div>
                 <div className="h-10 w-full flex items-center justify-center mb-1">
                     <span className="font-bold text-[10px] md:text-sm uppercase text-center leading-tight line-clamp-2 w-full">{p1.name}</span>
@@ -65,7 +66,7 @@ function RivalryContent({ data, onClick }) {
                 onClick={() => onClick && onClick(p2.roll_no)}
             >
                 <div className="w-16 h-16 md:w-20 md:h-20 border-3 border-black rounded-full overflow-hidden bg-gray-200 mb-2 relative shadow-sm group-hover/p2:shadow-md transition-all">
-                    <img src={`/student_faces/${p2.roll_no}.png`} className="w-full h-full object-cover" onError={(e) => e.target.style.display = 'none'} alt={p2.name} />
+                    <OptimizedImage src={`/student_faces/${p2.roll_no}.png`} className="w-full h-full object-cover" onError={(e) => e.target.style.display = 'none'} alt={p2.name} />
                 </div>
                 <div className="h-10 w-full flex items-center justify-center mb-1">
                     <span className="font-bold text-[10px] md:text-sm uppercase text-center leading-tight line-clamp-2 w-full">{p2.name}</span>
@@ -104,11 +105,6 @@ function ChartContent({ data, color, showXAxis }) {
                     </Bar>
                 </BarChart>
             </ResponsiveContainer>
-
-            {/* Interactive Hint Overlay */}
-            <div className="absolute top-2 right-2 bg-black text-white text-[10px] font-bold px-2 py-1 uppercase opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none md:opacity-0">
-                View Details
-            </div>
 
             {/* Mobile Tap Hint */}
             <div className="absolute bottom-2 right-2 md:hidden">
@@ -151,7 +147,7 @@ function ListContent({ data, onClick }) {
                     {item.image && (
                         <div className="w-12 h-12 border-2 border-black rounded-full overflow-hidden bg-yellow-300 flex-shrink-0 flex items-center justify-center relative shadow-sm">
                             <span className="font-black text-lg">{item.label.charAt(0)}</span>
-                            <img
+                            <OptimizedImage
                                 src={item.image}
                                 className="absolute inset-0 w-full h-full object-cover"
                                 onError={(e) => e.target.style.display = 'none'}
@@ -190,7 +186,7 @@ function SingleProfileContent({ item, onClick }) {
                     <span className="font-black text-4xl">{item.label.charAt(0)}</span>
                     {/* Fallback Initials above, Image Overlay below */}
                     {item.image && (
-                        <img
+                        <OptimizedImage
                             src={item.image}
                             className="absolute inset-0 w-full h-full object-cover"
                             onError={(e) => e.target.style.display = 'none'}

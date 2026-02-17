@@ -3,6 +3,7 @@ import { gsap } from 'gsap'
 import { gameAPI } from '../utils/api'
 import Navbar from '../components/Navbar'
 import { ArrowUp, ArrowDown, Trophy, XCircle, RotateCcw, Loader2, ArrowLeft } from 'lucide-react'
+import OptimizedImage from '../components/common/OptimizedImage'
 
 import { CLASSES } from '../utils/constants'
 
@@ -207,7 +208,12 @@ export default function GamePage() {
                     <div className="flex flex-col items-center text-center z-10 w-full max-w-md">
                         <div className="w-20 h-20 md:w-32 md:h-32 border-4 border-black rounded-full overflow-hidden mb-2 md:mb-4 bg-gray-200 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] flex-shrink-0 relative flex items-center justify-center">
                             <span className="text-4xl md:text-5xl font-black text-gray-400">{p1.name.charAt(0)}</span>
-                            <img src={`/student_faces/${p1.roll_no}.png`} className="absolute inset-0 w-full h-full object-cover" onError={e => e.target.style.display = 'none'} alt="P1" />
+                            <OptimizedImage
+                                src={`/student_faces/${p1.roll_no}.png`}
+                                className="w-full h-full object-cover"
+                                onError={e => e.target.style.display = 'none'}
+                                alt="P1"
+                            />
                         </div>
                         {/* P1 Name: Full Name, wrap allowed */}
                         <h2 className="text-xl md:text-3xl font-black uppercase leading-tight mb-1 md:mb-2 w-full">{p1.name}</h2>
@@ -278,7 +284,12 @@ export default function GamePage() {
                     <div className="flex flex-col items-center text-center z-10 w-full h-full justify-center max-w-md">
                         <div className="w-20 h-20 md:w-32 md:h-32 border-4 border-white/20 rounded-full overflow-hidden mb-2 md:mb-4 bg-neutral-800 shadow-[4px_4px_0px_0px_rgba(255,255,255,0.2)] flex-shrink-0 relative flex items-center justify-center">
                             <span className="text-4xl md:text-5xl font-black text-white/20">{p2.name.charAt(0)}</span>
-                            <img src={`/student_faces/${p2.roll_no}.png`} className="absolute inset-0 w-full h-full object-cover" onError={e => e.target.style.display = 'none'} alt="P2" />
+                            <OptimizedImage
+                                src={`/student_faces/${p2.roll_no}.png`}
+                                className="w-full h-full object-cover"
+                                onError={e => e.target.style.display = 'none'}
+                                alt="P2"
+                            />
                         </div>
                         {/* P2 Name: White Text, Full Name */}
                         <h2 className="text-xl md:text-3xl font-black uppercase leading-tight mb-1 md:mb-2 text-white w-full drop-shadow-md">{p2.name}</h2>
