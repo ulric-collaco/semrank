@@ -280,22 +280,34 @@ export default function StudentIDCard({ student, loading, error, onClose }) {
 const ViewRechartsBarChart = ({ activeSubject, maxMarks }) => {
     const data = [];
 
-    // Only add MSE/ESE if either has marks
-    if ((activeSubject.mse && activeSubject.mse > 0) || (activeSubject.ese && activeSubject.ese > 0)) {
-        data.push({ name: 'MSE', value: Number(activeSubject.mse) || 0 });
-        data.push({ name: 'ESE', value: Number(activeSubject.ese) || 0 });
-    }
+    // Check if Double Minor (DM) subject
+    const isDM = activeSubject.subject_code && activeSubject.subject_code.startsWith('25DM');
 
-    // Only add T1/T2 (Term Work) if either has marks
-    if ((activeSubject.th_ise1 && activeSubject.th_ise1 > 0) || (activeSubject.th_ise2 && activeSubject.th_ise2 > 0)) {
-        data.push({ name: 'T1', value: Number(activeSubject.th_ise1) || 0 });
-        data.push({ name: 'T2', value: Number(activeSubject.th_ise2) || 0 });
-    }
-
-    // Only add P1/P2 (Practicals) if either has marks
-    if ((activeSubject.pr_ise1 && activeSubject.pr_ise1 > 0) || (activeSubject.pr_ise2 && activeSubject.pr_ise2 > 0)) {
-        data.push({ name: 'P1', value: Number(activeSubject.pr_ise1) || 0 });
-        data.push({ name: 'P2', value: Number(activeSubject.pr_ise2) || 0 });
+    if (isDM) {
+        // DM Subjects: Show ONLY non-zero marks (0 implies Not Applicable)
+        if (activeSubject.mse && Number(activeSubject.mse) > 0) data.push({ name: 'MSE', value: Number(activeSubject.mse) });
+        if (activeSubject.ese && Number(activeSubject.ese) > 0) data.push({ name: 'ESE', value: Number(activeSubject.ese) });
+        if (activeSubject.th_ise1 && Number(activeSubject.th_ise1) > 0) data.push({ name: 'T1', value: Number(activeSubject.th_ise1) });
+        if (activeSubject.th_ise2 && Number(activeSubject.th_ise2) > 0) data.push({ name: 'T2', value: Number(activeSubject.th_ise2) });
+        if (activeSubject.pr_ise1 && Number(activeSubject.pr_ise1) > 0) data.push({ name: 'P1', value: Number(activeSubject.pr_ise1) });
+        if (activeSubject.pr_ise2 && Number(activeSubject.pr_ise2) > 0) data.push({ name: 'P2', value: Number(activeSubject.pr_ise2) });
+    } else {
+        // Regular Subjects: Show 0s if the category exists (at least one exam has marks)
+        // Group: MSE & ESE
+        if ((activeSubject.mse && Number(activeSubject.mse) > 0) || (activeSubject.ese && Number(activeSubject.ese) > 0)) {
+            data.push({ name: 'MSE', value: Number(activeSubject.mse) || 0 });
+            data.push({ name: 'ESE', value: Number(activeSubject.ese) || 0 });
+        }
+        // Group: T1 & T2
+        if ((activeSubject.th_ise1 && Number(activeSubject.th_ise1) > 0) || (activeSubject.th_ise2 && Number(activeSubject.th_ise2) > 0)) {
+            data.push({ name: 'T1', value: Number(activeSubject.th_ise1) || 0 });
+            data.push({ name: 'T2', value: Number(activeSubject.th_ise2) || 0 });
+        }
+        // Group: P1 & P2
+        if ((activeSubject.pr_ise1 && Number(activeSubject.pr_ise1) > 0) || (activeSubject.pr_ise2 && Number(activeSubject.pr_ise2) > 0)) {
+            data.push({ name: 'P1', value: Number(activeSubject.pr_ise1) || 0 });
+            data.push({ name: 'P2', value: Number(activeSubject.pr_ise2) || 0 });
+        }
     }
 
     // Ensure maxMarks is reasonable (at least 20 to avoid huge bars for small marks)
