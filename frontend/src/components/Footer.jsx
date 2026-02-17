@@ -75,7 +75,9 @@ export default function Footer() {
             {/* Copyright */}
             <div className="mt-12 pt-8 border-t-2 border-[#333] flex flex-col md:flex-row justify-between items-center gap-4 text-[#666] text-xs font-bold uppercase">
                 <span>(C) 2026 SEMRANK.</span>
-                <span className="opacity-50 tracking-wide">Where your CGPA is a joke but your attendance is the punchline.</span>
+                <span className="opacity-50 tracking-wide hover:opacity-100 hover:text-[#ff0000] hover:tracking-widest transition-all duration-500 cursor-help font-black">
+                    QUANTIFYING YOUR ACADEMIC TRAUMA.
+                </span>
             </div>
         </footer >
     );
