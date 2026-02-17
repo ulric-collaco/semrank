@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef, useCallback } from 'react'
 import { gameAPI } from '../utils/api'
 import Navbar from '../components/Navbar'
 import { ArrowUp, ArrowDown, Trophy, XCircle, RotateCcw, Loader2, ArrowLeft } from 'lucide-react'
+import { formatClassName } from '../utils/format'
 import OptimizedImage from '../components/common/OptimizedImage'
 import { motion, LayoutGroup } from 'framer-motion'
 import { CLASSES } from '../utils/constants'
@@ -205,10 +206,9 @@ export default function GamePage() {
                     initial="hidden" animate="visible" variants={containerVariants}
                     className="flex-1 w-full max-w-4xl px-4 md:px-6 flex flex-col items-center justify-center pb-4 pt-16 md:pt-0"
                 >
-                    <motion.h1 className="text-4xl md:text-7xl font-black text-black uppercase text-center mb-2 tracking-tighter leading-none z-10">
+                    <motion.h1 className="text-4xl md:text-7xl font-black text-black uppercase text-center mb-8 md:mb-16 tracking-tighter leading-none z-10">
                         HIGHER <span className="text-[#ffde00] px-2 bg-black">OR</span> LOWER
                     </motion.h1>
-                    <p className="text-neutral-500 text-sm md:text-xl mb-4 md:mb-12 font-bold tracking-widest uppercase opacity-80 z-10">Select Context</p>
 
                     <div className="w-full flex flex-col gap-2 md:gap-4 max-w-3xl z-10 overflow-y-auto flex-1 md:flex-none px-1 scrollbar-hide">
                         <motion.button
@@ -258,7 +258,7 @@ export default function GamePage() {
             <Navbar />
 
             {/* Match Container */}
-            <div className="flex-1 w-full max-w-6xl mx-auto flex flex-col md:flex-row items-stretch justify-center p-1 md:p-4 gap-1 md:gap-8 overflow-hidden">
+            <div className="flex-1 w-full max-w-6xl mx-auto flex flex-col md:flex-row items-stretch justify-center p-1 md:p-4 gap-1 md:gap-8 overflow-hidden relative">
                 <LayoutGroup>
 
                     {/* STREAK BAR (Mobile: Top Strip, Desktop: Floating) */}
@@ -295,7 +295,7 @@ export default function GamePage() {
                         <div className="flex flex-col items-center text-center bg-white text-black justify-between shrink-0 z-10 p-2 md:p-4 pb-3 md:pb-4 gap-1 md:gap-0">
                             <div className="w-full">
                                 <h2 className="text-base md:text-2xl font-black uppercase leading-none line-clamp-1 md:line-clamp-2 md:leading-tight">{p1.name}</h2>
-                                <div className="text-[10px] md:text-xs font-bold opacity-60 uppercase mt-0.5 md:mt-1">{p1.class.replace('_', '-')}</div>
+                                <div className="text-[10px] md:text-xs font-bold opacity-60 uppercase mt-0.5 md:mt-1">{formatClassName(p1.class)}</div>
                             </div>
 
                             <div className="flex flex-col items-center justify-center w-full pt-1 md:pt-2 border-t-2 border-dashed border-black mt-1">
@@ -342,7 +342,7 @@ export default function GamePage() {
                         <div className="flex flex-col items-center text-center bg-white text-black justify-between shrink-0 z-10 p-2 md:p-4 pt-4 md:pt-4 gap-2 md:gap-0 pr-8 md:pr-4">
                             <div className="w-full">
                                 <h2 className="text-base md:text-2xl font-black uppercase leading-none line-clamp-1 md:line-clamp-2 md:leading-tight">{p2.name}</h2>
-                                <div className="text-[10px] md:text-xs font-bold opacity-60 uppercase mt-0.5 md:mt-1">{p2.class.replace('_', '-')}</div>
+                                <div className="text-[10px] md:text-xs font-bold opacity-60 uppercase mt-0.5 md:mt-1">{formatClassName(p2.class)}</div>
                             </div>
 
                             {gameState === 'playing' ? (
@@ -372,11 +372,10 @@ export default function GamePage() {
                             )}
                         </div>
                     </motion.div>
-
                 </LayoutGroup>
             </div>
 
-            {/* --- GAME OVER OVERLAY (Fixed & Scrollable) --- */}
+            {/* Game Over Overlays */}
             {gameState === 'wrong' && (
                 <div className="fixed inset-0 z-[100] bg-white/90 backdrop-blur-sm flex flex-col animate-in fade-in duration-300 overflow-y-auto">
                     <div className="flex-1 flex flex-col items-center justify-center p-4 min-h-[600px]">

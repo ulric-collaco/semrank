@@ -6,6 +6,7 @@ import Footer from '../components/Footer';
 import InsightCard from '../components/InsightCard';
 import StudentModal from '../components/StudentModal';
 import { leaderboardAPI, studentAPI, birthdayAPI, statsAPI } from '../utils/api';
+import { formatClassName } from '../utils/format';
 import { Swords, BarChart3, TrendingUp, AlertTriangle, Cake, Shield, Trophy, Zap } from 'lucide-react';
 
 export default function LandingPage() {
@@ -86,7 +87,7 @@ export default function LandingPage() {
                     const bunkLordClass = [...classRankings].sort((a, b) => a.avg_attendance - b.avg_attendance)[0];
 
                     setBunkStatsData({
-                        value: bunkLordClass.class_name,
+                        value: formatClassName(bunkLordClass.class_name),
                         label: `${bunkLordClass.avg_attendance}%`,
                         subtext: 'LOWEST ATTENDANCE'
                     });
@@ -113,7 +114,7 @@ export default function LandingPage() {
                             label: carryClass.top_student.name,
                             value: '',
                             image: `/student_faces/${carryClass.top_student.roll_no}.png`,
-                            subtext: carryClass.class_name
+                            subtext: formatClassName(carryClass.class_name)
                         }]);
                     }
                 }
@@ -129,7 +130,7 @@ export default function LandingPage() {
                     const [topClass, topCount] = sorted[0];
 
                     setClassWarData({
-                        value: topClass,
+                        value: formatClassName(topClass),
                         label: 'TOP CLASS RN',
                         subtext: `${topCount} IN TOP 50`
                     });
