@@ -322,10 +322,10 @@ export default function ComparePage() {
                         <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-6 h-6 text-black" />
                         <input
                             type="text"
-                            placeholder="FIND FIGHTER (NAME OR ROLL NO)"
+                            placeholder="SEARCH (NAME / ROLL NO)"
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
-                            className="w-full pl-14 pr-4 py-3 md:py-4 bg-white border-4 border-black font-bold placeholder:text-gray-400 focus:outline-none focus:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all uppercase text-sm md:text-base truncate"
+                            className="w-full pl-14 pr-4 py-3 md:py-4 bg-white border-4 border-black font-bold placeholder:text-gray-400 focus:outline-none focus:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all uppercase text-xs md:text-base truncate"
                         />
                     </div>
 

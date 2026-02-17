@@ -67,8 +67,8 @@ export default function SearchInput() {
                                 setShowResults(true);
                             }}
                             onFocus={() => setShowResults(true)}
-                            placeholder="SEARCH ROLL NO..."
-                            className="w-full h-14 md:h-20 px-4 md:px-6 font-black text-xl md:text-3xl uppercase bg-transparent outline-none placeholder:text-gray-300 text-black leading-none"
+                            placeholder="SEARCH NAME / ROLL NO..."
+                            className="w-full h-14 md:h-20 px-4 md:px-6 font-black text-sm sm:text-lg md:text-3xl uppercase bg-transparent outline-none placeholder:text-gray-300 text-black leading-none"
                         />
                         <button className="hidden md:flex items-center px-8 bg-[#ffde00] border-l-4 border-black font-black text-xl hover:bg-[#ff69b4] transition-colors" onClick={() => {
                             // Focus logic or search trigger if needed
