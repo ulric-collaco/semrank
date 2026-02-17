@@ -5,7 +5,25 @@ const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://semrank-api.collac
 const MAX_RETRIES = 3
 const RETRY_DELAY_BASE = 1000 // 1s, doubles each retry
 
+// Simple In-Memory Cache
+const API_CACHE = new Map();
+const CACHE_TTL = 5 * 60 * 1000; // 5 minutes
+
 async function fetchWithRetry(url, options = {}) {
+  const isGet = !options.method || options.method === 'GET';
+  const cacheKey = url;
+
+  // Check Cache for GET requests
+  if (isGet && API_CACHE.has(cacheKey)) {
+    const { data, timestamp } = API_CACHE.get(cacheKey);
+    if (Date.now() - timestamp < CACHE_TTL) {
+      // Return cached data if fresh
+      return data;
+    } else {
+      API_CACHE.delete(cacheKey);
+    }
+  }
+
   const separator = url.includes('?') ? '&' : '?'
   const fullUrl = `${API_BASE_URL}${url}${separator}_t=${Date.now()}`
   const config = {
@@ -24,7 +42,14 @@ async function fetchWithRetry(url, options = {}) {
         }
         throw new Error(`HTTP ${response.status}: ${response.statusText}`)
       }
-      return await response.json()
+      const data = await response.json()
+
+      // Cache successful GET responses
+      if (isGet) {
+        API_CACHE.set(cacheKey, { data, timestamp: Date.now() });
+      }
+
+      return data
     } catch (error) {
       lastError = error
       if (attempt < MAX_RETRIES && (error.name === 'TypeError' || error.message.startsWith('Server error'))) {

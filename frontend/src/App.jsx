@@ -11,9 +11,12 @@ const LandingPage2 = lazy(() => import('./pages/LandingPage2'))
 
 
 
+import DataPreloader from './components/DataPreloader';
+
 function App() {
   return (
     <BrowserRouter>
+      <DataPreloader /> {/* Background Data Sync */}
       <Suspense fallback={null}>
 
         <Routes>
