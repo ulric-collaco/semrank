@@ -295,7 +295,7 @@ export default function GamePage() {
                         <div className="flex flex-col items-center text-center bg-white text-black justify-between shrink-0 z-10 p-2 md:p-4 pb-3 md:pb-4 gap-1 md:gap-0">
                             <div className="w-full">
                                 <h2 className="text-base md:text-2xl font-black uppercase leading-none line-clamp-1 md:line-clamp-2 md:leading-tight">{p1.name}</h2>
-                                <div className="text-[10px] md:text-xs font-bold opacity-60 uppercase mt-0.5 md:mt-1">{p1.class}</div>
+                                <div className="text-[10px] md:text-xs font-bold opacity-60 uppercase mt-0.5 md:mt-1">{p1.class.replace('_', '-')}</div>
                             </div>
 
                             <div className="flex flex-col items-center justify-center w-full pt-1 md:pt-2 border-t-2 border-dashed border-black mt-1">
@@ -342,7 +342,7 @@ export default function GamePage() {
                         <div className="flex flex-col items-center text-center bg-white text-black justify-between shrink-0 z-10 p-2 md:p-4 pt-4 md:pt-4 gap-2 md:gap-0 pr-8 md:pr-4">
                             <div className="w-full">
                                 <h2 className="text-base md:text-2xl font-black uppercase leading-none line-clamp-1 md:line-clamp-2 md:leading-tight">{p2.name}</h2>
-                                <div className="text-[10px] md:text-xs font-bold opacity-60 uppercase mt-0.5 md:mt-1">{p2.class}</div>
+                                <div className="text-[10px] md:text-xs font-bold opacity-60 uppercase mt-0.5 md:mt-1">{p2.class.replace('_', '-')}</div>
                             </div>
 
                             {gameState === 'playing' ? (
