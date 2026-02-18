@@ -210,30 +210,28 @@ export default function GamePage() {
                         HIGHER <span className="text-[#ffde00] px-2 bg-black">OR</span> LOWER
                     </motion.h1>
 
-                    <div className="w-full flex flex-col gap-2 md:gap-4 max-w-3xl z-10 overflow-y-auto flex-1 md:flex-none px-1 scrollbar-hide">
+                    <div className="w-full grid grid-cols-2 gap-2 md:gap-4 max-w-3xl z-10 overflow-y-auto flex-1 md:flex-none px-1 scrollbar-hide pb-10">
                         <motion.button
                             whileHover={{ scale: 1.02 }}
                             whileTap={{ scale: 0.98 }}
                             onClick={() => startGame('all')}
-                            className="bg-[#ffde00] border-4 border-black p-4 md:p-8 text-left shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] flex items-center justify-between shrink-0 mb-2"
+                            className="col-span-2 bg-[#ffde00] border-4 border-black p-4 md:p-8 text-left shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] flex items-center justify-between shrink-0"
                         >
                             <div className="font-black text-2xl md:text-6xl text-black uppercase tracking-tighter leading-none">EVERYONE</div>
                             <ArrowUp className="w-8 h-8 md:w-16 md:h-16 text-black rotate-45 stroke-[3]" />
                         </motion.button>
 
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-3 w-full shrink-0 pb-10">
-                            {secondaryModes.map(mode => (
-                                <motion.button
-                                    key={mode.id}
-                                    whileHover={{ y: -5 }}
-                                    onClick={() => startGame(mode.id)}
-                                    className="bg-white border-2 border-black p-4 text-left shadow-[2px_2px_0px_black] flex items-center justify-between"
-                                >
-                                    <div className="font-black text-lg md:text-2xl text-black uppercase">{mode.label}</div>
-                                    <ArrowUp className="w-4 h-4 md:w-5 md:h-5 text-black rotate-45" />
-                                </motion.button>
-                            ))}
-                        </div>
+                        {secondaryModes.map(mode => (
+                            <motion.button
+                                key={mode.id}
+                                whileHover={{ y: -5 }}
+                                onClick={() => startGame(mode.id)}
+                                className="bg-white border-2 border-black p-4 text-left shadow-[2px_2px_0px_black] flex items-center justify-between col-span-1"
+                            >
+                                <div className="font-black text-lg md:text-2xl text-black uppercase">{mode.label}</div>
+                                <ArrowUp className="w-4 h-4 md:w-5 md:h-5 text-black rotate-45" />
+                            </motion.button>
+                        ))}
                     </div>
                 </motion.div>
             </div>
