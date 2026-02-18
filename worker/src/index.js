@@ -5,16 +5,20 @@
 
 // CORS headers for all responses
 function getCorsHeaders(origin) {
-  const allowedOrigins = [
+  const allowedLocalOrigins = [
     'http://localhost:5173',
     'http://localhost:3000',
-    'https://c5c5-115-69-246-236.ngrok-free.app'
+    'http://127.0.0.1:5173',
+    'http://localhost:4173',
   ];
 
-  const originAllowed = allowedOrigins.includes(origin) || origin?.includes('.ngrok');
+  const originAllowed =
+    allowedLocalOrigins.includes(origin) ||
+    (origin && origin.includes('.ngrok')) ||
+    (origin && origin.endsWith('.vercel.app'));
 
   return {
-    'Access-Control-Allow-Origin': originAllowed ? origin : '*',
+    'Access-Control-Allow-Origin': originAllowed ? origin : 'null',
     'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
     'Access-Control-Allow-Headers': 'Content-Type, Authorization',
     'Access-Control-Max-Age': '86400',
@@ -267,6 +271,21 @@ async function handleRequest(request, env) {
   const path = url.pathname;
   const method = request.method;
   const origin = request.headers.get('Origin');
+
+  // Context-aware helpers to enforce CORS
+  const jsonResponse = (data, status = 200) => {
+    return new Response(JSON.stringify(data), {
+      status,
+      headers: {
+        'Content-Type': 'application/json',
+        ...getCorsHeaders(origin),
+      },
+    });
+  };
+
+  const errorResponse = (message, status = 500) => {
+    return jsonResponse({ error: message }, status);
+  };
 
   // Handle CORS preflight
   if (method === 'OPTIONS') {

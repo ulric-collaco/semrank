@@ -24,8 +24,8 @@ export default function Leaderboard({ data, sortBy = 'sgpa', setSortBy }) {
                 <div className="flex flex-col items-center mb-12 relative z-10">
                     <Link to="/leaderboard" className="inline-block group relative">
                         <div className="absolute inset-0 bg-black translate-x-3 translate-y-3 group-hover:translate-x-1 group-hover:translate-y-1 transition-transform"></div>
-                        <div className="relative bg-[#ff69b4] border-4 border-black px-8 py-5 md:px-16 md:py-8 flex items-center justify-center gap-4 hover:-translate-y-1 transition-transform cursor-pointer">
-                            <h2 className="text-3xl sm:text-5xl md:text-7xl font-black uppercase text-center m-0 leading-none text-black whitespace-nowrap">
+                        <div className="relative bg-[#ff69b4] border-4 border-black px-6 py-5 md:px-16 md:py-8 flex items-center justify-center gap-4 hover:-translate-y-1 transition-transform cursor-pointer">
+                            <h2 className="text-2xl sm:text-3xl md:text-5xl lg:text-7xl font-black uppercase text-center m-0 leading-none text-black whitespace-normal md:whitespace-nowrap break-words">
                                 The Leaderboard
                             </h2>
                             {/* Sticker Badge */}
@@ -60,7 +60,7 @@ export default function Leaderboard({ data, sortBy = 'sgpa', setSortBy }) {
                             onClick={() => setSelectedStudentRoll(student.roll_no)}
                             className="bg-white border-4 border-black p-6 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] transition-all flex flex-col items-center text-center relative cursor-pointer group mt-4"
                         >
-                            <div className={`absolute -top-8 -left-6 md:-left-8 flex items-center justify-center font-black rounded-full transition-transform group-hover:scale-110 ${getRankStyle(index)}`}>
+                            <div className={`absolute -top-8 -left-2 md:-left-8 flex items-center justify-center font-black rounded-full transition-transform group-hover:scale-110 ${getRankStyle(index)}`}>
                                 {index === 0 ? <Crown size={36} strokeWidth={2.5} /> : (index + 1)}
                             </div>
 

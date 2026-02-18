@@ -33,10 +33,12 @@ export default function StudentIDCard({ student, loading, error, onClose }) {
         );
     }
 
-    const formatFloat = (num, decimals) => {
+    const formatFloat = (num, decimals = 2) => {
         if (num === null || num === undefined) return 'N/A';
         const val = parseFloat(num);
-        return isNaN(val) ? 'N/A' : val.toFixed(decimals);
+        if (isNaN(val)) return 'N/A';
+        // Returns a number with max 2 decimal places (e.g., 60.98004 -> 60.98, 60.00 -> 60)
+        return Number(val.toFixed(decimals));
     };
 
     // Calculate derived values safely
@@ -45,8 +47,12 @@ export default function StudentIDCard({ student, loading, error, onClose }) {
 
     const topSubjects = student && student.subjects
         ? [...student.subjects]
-            .filter(a => !['Sensor', 'Constitution', 'Environmental'].some(term => a.subject_name.includes(term)))
-            .sort((a, b) => (a.rank || 999) - (b.rank || 999))
+            .filter(a => !['Sensor', 'Constitution', 'Environmental'].some(term => a.subject_name.includes(term)) && !a.subject_code?.startsWith('25DM'))
+            .map(s => ({
+                ...s,
+                percentage: s.maxMarks > 0 ? (s.total_marks / s.maxMarks) * 100 : 0
+            }))
+            .sort((a, b) => b.percentage - a.percentage)
             .slice(0, 4)
         : [];
 
@@ -95,23 +101,30 @@ export default function StudentIDCard({ student, loading, error, onClose }) {
                 </div>
 
                 {/* Stats Row */}
-                <div className="grid grid-cols-2 md:grid-cols-4 border-b-4 border-black">
-                    <div className="p-4 border-r-4 border-black bg-[#ff69b4] flex flex-col items-center justify-center text-center">
+                <div className="grid grid-cols-2 md:grid-cols-5 border-b-4 border-black">
+                    <div className="p-4 border-r-4 border-b-4 md:border-b-0 border-black bg-[#ff69b4] flex flex-col items-center justify-center text-center">
                         <span className="text-xs font-black uppercase">SEMESTER SGPA</span>
                         <span className="text-4xl md:text-5xl font-black">{formatFloat(student.cgpa, 2)}</span>
                     </div>
-                    <div className="p-4 border-r-0 md:border-r-4 border-black bg-[#00ffff] flex flex-col items-center justify-center text-center">
+                    <div className="p-4 border-b-4 md:border-b-0 md:border-r-4 border-black bg-[#00ffff] flex flex-col items-center justify-center text-center">
                         <span className="text-xs font-black uppercase">ATTENDANCE</span>
                         <span className="text-4xl md:text-5xl font-black">{formatFloat(student.attendance, 1)}%</span>
                     </div>
-                    <div className="p-4 border-r-4 border-t-4 md:border-t-0 border-black bg-white flex flex-col items-center justify-center text-center">
+                    <div className="p-4 border-r-4 border-black bg-white flex flex-col items-center justify-center text-center">
                         <span className="text-xs font-bold uppercase text-gray-500">CLASS RANK</span>
                         <div className="flex items-center gap-2">
                             <Trophy size={20} />
                             <span className="text-3xl font-black">#{student.rank_cgpa_class}</span>
                         </div>
                     </div>
-                    <div className="p-4 border-t-4 md:border-t-0 border-black bg-white flex flex-col items-center justify-center text-center cursor-pointer hover:bg-gray-100 transition-colors group" onClick={handleAnalyze}>
+                    <div className="p-4 md:border-r-4 border-black bg-white flex flex-col items-center justify-center text-center">
+                        <span className="text-xs font-bold uppercase text-gray-500">COLLEGE RANK</span>
+                        <div className="flex items-center gap-2">
+                            <Trophy size={20} className="text-[#ffde00] fill-[#ffde00]" />
+                            <span className="text-3xl font-black">#{student.rank_cgpa_college}</span>
+                        </div>
+                    </div>
+                    <div className="p-4 border-t-4 md:border-t-0 border-black bg-white flex flex-col items-center justify-center text-center cursor-pointer hover:bg-gray-100 transition-colors group col-span-2 md:col-span-1" onClick={handleAnalyze}>
                         <span className="text-xs font-bold uppercase text-gray-500 group-hover:text-black">Analysis</span>
                         <div className="flex items-center gap-2">
                             <Calculator size={24} className="group-hover:scale-110 transition-transform" />
@@ -126,22 +139,18 @@ export default function StudentIDCard({ student, loading, error, onClose }) {
                         <span className="bg-black text-[#ffde00] px-2">TOP PERFORMING SUBJECTS</span>
                     </h3>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        {subjects
-                            .filter(s => !s.subject_code?.startsWith('25DM')) // Exclude DM subjects
-                            .sort((a, b) => (b.total_marks || 0) - (a.total_marks || 0))
-                            .slice(0, 4)
-                            .map((sub, idx) => (
-                                <div key={idx} className="border-4 border-black p-3 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] flex justify-between items-center bg-white hover:bg-[#ffde00] transition-colors">
-                                    <div>
-                                        <div className="text-xs font-bold text-gray-500">#{idx + 1}</div>
-                                        <div className="font-black text-sm md:text-lg uppercase truncate max-w-[150px]">{sub.subject_name}</div>
-                                    </div>
-                                    <div className="text-right">
-                                        <div className="text-2xl font-black">{sub.total_marks || 0}</div>
-                                        <div className="text-xs font-bold">/{sub.maxMarks || 50}</div>
-                                    </div>
+                        {topSubjects.map((sub, idx) => (
+                            <div key={idx} className="border-4 border-black p-3 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] flex justify-between items-center bg-white hover:bg-[#ffde00] transition-colors gap-2">
+                                <div className="min-w-0 flex-1">
+                                    <div className="text-xs font-bold text-gray-500">#{idx + 1}</div>
+                                    <div className="font-black text-sm md:text-sm uppercase truncate font-mono tracking-tighter" title={sub.subject_name}>{sub.subject_name}</div>
                                 </div>
-                            ))}
+                                <div className="text-right shrink-0">
+                                    <div className="text-xl font-black">{formatFloat(sub.percentage)}%</div>
+                                    <div className="text-[10px] font-bold text-gray-500 uppercase tracking-wider">{formatFloat(sub.total_marks)} / {sub.maxMarks || 50}</div>
+                                </div>
+                            </div>
+                        ))}
                     </div>
                 </div>
 
@@ -179,7 +188,7 @@ export default function StudentIDCard({ student, loading, error, onClose }) {
                                     <div className="flex gap-4">
                                         <div className="text-right">
                                             <div className="text-xs font-bold text-gray-500 uppercase">Total Marks</div>
-                                            <div className="text-2xl font-black">{activeSubject.total_marks}<span className="text-sm text-gray-400">/{activeSubject.maxMarks || 50}</span></div>
+                                            <div className="text-2xl font-black">{formatFloat(activeSubject.total_marks)}<span className="text-sm text-gray-400">/{activeSubject.maxMarks || 50}</span></div>
                                         </div>
                                         <div className="text-right pl-4 border-l-2 border-black">
                                             <div className="text-xs font-bold text-gray-500 uppercase">Subject Rank</div>

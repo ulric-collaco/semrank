@@ -111,7 +111,7 @@ export default function ClassStatsPage() {
                                 <button
                                     key={c.id}
                                     onClick={() => setSelectedClass(c.id)}
-                                    className="w-full bg-white text-black border-4 border-black py-4 px-3 md:px-6 text-lg md:text-2xl font-black uppercase tracking-wider relative group overflow-hidden transition-all duration-200 hover:-translate-y-1 hover:translate-x-1 hover:shadow-[6px_6px_0_0_#000] active:translate-y-0 active:translate-x-0 active:shadow-none flex items-center justify-between"
+                                    className="w-full bg-white text-black border-4 border-black py-4 px-3 md:px-6 text-lg md:text-2xl font-black uppercase tracking-wider relative group overflow-hidden transition-all duration-200 hover:-translate-y-1 hover:translate-x-1 hover:shadow-[6px_6px_0_0_#000] active:translate-y-0 active:translate-x-0 active:shadow-none flex items-center justify-between whitespace-nowrap"
                                     style={{
                                         animationDelay: `${index * 100}ms`
                                     }}
