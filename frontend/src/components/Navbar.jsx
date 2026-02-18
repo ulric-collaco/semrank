@@ -1,7 +1,6 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { Menu, X, Search } from 'lucide-react';
-import { useLocation } from 'react-router-dom';
 import SearchInput from './SearchInput';
 
 export default function Navbar() {
@@ -22,14 +21,27 @@ export default function Navbar() {
     return (
         <>
             <nav className="border-b-4 border-black bg-[#ffde00] text-black py-3 md:py-4 px-4 md:px-6 flex justify-between items-center font-mono sticky top-0 z-[100] w-full max-w-full">
-                {/* Desktop Menu - Left Side */}
-                <div className="hidden md:flex gap-6 font-bold text-sm items-center">
-                    <Link to="/leaderboard" className="hover:underline decoration-4 decoration-black underline-offset-4 uppercase">Leaderboard</Link>
-                    <Link to="/compare" className="hover:underline decoration-4 decoration-black underline-offset-4 uppercase">Compare</Link>
-                    <Link to="/classes" className="hover:underline decoration-4 decoration-black underline-offset-4 uppercase">Classes</Link>
-                    <button onClick={openSearch} className="hover:underline decoration-4 decoration-black underline-offset-4 uppercase flex items-center gap-1">
-                        <Search size={16} strokeWidth={3} /> Search
+
+                {/* Left Side: Mobile Menu Toggle & Desktop Links */}
+                <div className="flex items-center gap-4">
+                    {/* Mobile Menu Toggle - Left Side */}
+                    <button
+                        onClick={toggleMenu}
+                        className="p-1.5 min-w-[44px] min-h-[44px] flex items-center justify-center border-2 border-black bg-white md:hidden active:translate-y-1 transition-transform shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] active:shadow-none"
+                        aria-label="Toggle Menu"
+                    >
+                        {isMenuOpen ? <X size={24} strokeWidth={3} /> : <Menu size={24} strokeWidth={3} />}
                     </button>
+
+                    {/* Desktop Menu - Left Side */}
+                    <div className="hidden md:flex gap-6 font-bold text-sm items-center">
+                        <Link to="/leaderboard" className="hover:underline decoration-4 decoration-black underline-offset-4 uppercase">Leaderboard</Link>
+                        <Link to="/compare" className="hover:underline decoration-4 decoration-black underline-offset-4 uppercase">Compare</Link>
+                        <Link to="/classes" className="hover:underline decoration-4 decoration-black underline-offset-4 uppercase">Classes</Link>
+                        <button onClick={openSearch} className="hover:underline decoration-4 decoration-black underline-offset-4 uppercase flex items-center gap-1">
+                            <Search size={16} strokeWidth={3} /> Search
+                        </button>
+                    </div>
                 </div>
 
                 {/* Logo - Center Section */}
@@ -39,7 +51,7 @@ export default function Navbar() {
                     </Link>
                 </div>
 
-                {/* Desktop CTA & Mobile Controls - Right Side */}
+                {/* Right Side: Game Button */}
                 <div className="flex items-center gap-2">
                     {/* Desktop Game Button */}
                     {!isGamePage && (
@@ -57,23 +69,12 @@ export default function Navbar() {
                             <span>HIGHER LOWER</span>
                         </Link>
                     )}
-
-                    {/* Mobile Menu Toggle */}
-                    <button
-                        onClick={toggleMenu}
-                        className="p-2 min-w-[44px] min-h-[44px] flex items-center justify-center border-2 border-black bg-white md:bg-transparent md:border-0 active:translate-y-1 transition-transform md:hidden"
-                        aria-label="Toggle Menu"
-                    >
-                        {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
-                    </button>
-
-                    {/* Desktop Menu - Fallback for small desktop if logo overlaps? No, absolute centering should work. */}
                 </div>
             </nav>
 
             {/* Mobile Overlay */}
             {isMenuOpen && (
-                <div className="fixed inset-0 bg-[#ffde00] z-[100] flex flex-col justify-center items-center gap-6 md:hidden animate-in fade-in zoom-in-95 duration-200 p-6 overflow-y-auto">
+                <div className="fixed inset-0 bg-[#ffde00] z-[90] flex flex-col justify-center items-center gap-6 md:hidden animate-in fade-in zoom-in-95 duration-200 p-6 overflow-y-auto pt-20">
                     <Link
                         to="/leaderboard"
                         onClick={closeMenu}

@@ -263,7 +263,7 @@ export default function GamePage() {
 
                     {/* STREAK BAR (Mobile: Top Strip, Desktop: Floating) */}
                     <div className="w-full flex justify-end md:absolute md:top-4 md:right-4 md:w-auto md:z-[60] mb-1 md:mb-0 pointer-events-none">
-                        <div className="bg-[#ffde00] text-black border-2 border-black px-2 py-0.5 md:px-3 md:py-1 font-black text-xs md:text-xl uppercase shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] transform md:rotate-2">
+                        <div className="bg-[#ffde00] text-black border-2 border-black px-2 py-0.5 md:px-3 md:py-1 font-black text-sm md:text-xl uppercase shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] transform md:rotate-2">
                             Streak: {score}
                         </div>
                     </div>
@@ -294,13 +294,13 @@ export default function GamePage() {
                         {/* Content Section */}
                         <div className="flex flex-col items-center text-center bg-white text-black justify-between shrink-0 z-10 p-2 md:p-4 pb-3 md:pb-4 gap-1 md:gap-0">
                             <div className="w-full">
-                                <h2 className="text-base md:text-2xl font-black uppercase leading-none line-clamp-1 md:line-clamp-2 md:leading-tight">{p1.name}</h2>
-                                <div className="text-[10px] md:text-xs font-bold opacity-60 uppercase mt-0.5 md:mt-1">{formatClassName(p1.class)}</div>
+                                <h2 className="text-xl md:text-3xl font-black uppercase leading-none line-clamp-1 md:line-clamp-2 md:leading-tight">{p1.name}</h2>
+                                <div className="text-sm md:text-base font-black uppercase mt-0.5 md:mt-1">{formatClassName(p1.class)}</div>
                             </div>
 
                             <div className="flex flex-col items-center justify-center w-full pt-1 md:pt-2 border-t-2 border-dashed border-black mt-1">
-                                <span className="font-bold text-[10px] md:text-xs uppercase opacity-50 mb-0.5">{metricLabel}</span>
-                                <div className="text-2xl md:text-5xl font-black tracking-tighter text-black leading-none">
+                                <span className="font-bold text-xs md:text-sm uppercase opacity-70 mb-0.5">{metricLabel}</span>
+                                <div className="text-5xl md:text-7xl font-black tracking-tighter text-black leading-none">
                                     {currentMetric === 'attendance' ? `${p1Value}%` : p1Value}
                                 </div>
                             </div>
@@ -310,7 +310,7 @@ export default function GamePage() {
 
                     {/* VS Badge - Positioned on right for mobile to avoid text overlap, Center for desktop */}
                     <div className="z-50 absolute right-4 top-1/2 -translate-y-1/2 md:left-1/2 md:right-auto md:-translate-x-1/2 pointer-events-none">
-                        <div className="bg-[#ffde00] text-black border-2 md:border-4 border-black font-black text-xs md:text-xl px-2 py-1 md:px-4 md:py-2 transform -skew-x-12 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] md:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+                        <div className="bg-[#ffde00] text-black border-2 md:border-4 border-black font-black text-sm md:text-xl px-2 py-1 md:px-4 md:py-2 transform -skew-x-12 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] md:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
                             VS
                         </div>
                     </div>
@@ -339,33 +339,33 @@ export default function GamePage() {
                         </div>
 
                         {/* Content Section */}
-                        <div className="flex flex-col items-center text-center bg-white text-black justify-between shrink-0 z-10 p-2 md:p-4 pt-4 md:pt-4 gap-2 md:gap-0 pr-8 md:pr-4">
+                        <div className="flex flex-col items-center text-center bg-white text-black justify-between shrink-0 z-10 p-2 md:p-4 pt-4 md:pt-4 gap-2 md:gap-0 pr-2 md:pr-4">
                             <div className="w-full">
-                                <h2 className="text-base md:text-2xl font-black uppercase leading-none line-clamp-1 md:line-clamp-2 md:leading-tight">{p2.name}</h2>
-                                <div className="text-[10px] md:text-xs font-bold opacity-60 uppercase mt-0.5 md:mt-1">{formatClassName(p2.class)}</div>
+                                <h2 className="text-xl md:text-3xl font-black uppercase leading-none line-clamp-1 md:line-clamp-2 md:leading-tight">{p2.name}</h2>
+                                <div className="text-sm md:text-base font-black uppercase mt-0.5 md:mt-1">{formatClassName(p2.class)}</div>
                             </div>
 
                             {gameState === 'playing' ? (
                                 <div className="w-full grid grid-cols-2 gap-2 mt-auto">
                                     <button
                                         onClick={() => handleGuess('higher')}
-                                        className="bg-[#00ffff] border-2 md:border-4 border-black p-1 hover:-translate-y-1 hover:shadow-[2px_2px_0px_black] active:translate-y-0 active:shadow-none transition-all flex flex-col items-center justify-center gap-0.5 h-10 md:h-16"
+                                        className="bg-[#00ffff] border-2 md:border-4 border-black p-1 hover:-translate-y-1 hover:shadow-[2px_2px_0px_black] active:translate-y-0 active:shadow-none transition-all flex flex-col items-center justify-center gap-0.5 h-14 md:h-20"
                                     >
-                                        <ArrowUp className="w-4 h-4 md:w-5 md:h-5 stroke-[3]" />
-                                        <span className="font-black text-[10px] md:text-sm uppercase leading-none text-black">High</span>
+                                        <ArrowUp className="w-6 h-6 md:w-8 md:h-8 stroke-[3]" />
+                                        <span className="font-black text-sm md:text-lg uppercase leading-none text-black">High</span>
                                     </button>
                                     <button
                                         onClick={() => handleGuess('lower')}
-                                        className="bg-[#ff69b4] border-2 md:border-4 border-black p-1 hover:-translate-y-1 hover:shadow-[2px_2px_0px_black] active:translate-y-0 active:shadow-none transition-all flex flex-col items-center justify-center gap-0.5 h-10 md:h-16"
+                                        className="bg-[#ff69b4] border-2 md:border-4 border-black p-1 hover:-translate-y-1 hover:shadow-[2px_2px_0px_black] active:translate-y-0 active:shadow-none transition-all flex flex-col items-center justify-center gap-0.5 h-14 md:h-20"
                                     >
-                                        <ArrowDown className="w-4 h-4 md:w-5 md:h-5 stroke-[3]" />
-                                        <span className="font-black text-[10px] md:text-sm uppercase leading-none text-black">Low</span>
+                                        <ArrowDown className="w-6 h-6 md:w-8 md:h-8 stroke-[3]" />
+                                        <span className="font-black text-sm md:text-lg uppercase leading-none text-black">Low</span>
                                     </button>
                                 </div>
                             ) : (
                                 <div className="flex flex-col items-center justify-center w-full pt-1 md:pt-2 border-t-2 border-dashed border-black animate-in zoom-in duration-300 mt-1">
-                                    <span className="font-bold text-[10px] md:text-xs uppercase opacity-50 mb-0.5">{metricLabel}</span>
-                                    <div className="text-2xl md:text-5xl font-black tracking-tighter text-black leading-none">
+                                    <span className="font-bold text-xs md:text-sm uppercase opacity-70 mb-0.5">{metricLabel}</span>
+                                    <div className="text-5xl md:text-7xl font-black tracking-tighter text-black leading-none">
                                         {currentMetric === 'attendance' ? `${p2Value}%` : p2Value}
                                     </div>
                                 </div>
@@ -391,10 +391,10 @@ export default function GamePage() {
                         </div>
 
                         <div className="flex flex-col md:flex-row gap-4 w-full max-w-sm">
-                            <button onClick={resetGame} className="flex-1 bg-[#ffde00] text-black border-4 border-black py-4 font-black text-xl hover:translate-y-[-4px] hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all flex items-center justify-center gap-2 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
+                            <button onClick={resetGame} className="flex-1 bg-[#ffde00] text-black border-4 border-black py-4 font-black text-xl hover:translate-y-[-4px] hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all flex items-center justify-center gap-2 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:translate-y-0 active:shadow-none">
                                 <RotateCcw size={24} /> RETRY
                             </button>
-                            <button onClick={goToMenu} className="flex-1 bg-white text-black border-4 border-black py-4 font-black text-xl hover:translate-y-[-4px] hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all flex items-center justify-center gap-2 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
+                            <button onClick={goToMenu} className="flex-1 bg-white text-black border-4 border-black py-4 font-black text-xl hover:translate-y-[-4px] hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all flex items-center justify-center gap-2 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:translate-y-0 active:shadow-none">
                                 <ArrowLeft size={24} /> EXIT
                             </button>
                         </div>
