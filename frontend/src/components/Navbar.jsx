@@ -22,36 +22,24 @@ export default function Navbar() {
         <>
             <nav className="border-b-4 border-black bg-[#ffde00] text-black py-3 md:py-4 px-4 md:px-6 flex justify-between items-center font-mono sticky top-0 z-[100] w-full max-w-full">
 
-                {/* Left Side: Mobile Menu Toggle & Desktop Links */}
-                <div className="flex items-center gap-4">
-                    {/* Mobile Menu Toggle - Left Side */}
-                    <button
-                        onClick={toggleMenu}
-                        className="p-1.5 min-w-[44px] min-h-[44px] flex items-center justify-center border-2 border-black bg-white md:hidden active:translate-y-1 transition-transform shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] active:shadow-none"
-                        aria-label="Toggle Menu"
-                    >
-                        {isMenuOpen ? <X size={24} strokeWidth={3} /> : <Menu size={24} strokeWidth={3} />}
-                    </button>
-
-                    {/* Desktop Menu - Left Side */}
-                    <div className="hidden md:flex gap-6 font-bold text-sm items-center">
-                        <Link to="/leaderboard" className="hover:underline decoration-4 decoration-black underline-offset-4 uppercase">Leaderboard</Link>
-                        <Link to="/compare" className="hover:underline decoration-4 decoration-black underline-offset-4 uppercase">Compare</Link>
-                        <Link to="/classes" className="hover:underline decoration-4 decoration-black underline-offset-4 uppercase">Classes</Link>
-                        <button onClick={openSearch} className="hover:underline decoration-4 decoration-black underline-offset-4 uppercase flex items-center gap-1">
-                            <Search size={16} strokeWidth={3} /> Search
-                        </button>
-                    </div>
-                </div>
-
-                {/* Logo - Center Section */}
-                <div className="absolute left-1/2 -translate-x-1/2 flex items-center justify-center z-[101]">
+                {/* Left Side: Logo */}
+                <div className="flex items-center shrink-0">
                     <Link to="/" className="text-xl md:text-2xl font-black uppercase tracking-tighter hover:skew-x-6 transition-transform cursor-pointer">
                         SemRank®
                     </Link>
                 </div>
 
-                {/* Right Side: Game Button */}
+                {/* Middle: Desktop Links (Centered Absolutely) */}
+                <div className="hidden md:flex gap-6 font-bold text-sm items-center absolute left-1/2 -translate-x-1/2">
+                    <Link to="/leaderboard" className="hover:underline decoration-4 decoration-black underline-offset-4 uppercase">Leaderboard</Link>
+                    <Link to="/compare" className="hover:underline decoration-4 decoration-black underline-offset-4 uppercase">Compare</Link>
+                    <Link to="/classes" className="hover:underline decoration-4 decoration-black underline-offset-4 uppercase">Classes</Link>
+                    <button onClick={openSearch} className="hover:underline decoration-4 decoration-black underline-offset-4 uppercase flex items-center gap-1">
+                        <Search size={16} strokeWidth={3} /> Search
+                    </button>
+                </div>
+
+                {/* Right Side: Game Button & Hamburger */}
                 <div className="flex items-center gap-2">
                     {/* Desktop Game Button */}
                     {!isGamePage && (
@@ -69,6 +57,15 @@ export default function Navbar() {
                             <span>HIGHER LOWER</span>
                         </Link>
                     )}
+
+                    {/* Mobile Menu Toggle - Most Right */}
+                    <button
+                        onClick={toggleMenu}
+                        className="p-1.5 min-w-[44px] min-h-[44px] flex items-center justify-center border-2 border-black bg-white md:hidden active:translate-y-1 transition-transform shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] active:shadow-none ml-1"
+                        aria-label="Toggle Menu"
+                    >
+                        {isMenuOpen ? <X size={24} strokeWidth={3} /> : <Menu size={24} strokeWidth={3} />}
+                    </button>
                 </div>
             </nav>
 
