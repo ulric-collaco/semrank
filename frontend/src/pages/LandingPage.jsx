@@ -108,13 +108,22 @@ export default function LandingPage() {
                     });
 
                     if (carryClass && carryClass.top_student) {
-                        setCarryDiffLabel(`+${maxDiff.toFixed(2)} ABOVE CLASS AVG`);
+                        setCarryDiffLabel('1V63 DIFF');
                         setCarryDiffData([{
                             id: carryClass.top_student.roll_no,
                             label: carryClass.top_student.name,
                             value: '',
                             image: `/student_faces/${carryClass.top_student.roll_no}.png`,
-                            subtext: formatClassName(carryClass.class_name)
+                            subtext: (
+                                <div className="flex flex-col items-center gap-1 mt-1">
+                                    <span className="font-black text-white bg-black px-2 py-0.5 text-lg -rotate-2 shadow-[2px_2px_0px_rgba(0,0,0,0.2)]">
+                                        SGPA {parseFloat(carryClass.top_student.cgpa).toFixed(2)}
+                                    </span>
+                                    <span className="font-bold text-xs bg-[#ffde00] px-1.5 py-0.5 border border-black rotate-1 shadow-[1px_1px_0px_black]">
+                                        +{maxDiff.toFixed(2)} DIFF
+                                    </span>
+                                </div>
+                            )
                         }]);
                     }
                 }

@@ -118,12 +118,20 @@ function ChartContent({ data, color, showXAxis }) {
 
 function StatContent({ data }) {
     if (!data) return <div className="text-center font-bold text-gray-300 animate-pulse">LOADING...</div>;
+
+    // Check if value is short (e.g. "COMPS A") to make it HUGE
+    const isShort = data.value && data.value.toString().length < 10;
+
     return (
-        <div className="text-center">
-            <div className="text-2xl md:text-4xl font-black mb-2 line-clamp-2 overflow-hidden text-ellipsis leading-tight break-words min-h-[3rem] flex items-center justify-center" style={{ WebkitTextStroke: '1px black', color: 'transparent', backgroundImage: 'linear-gradient(45deg, #000, #333)', WebkitBackgroundClip: 'text' }} title={data.value}>
+        <div className="text-center w-full flex flex-col items-center justify-center h-full">
+            <div
+                className={`${isShort ? 'text-5xl sm:text-6xl md:text-6xl' : 'text-3xl sm:text-4xl md:text-5xl'} font-black mb-2 line-clamp-2 overflow-hidden text-ellipsis leading-[0.85] break-words min-h-[3rem] flex items-center justify-center w-full px-1`}
+                style={{ WebkitTextStroke: '1px black', color: 'transparent', backgroundImage: 'linear-gradient(45deg, #000, #333)', WebkitBackgroundClip: 'text' }}
+                title={data.value}
+            >
                 {data.value}
             </div>
-            <div className="text-lg font-bold bg-black text-white inline-block px-3 py-1 transform -rotate-2">
+            <div className="text-lg font-bold bg-black text-white inline-block px-3 py-1 transform -rotate-2 shadow-[2px_2px_0px_rgba(0,0,0,0.3)]">
                 {data.label}
             </div>
             {data.subtext && <div className="text-xs font-mono mt-3 text-gray-500 font-bold">{data.subtext}</div>}
@@ -210,9 +218,15 @@ function SingleProfileContent({ item, onClick }) {
             </h4>
 
             {item.subtext && (
-                <div className="bg-black text-white font-mono font-bold text-xs px-2 py-0.5 transform -rotate-2 group-hover:rotate-0 transition-transform">
-                    {item.subtext}
-                </div>
+                typeof item.subtext === 'string' ? (
+                    <div className="bg-black text-white font-mono font-bold text-xs px-2 py-0.5 transform -rotate-2 group-hover:rotate-0 transition-transform">
+                        {item.subtext}
+                    </div>
+                ) : (
+                    <div className="mt-1 transform -rotate-2 group-hover:rotate-0 transition-transform">
+                        {item.subtext}
+                    </div>
+                )
             )}
         </div>
     );
