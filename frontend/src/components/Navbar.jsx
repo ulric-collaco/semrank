@@ -20,7 +20,7 @@ export default function Navbar() {
 
     return (
         <>
-            <nav className="border-b-4 border-black bg-[#ffde00] text-black py-3 md:py-4 px-4 md:px-6 flex justify-between items-center font-mono sticky top-0 z-[100] w-full max-w-full">
+            <nav className="border-b-4 border-black bg-[#ffde00] text-black py-3 md:py-4 px-4 md:px-6 flex justify-between items-center font-mono fixed top-0 left-0 right-0 z-[100] w-full max-w-full">
 
                 {/* Left Side: Logo */}
                 <div className="flex items-center shrink-0">
@@ -68,6 +68,8 @@ export default function Navbar() {
                     </button>
                 </div>
             </nav>
+            {/* Navbar Spacer to prevent content overlap */}
+            <div className="h-[62px] md:h-[72px] w-full" />
 
             {/* Mobile Overlay */}
             {isMenuOpen && (
