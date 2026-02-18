@@ -210,26 +210,26 @@ export default function GamePage() {
                         HIGHER <span className="text-[#ffde00] px-2 bg-black">OR</span> LOWER
                     </motion.h1>
 
-                    <div className="w-full grid grid-cols-2 gap-2 md:gap-4 max-w-3xl z-10 overflow-y-auto flex-1 md:flex-none px-1 scrollbar-hide pb-10">
+                    <div className="w-full grid grid-cols-2 gap-3 max-w-3xl z-10 overflow-y-auto flex-1 md:flex-none p-4 scrollbar-hide pb-10 overflow-x-hidden content-start">
                         <motion.button
                             whileHover={{ scale: 1.02 }}
                             whileTap={{ scale: 0.98 }}
                             onClick={() => startGame('all')}
-                            className="col-span-2 bg-[#ffde00] border-4 border-black p-4 md:p-8 text-left shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] flex items-center justify-between shrink-0"
+                            className="col-span-2 bg-[#ffde00] border-4 border-black py-6 px-6 text-left shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] flex items-center justify-between shrink-0 group hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] transition-all"
                         >
-                            <div className="font-black text-2xl md:text-6xl text-black uppercase tracking-tighter leading-none">EVERYONE</div>
-                            <ArrowUp className="w-8 h-8 md:w-16 md:h-16 text-black rotate-45 stroke-[3]" />
+                            <div className="font-black text-2xl md:text-5xl text-black uppercase tracking-tighter leading-none">EVERYONE</div>
+                            <ArrowUp className="w-8 h-8 md:w-12 md:h-12 text-black rotate-45 stroke-[3] group-hover:-translate-y-1 group-hover:translate-x-1 transition-transform" />
                         </motion.button>
 
                         {secondaryModes.map(mode => (
                             <motion.button
                                 key={mode.id}
-                                whileHover={{ y: -5 }}
+                                whileHover={{ y: -4 }}
                                 onClick={() => startGame(mode.id)}
-                                className="bg-white border-2 border-black p-4 text-left shadow-[2px_2px_0px_black] flex items-center justify-between col-span-1"
+                                className="bg-white border-4 border-black py-4 px-4 text-left shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] flex items-center justify-between col-span-1 group hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] transition-all"
                             >
-                                <div className="font-black text-lg md:text-2xl text-black uppercase">{mode.label}</div>
-                                <ArrowUp className="w-4 h-4 md:w-5 md:h-5 text-black rotate-45" />
+                                <div className="font-black text-lg md:text-xl text-black uppercase leading-tight">{mode.label}</div>
+                                <ArrowUp className="w-5 h-5 md:w-6 md:h-6 text-black rotate-45 stroke-[3] group-hover:-translate-y-1 group-hover:translate-x-1 transition-transform" />
                             </motion.button>
                         ))}
                     </div>
