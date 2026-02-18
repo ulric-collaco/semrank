@@ -90,44 +90,46 @@ export default function ClassStatsPage() {
     // --- View 1: Class Selection Interstitial (Mobile First) ---
     if (!selectedClass) {
         return (
-            <div className="min-h-screen bg-white text-black p-6 flex flex-col items-center justify-center font-sans box-border">
+            <div className="min-h-screen bg-white text-black font-sans box-border flex flex-col">
                 <Navbar />
-                <div className="max-w-md w-full animate-in fade-in slide-in-from-bottom-8 duration-500 mt-20 md:mt-0">
-                    <div className="text-center mb-12">
-                        <div className="inline-block bg-[#ffde00] p-4 border-4 border-black shadow-[8px_8px_0_0_#000] mb-6 rotate-3 hover:rotate-0 transition-transform duration-300">
-                            <GraduationCap size={48} className="text-black" strokeWidth={2.5} />
+                <div className="flex-1 flex flex-col items-center justify-center p-6 animate-in fade-in slide-in-from-bottom-8 duration-500">
+                    <div className="max-w-2xl w-full">
+                        <div className="text-center mb-12">
+                            <div className="inline-block bg-[#ffde00] p-4 border-4 border-black shadow-[8px_8px_0_0_#000] mb-6 rotate-3 hover:rotate-0 transition-transform duration-300">
+                                <GraduationCap size={48} className="text-black" strokeWidth={2.5} />
+                            </div>
+                            <h1 className="text-4xl md:text-6xl font-black uppercase tracking-tighter mb-2 leading-none">
+                                Select Batch
+                            </h1>
+                            <p className="text-black font-bold uppercase tracking-widest text-xs md:text-sm bg-[#00ffff] inline-block px-2 py-1 border-2 border-black shadow-[4px_4px_0_0_#000]">
+                                View Detailed Statistics
+                            </p>
                         </div>
-                        <h1 className="text-4xl md:text-6xl font-black uppercase tracking-tighter mb-2 leading-none">
-                            Select Batch
-                        </h1>
-                        <p className="text-black font-bold uppercase tracking-widest text-xs md:text-sm bg-[#00ffff] inline-block px-2 py-1 border-2 border-black shadow-[4px_4px_0_0_#000]">
-                            View Detailed Statistics
+
+                        <div className="grid grid-cols-2 gap-4 w-full">
+                            {classes.map((c, index) => (
+                                <button
+                                    key={c.id}
+                                    onClick={() => setSelectedClass(c.id)}
+                                    className="w-full bg-white text-black border-4 border-black py-4 px-3 md:px-6 text-lg md:text-2xl font-black uppercase tracking-wider relative group overflow-hidden transition-all duration-200 hover:-translate-y-1 hover:translate-x-1 hover:shadow-[6px_6px_0_0_#000] active:translate-y-0 active:translate-x-0 active:shadow-none flex items-center justify-between"
+                                    style={{
+                                        animationDelay: `${index * 100}ms`
+                                    }}
+                                >
+                                    <span className="relative z-10 flex w-full justify-between items-center group-hover:text-black transition-colors">
+                                        <span className="truncate mr-2">{c.name}</span>
+                                        <span className="bg-black text-white p-1 md:p-1.5 border-2 border-transparent group-hover:bg-[#ffde00] group-hover:text-black group-hover:border-black transition-all duration-200 transform group-hover:rotate-45 shrink-0">
+                                            <ArrowLeft className="rotate-180 w-4 h-4 md:w-5 md:h-5" strokeWidth={3} />
+                                        </span>
+                                    </span>
+                                </button>
+                            ))}
+                        </div>
+
+                        <p className="text-center mt-12 font-bold uppercase text-xs opacity-50 tracking-widest">
+                            SemRank Analytics
                         </p>
                     </div>
-
-                    <div className="space-y-4">
-                        {classes.map((c, index) => (
-                            <button
-                                key={c.id}
-                                onClick={() => setSelectedClass(c.id)}
-                                className="w-full bg-white text-black border-4 border-black py-4 md:py-6 px-6 md:px-8 text-xl md:text-2xl font-black uppercase tracking-wider relative group overflow-hidden transition-all duration-200 hover:-translate-y-1 hover:translate-x-1 hover:shadow-[8px_8px_0_0_#000] active:translate-y-0 active:translate-x-0 active:shadow-none flex items-center justify-between"
-                                style={{
-                                    animationDelay: `${index * 100}ms`
-                                }}
-                            >
-                                <span className="relative z-10 flex w-full justify-between items-center group-hover:text-black transition-colors">
-                                    {c.name}
-                                    <span className="bg-black text-white p-1 md:p-2 border-2 border-transparent group-hover:bg-[#ffde00] group-hover:text-black group-hover:border-black transition-all duration-200 transform group-hover:rotate-45">
-                                        <ArrowLeft className="rotate-180" size={20} strokeWidth={3} />
-                                    </span>
-                                </span>
-                            </button>
-                        ))}
-                    </div>
-
-                    <p className="text-center mt-12 font-bold uppercase text-xs opacity-50 tracking-widest">
-                        SemRank Analytics
-                    </p>
                 </div>
             </div>
         );
