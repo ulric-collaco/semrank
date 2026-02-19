@@ -12,20 +12,26 @@ const CACHE_TTL = 5 * 60 * 1000; // 5 minutes
 async function fetchWithRetry(url, options = {}) {
   const isGet = !options.method || options.method === 'GET';
   const cacheKey = url;
+  const bypassCache = options.bypassCache || false;
+  const isInternalSWR = options._internalSWR || false;
 
-  // Check Cache for GET requests
-  if (isGet && API_CACHE.has(cacheKey)) {
+  // 1. Check Cache for GET requests (Stale-While-Revalidate Pattern)
+  if (isGet && !bypassCache && !isInternalSWR && API_CACHE.has(cacheKey)) {
     const { data, timestamp } = API_CACHE.get(cacheKey);
-    if (Date.now() - timestamp < CACHE_TTL) {
-      // Return cached data if fresh
+    const age = Date.now() - timestamp;
+
+    if (age < CACHE_TTL) {
+      return data; // Fresh
+    } else if (age < CACHE_TTL * 2) {
+      // Stale: Return immediately but fetch fresh in background
+      fetchWithRetry(url, { ...options, _internalSWR: true }).catch(() => { });
       return data;
-    } else {
-      API_CACHE.delete(cacheKey);
     }
   }
 
   const separator = url.includes('?') ? '&' : '?'
-  const fullUrl = `${API_BASE_URL}${url}${separator}_t=${Date.now()}`
+  // Only add timestamp if we explicitly want to bypass all caches (e.g. game data)
+  const fullUrl = `${API_BASE_URL}${url}${bypassCache ? `${separator}_t=${Date.now()}` : ''}`
   const config = {
     headers: { 'Content-Type': 'application/json' },
     signal: AbortSignal.timeout(10000), // 10s timeout
@@ -54,7 +60,8 @@ async function fetchWithRetry(url, options = {}) {
       lastError = error
       if (attempt < MAX_RETRIES && (error.name === 'TypeError' || error.message.startsWith('Server error'))) {
         const delay = RETRY_DELAY_BASE * Math.pow(2, attempt)
-        console.log(`API retry ${attempt + 1}/${MAX_RETRIES} after ${delay}ms: ${url}`)
+        // No logging for background SWR retries
+        if (!isInternalSWR) console.log(`API retry ${attempt + 1}/${MAX_RETRIES} after ${delay}ms: ${url}`)
         await new Promise((resolve) => setTimeout(resolve, delay))
       } else if (attempt >= MAX_RETRIES) {
         break
@@ -108,17 +115,10 @@ export const birthdayAPI = {
 
 export const gameAPI = {
   getRandomPair: (classFilter = 'all') => {
-    // Force fresh fetch by appending timestamp and specific cache-bust param
-    const params = new URLSearchParams({ class: classFilter, _t: Date.now() })
-    // We can also pass a fetch option to ignore internal cache if implemented, 
-    // but the fetchWithRetry function uses the URL as cache key. 
-    // Since we are appending a unique timestamp to params, the URL is unique every call.
-    // fetchWithRetry ALREADY appends _t, but let's be explicit and ensure it's not cached in memory.
-    // The current fetchWithRetry implementation caches based on 'url' argument BEFORE _t is appended internally.
-    // So we need to append a unique string to the 'url' argument itself to bypass the Map cache.
-    return fetchWithRetry(`/game/random-pair?${params}`)
+    const params = new URLSearchParams({ class: classFilter })
+    return fetchWithRetry(`/game/random-pair?${params}`, { bypassCache: true })
   },
-  getRandomPairWithSubject: () => fetchWithRetry(`/game/random-pair-subject?_t=${Date.now()}`),
+  getRandomPairWithSubject: () => fetchWithRetry('/game/random-pair-subject', { bypassCache: true }),
 }
 
 export default { fetchWithRetry }

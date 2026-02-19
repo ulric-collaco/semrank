@@ -279,6 +279,8 @@ async function handleRequest(request, env) {
       headers: {
         'Content-Type': 'application/json',
         ...getCorsHeaders(origin),
+        'Cache-Control': 'public, max-age=600, stale-while-revalidate=60',
+        'Vary': 'Origin',
       },
     });
   };
@@ -1002,6 +1004,43 @@ async function handleRequest(request, env) {
 
 export default {
   async fetch(request, env, ctx) {
-    return handleRequest(request, env);
+    const url = new URL(request.url);
+    const cache = caches.default;
+
+    // Bypass cache for non-GET or special endpoints
+    if (request.method !== 'GET' || url.pathname.includes('/health')) {
+      return handleRequest(request, env);
+    }
+
+    // Construct a cache key that includes the Origin to prevent CORS poisoning
+    const origin = request.headers.get('Origin') || 'no-origin';
+    const cacheKeyUrl = new URL(request.url);
+    // Remove transient query params that kill cache performance if they exist
+    // (though we will fix the frontend to not send these for most requests)
+    // cacheKeyUrl.searchParams.delete('_t'); 
+
+    cacheKeyUrl.searchParams.set('__origin', origin);
+    const cacheKey = new Request(cacheKeyUrl.toString(), request);
+
+    // Try to find in cache
+    let response = await cache.match(cacheKey);
+
+    if (!response) {
+      // MISS: Execute logic
+      response = await handleRequest(request, env);
+
+      // Successfully returned data should be cached
+      if (response.status === 200) {
+        // Cloudflare requires specific headers for caches.default to work
+        const cachedResponse = new Response(response.body, response);
+        cachedResponse.headers.set('Cache-Control', 'public, max-age=600');
+
+        // Store in cache background
+        ctx.waitUntil(cache.put(cacheKey, cachedResponse.clone()));
+        return cachedResponse;
+      }
+    }
+
+    return response;
   },
 };
