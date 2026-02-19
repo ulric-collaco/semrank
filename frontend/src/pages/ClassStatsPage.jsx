@@ -65,13 +65,17 @@ export default function ClassStatsPage() {
         loadStats();
     }, [selectedClass]);
 
-    // Handle Roll Number Highlighting
+    // Handle Student Highlighting (Roll No or Name)
     useEffect(() => {
         if (!rollHighlight || !stats?.students) {
             setHighlightedStudent(null);
             return;
         }
-        const student = stats.students.find(s => s.roll_no.toString() === rollHighlight);
+        const query = rollHighlight.toLowerCase();
+        const student = stats.students.find(s =>
+            s.roll_no.toString() === query ||
+            s.name.toLowerCase().includes(query)
+        );
         setHighlightedStudent(student);
     }, [rollHighlight, stats]);
 
@@ -170,14 +174,16 @@ export default function ClassStatsPage() {
                 </div>
 
                 {stats && (
-                    <div className="flex items-center gap-6">
-                        <div className="hidden md:block">
-                            <p className="text-[10px] font-bold text-gray-400 uppercase">AVG SGPI</p>
-                            <p className="text-xl font-black text-[#00ffff]">{stats.info.avg_cgpa.toFixed(2)}</p>
+                    <div className="flex items-center gap-3 w-full sm:w-auto">
+                        <div className="flex-1 sm:flex-none bg-[#111] border-2 border-[#333] px-3 md:px-5 py-2 relative group overflow-hidden">
+                            <div className="absolute top-0 left-0 w-1 h-full bg-[#00ffff]" />
+                            <p className="text-[9px] font-black text-gray-500 uppercase tracking-tighter mb-1">AVG SGPI</p>
+                            <p className="text-xl md:text-2xl font-black text-[#00ffff] leading-none">{stats.info.avg_cgpa.toFixed(2)}</p>
                         </div>
-                        <div className="hidden md:block">
-                            <p className="text-[10px] font-bold text-gray-400 uppercase">Class Rank</p>
-                            <p className="text-xl font-black text-[#ffde00]">#{stats.info.rank_avg_cgpa}</p>
+                        <div className="flex-1 sm:flex-none bg-[#111] border-2 border-[#333] px-3 md:px-5 py-2 relative group overflow-hidden">
+                            <div className="absolute top-0 left-0 w-1 h-full bg-[#ffde00]" />
+                            <p className="text-[9px] font-black text-gray-500 uppercase tracking-tighter mb-1">CLASS RANK</p>
+                            <p className="text-xl md:text-2xl font-black text-[#ffde00] leading-none">#{stats.info.rank_avg_cgpa}</p>
                         </div>
                     </div>
                 )}
@@ -242,7 +248,7 @@ export default function ClassStatsPage() {
                             <div className="relative">
                                 <input
                                     type="text"
-                                    placeholder="ENTER ROLL NO"
+                                    placeholder="ROLL NO OR NAME"
                                     value={rollHighlight}
                                     onChange={(e) => setRollHighlight(e.target.value)}
                                     className="w-full md:w-64 bg-white border-4 border-black p-3 font-black placeholder:text-gray-300 focus:outline-none focus:shadow-[4px_4px_0_0_#000] transition-all uppercase"
