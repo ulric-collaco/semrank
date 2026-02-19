@@ -106,20 +106,20 @@ export default function ClassStatsPage() {
                             </p>
                         </div>
 
-                        <div className="grid grid-cols-2 gap-4 w-full">
+                        <div className="grid grid-cols-2 gap-2 md:gap-4 w-full">
                             {classes.map((c, index) => (
                                 <button
                                     key={c.id}
                                     onClick={() => setSelectedClass(c.id)}
-                                    className="w-full bg-white text-black border-4 border-black py-4 px-3 md:px-6 text-lg md:text-2xl font-black uppercase tracking-wider relative group overflow-hidden transition-all duration-200 hover:-translate-y-1 hover:translate-x-1 hover:shadow-[6px_6px_0_0_#000] active:translate-y-0 active:translate-x-0 active:shadow-none flex items-center justify-between whitespace-nowrap"
+                                    className="w-full bg-white text-black border-4 border-black py-3 md:py-4 px-2 md:px-6 text-xs sm:text-sm md:text-2xl font-black uppercase tracking-normal md:tracking-wider relative group overflow-hidden transition-all duration-200 hover:-translate-y-1 hover:translate-x-1 hover:shadow-[6px_6px_0_0_#000] active:translate-y-0 active:translate-x-0 active:shadow-none flex items-center justify-between whitespace-nowrap"
                                     style={{
                                         animationDelay: `${index * 100}ms`
                                     }}
                                 >
-                                    <span className="relative z-10 flex w-full justify-between items-center group-hover:text-black transition-colors">
-                                        <span className="truncate mr-2">{c.name}</span>
+                                    <span className="relative z-10 flex w-full justify-between items-center group-hover:text-black transition-colors gap-1">
+                                        <span className="truncate">{c.name}</span>
                                         <span className="bg-black text-white p-1 md:p-1.5 border-2 border-transparent group-hover:bg-[#ffde00] group-hover:text-black group-hover:border-black transition-all duration-200 transform group-hover:rotate-45 shrink-0">
-                                            <ArrowLeft className="rotate-180 w-4 h-4 md:w-5 md:h-5" strokeWidth={3} />
+                                            <ArrowLeft className="rotate-180 w-3 h-3 md:w-5 md:h-5" strokeWidth={3} />
                                         </span>
                                     </span>
                                 </button>

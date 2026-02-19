@@ -37,24 +37,27 @@ export default function LandingPage() {
         async function fetchData() {
             try {
                 // Parallel Fetching for speed
-                const [leaderboardData, subjectStats, classRankings, birthdayData, distributionData] = await Promise.all([
+                const [leaderboardData, subjectStats, classRankings, birthdayData, distributionData, extraSgpaData] = await Promise.all([
                     sortBy === 'sgpa' ? leaderboardAPI.getTopBySGPA(50, 'all') : leaderboardAPI.getTopByAttendance(50, 'all'),
                     statsAPI.getSubjectStats('all'), // Correct API call
                     leaderboardAPI.getClassRankings(),
                     birthdayAPI.getTodaysBirthdays ? birthdayAPI.getTodaysBirthdays().catch(() => []) : Promise.resolve([]),
-                    statsAPI.getBatchDistribution().catch(() => []) /* New Distribution Endpoint */
+                    statsAPI.getBatchDistribution().catch(() => []), /* New Distribution Endpoint */
+                    sortBy !== 'sgpa' ? leaderboardAPI.getTopBySGPA(50, 'all') : Promise.resolve(null)
                 ]);
 
                 setTopStudents(leaderboardData.slice(0, 6)); // Keep top 6 for main board
                 setBirthdays(birthdayData || []);
 
-                // --- 1. Rivalry Mode (Seeded Daily Matchup) ---
-                if (leaderboardData.length >= 2) {
+                // --- 1. Rivalry Mode (Seeded Daily Matchup - STRICTLY SGPA) ---
+                const rivalrySource = sortBy === 'sgpa' ? leaderboardData : extraSgpaData;
+
+                if (rivalrySource && rivalrySource.length >= 2) {
                     const today = new Date().toDateString();
                     let hash = 0;
                     for (let i = 0; i < today.length; i++) hash = today.charCodeAt(i) + ((hash << 5) - hash);
-                    const dailyIndex = Math.abs(hash) % (leaderboardData.length - 2);
-                    setRivalryData([leaderboardData[dailyIndex], leaderboardData[dailyIndex + 1]]);
+                    const dailyIndex = Math.abs(hash) % (rivalrySource.length - 2);
+                    setRivalryData([rivalrySource[dailyIndex], rivalrySource[dailyIndex + 1]]);
                 }
 
                 // --- 2. Rank Distribution (Real DB Data) ---
