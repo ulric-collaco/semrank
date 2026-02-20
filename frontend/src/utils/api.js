@@ -30,12 +30,37 @@ async function fetchWithRetry(url, options = {}) {
   }
 
   const separator = url.includes('?') ? '&' : '?'
-  // Only add timestamp if we explicitly want to bypass all caches (e.g. game data)
-  const fullUrl = `${API_BASE_URL}${url}${bypassCache ? `${separator}_t=${Date.now()}` : ''}`
+  const bypassCacheParam = bypassCache ? `${separator}_t=${Date.now()}` : ''
+  const backendRelativeUrl = `${url}${bypassCacheParam}`
+  const fullUrl = `${API_BASE_URL}${backendRelativeUrl}`
+
+  // Generate HMAC Signature
+  const API_SECRET = import.meta.env.VITE_API_SECRET || 'meowmeowwhatdiduguess';
+  const reqTimestamp = Math.floor(Date.now() / 1000).toString();
+
+  const encoder = new TextEncoder();
+  const dataToSign = encoder.encode(`${backendRelativeUrl}:${reqTimestamp}`);
+  const cryptoKey = await crypto.subtle.importKey(
+    'raw',
+    encoder.encode(API_SECRET),
+    { name: 'HMAC', hash: 'SHA-256' },
+    false,
+    ['sign']
+  );
+  const signatureBuffer = await crypto.subtle.sign('HMAC', cryptoKey, dataToSign);
+  const signatureHex = Array.from(new Uint8Array(signatureBuffer))
+    .map(b => b.toString(16).padStart(2, '0'))
+    .join('');
+
   const config = {
-    headers: { 'Content-Type': 'application/json' },
-    signal: AbortSignal.timeout(10000), // 10s timeout
     ...options,
+    headers: {
+      'Content-Type': 'application/json',
+      'x-timestamp': reqTimestamp,
+      'x-signature': signatureHex,
+      ...(options.headers || {})
+    },
+    signal: options.signal || AbortSignal.timeout(10000), // 10s timeout
   }
 
   let lastError

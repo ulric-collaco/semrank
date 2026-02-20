@@ -64,7 +64,6 @@ async function getStudentLeaderboardData(db, classFilter = 'all') {
       s.roll_no,
       s.enrollment_id,
       s.name,
-      s.dob,
       s.class,
       s.class_id,
       sl.cgpa,
@@ -180,7 +179,6 @@ async function getStudentSGPIAnalysis(db, prn) {
   const sgpi = totalCredits > 0 ? (totalWeightedPoints / totalCredits) : 0;
 
   return {
-    prn,
     sgpi: parseFloat(sgpi.toFixed(2)),
     totalWeightedPoints,
     totalCredits,
@@ -197,7 +195,6 @@ async function getStudentDetails(db, studentId) {
       s.roll_no,
       s.enrollment_id,
       s.name,
-      s.dob,
       s.class,
       s.class_id,
       sl.cgpa,
@@ -293,6 +290,52 @@ async function handleRequest(request, env) {
   if (method === 'OPTIONS') {
     return handleOptions(request);
   }
+
+  // --- HMAC Signature Verification ---
+  // Apply only to API routes
+  if (path.startsWith('/api/')) {
+    const API_SECRET = env.API_SECRET || 'meowmeowwhatdiduguess';
+    const reqTimestamp = request.headers.get('x-timestamp');
+    const reqSignature = request.headers.get('x-signature');
+
+    if (!reqTimestamp || !reqSignature) {
+      return errorResponse('Missing signature headers. Unauthorized access.', 401);
+    }
+
+    // Check expiration (60 seconds window to prevent replay attacks)
+    const now = Math.floor(Date.now() / 1000);
+    if (Math.abs(now - parseInt(reqTimestamp, 10)) > 60) {
+      return errorResponse('Request expired', 401);
+    }
+
+    // Reconstruct the payload to sign
+    const pathForSig = url.pathname.replace('/api', '') + url.search;
+
+    try {
+      const encoder = new TextEncoder();
+      const dataToSign = encoder.encode(`${pathForSig}:${reqTimestamp}`);
+      const cryptoKey = await crypto.subtle.importKey(
+        'raw',
+        encoder.encode(API_SECRET),
+        { name: 'HMAC', hash: 'SHA-256' },
+        false,
+        ['sign']
+      );
+      const signatureBuffer = await crypto.subtle.sign('HMAC', cryptoKey, dataToSign);
+      const expectedSignature = Array.from(new Uint8Array(signatureBuffer))
+        .map(b => b.toString(16).padStart(2, '0'))
+        .join('');
+
+      // Constant-time string comparison (prevent timing attacks)
+      // Since it's a worker, direct comparison works fairly well, but could be enhanced
+      if (reqSignature !== expectedSignature) {
+        return errorResponse('Invalid request signature', 403);
+      }
+    } catch (err) {
+      return errorResponse('Error verifying signature', 500);
+    }
+  }
+  // --- End HMAC Verification ---
 
   const db = env.DB;
 
@@ -475,18 +518,30 @@ async function handleRequest(request, env) {
       const today = new Date();
       const day = String(today.getDate()).padStart(2, '0');
       const month = String(today.getMonth() + 1).padStart(2, '0');
+      const dobMatch = `${day}/${month}%`;
 
-      // Get all students from leaderboard
-      const allStudents = await getStudentLeaderboardData(db, 'all');
+      const bdayQuery = `
+        SELECT 
+          s.student_id,
+          s.roll_no,
+          s.enrollment_id,
+          s.name,
+          s.dob,
+          s.class,
+          s.class_id,
+          sl.cgpa,
+          sl.overall_attendance as attendance,
+          sl.rank_cgpa_college,
+          sl.rank_cgpa_class,
+          sl.rank_attendance_college,
+          sl.rank_attendance_class
+        FROM STUDENT s
+        JOIN STUDENT_LEADERBOARD sl ON s.student_id = sl.student_id
+        WHERE s.dob LIKE ?
+      `;
 
-      // Filter by birthday
-      const birthdayStudents = allStudents.filter(student => {
-        if (!student.dob) return false;
-        const parts = student.dob.split('/');
-        return parts[0] === day && parts[1] === month;
-      });
-
-      return jsonResponse(birthdayStudents);
+      const results = await db.prepare(bdayQuery).bind(dobMatch).all();
+      return jsonResponse(results.results || []);
     }
 
     // GET /api/game/random-pair - Get two random students for game
