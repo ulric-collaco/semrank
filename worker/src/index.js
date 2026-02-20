@@ -1002,42 +1002,50 @@ async function handleRequest(request, env) {
   }
 }
 
+// Global Memory Cache (Shared across requests in the same warm isolate)
+const GLOBAL_CACHE = new Map();
+const MEMORY_TTL = 5 * 60 * 1000; // 5 minutes
+
 export default {
   async fetch(request, env, ctx) {
     const url = new URL(request.url);
-    const cache = caches.default;
+    const cacheKey = url.pathname + url.search;
 
     // Bypass cache for non-GET or special endpoints
     if (request.method !== 'GET' || url.pathname.includes('/health')) {
       return handleRequest(request, env);
     }
 
-    // Construct a cache key that includes the Origin to prevent CORS poisoning
-    const origin = request.headers.get('Origin') || 'no-origin';
-    const cacheKeyUrl = new URL(request.url);
-    // Remove transient query params that kill cache performance if they exist
-    // (though we will fix the frontend to not send these for most requests)
-    // cacheKeyUrl.searchParams.delete('_t'); 
+    // 1. Check Global Memory Cache (FREE, zero D1 reads)
+    const cached = GLOBAL_CACHE.get(cacheKey);
+    if (cached && (Date.now() - cached.timestamp < MEMORY_TTL)) {
+      return new Response(cached.body, {
+        headers: {
+          ...cached.headers,
+          'X-Cache': 'HIT-MEMORY',
+          'Access-Control-Allow-Origin': request.headers.get('Origin') || '*'
+        }
+      });
+    }
 
-    cacheKeyUrl.searchParams.set('__origin', origin);
-    const cacheKey = new Request(cacheKeyUrl.toString(), request);
+    // 2. Cache MISS: Execute logic
+    const response = await handleRequest(request, env);
 
-    // Try to find in cache
-    let response = await cache.match(cacheKey);
+    // 3. Store in Memory Cache if successful (200 OK)
+    // Only cache if the response is actually data (JSON)
+    if (response.status === 200 && response.headers.get('Content-Type')?.includes('application/json')) {
+      try {
+        const clonedResponse = response.clone();
+        const body = await clonedResponse.text();
+        const headers = Object.fromEntries(clonedResponse.headers.entries());
 
-    if (!response) {
-      // MISS: Execute logic
-      response = await handleRequest(request, env);
-
-      // Successfully returned data should be cached
-      if (response.status === 200) {
-        // Cloudflare requires specific headers for caches.default to work
-        const cachedResponse = new Response(response.body, response);
-        cachedResponse.headers.set('Cache-Control', 'public, max-age=600');
-
-        // Store in cache background
-        ctx.waitUntil(cache.put(cacheKey, cachedResponse.clone()));
-        return cachedResponse;
+        GLOBAL_CACHE.set(cacheKey, {
+          body,
+          headers,
+          timestamp: Date.now()
+        });
+      } catch (e) {
+        console.error('Failed to cache response in memory:', e);
       }
     }
 
